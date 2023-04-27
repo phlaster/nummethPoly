@@ -39,7 +39,7 @@ double integral(int n, double a=-0.7, double b=1.6)
     double right = a + dx;
     for(int i=1; i <= n; i++)
         {
-            I += dx * (polynom(left) + polynom(right)) / 2.0;
+            I += 0.5 * dx * (polynom(left) + polynom(right));
             left = right;
             right += dx;
         }
@@ -77,7 +77,8 @@ void integralRunge(int lowestPower = -10)
                 delta = ETA*abs(integral(2*n) - integral(n));
                 n *= 2;
             }
-            outfile << n/2 << "," << delta << "," << eps << endl;
+            // n, not n/2, bc we've allready reached integral(2*n)
+            outfile << n << "," << delta << "," << eps << endl;
         }
         outfile.close();
         cout << "rungeResult.csv has been written!" << endl;
