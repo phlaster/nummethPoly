@@ -19,12 +19,12 @@ using namespace std;
 
 double dif_y(double x, double y)
 {
-    return x/(y*y) + y/x;
+    return x/(y * y) + y/x;
 }
 
 double y_exact(double x)
 {
-    return cbrt(3*x*x*(x-1));
+    return cbrt(3 * x * x * (x-1));
 }
 
 double y_wave_next(double y_i, double h_i, double f)
@@ -47,7 +47,7 @@ int main(void)
     double h_i = 1 * pow(10, -1); // Здесь меняем шаг
     cout << "h_i = " << h_i << endl;
 
-    int n_steps = round(h/ h_i);
+    int n_steps = round(h/h_i);
     cout << "N steps = " << n_steps << endl;
 
     double y_0 = y_exact(a);
@@ -58,7 +58,7 @@ int main(void)
     for (int i = 1; i <= n_steps; i++)
     {
         y_wav = y_wave_next(y_0, h_i, dif_y(y_0, y_0+h_i));
-        y_i = y_next(y_0, h_i, dif_y(x_i+h_i/2, y_wav));
+        y_i = y_next(y_0, h_i, dif_y(x_i + h_i/2, y_wav));
         y_0 = y_wav;
         y_0 = y_i;
         x_i = a + i * h_i;
