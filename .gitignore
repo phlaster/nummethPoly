@@ -10,3 +10,5 @@ build/
 **/*.csv
 **/*.dat
 **/*.json
+
+**/.ipynb_checkpoints/
