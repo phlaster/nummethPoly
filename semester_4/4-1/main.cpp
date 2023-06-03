@@ -37,24 +37,14 @@ double y_next(double y_i, double h_i, double f)
     return y_i + h_i * f;
 }
 
+void calculate(double a, double b, double h_i)
 
-
-
-int main(void)
 {
-    double a = 1.1, b = 3.0;
-    double h = b-a;
-    double h_i = 1 * pow(10, -1); // Здесь меняем шаг
-    cout << "h_i = " << h_i << endl;
-
-    int n_steps = round(h/h_i);
-    cout << "N steps = " << n_steps << endl;
-
     double y_0 = y_exact(a);
+    double h = b-a;
     double y_wav, y_i;
     double x_i = a;
-    cout << x_i << "," << y_i << endl;
-
+    int n_steps = round(h/h_i);
     for (int i = 1; i <= n_steps; i++)
     {
         y_wav = y_wave_next(y_0, h_i, dif_y(y_0, y_0+h_i));
@@ -62,10 +52,20 @@ int main(void)
         y_0 = y_wav;
         y_0 = y_i;
         x_i = a + i * h_i;
-        cout << x_i << "," << y_i << endl;
+        cout << h_i << ","<< i << ',' << x_i << ',' << y_i << ',' << abs (y_i - y_exact(x_i)) << '\n';
 
     }
-    // cout << "x: " << x_i << " --> " << b << endl;
-    // cout << "y: " << y_i << " --> " << y_exact(b) << endl;
+}
+
+
+int main(void)
+{
+    double a = 1.1, b = 3.0;
+    double h_i = 1 * pow(10, -1); // Здесь меняем шаг
+    
+    calculate(a, b, h_i);
+
+    h_i = 5 * pow(10, -2); // Здесь меняем шаг
+    calculate(a, b, h_i);
     return 0;
 }
