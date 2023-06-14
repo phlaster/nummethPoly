@@ -19,8 +19,10 @@ Vector generateRandomVector(int n, double lower=0, double upper=10);
 Matrix generateRandomMatrix(int rows, int cols=-1, double lower=0, double upper=10);
 Matrix generateRndSymPos(int n);
 
-int conjugateGradientMethod(const Matrix& A, const Vector& b, double eps, int maxIter=1000);
-
+void printVector(const Vector& v);
 void printMatrix(const Matrix& A);
 void printSLAE(const Matrix& A, const Vector& x, const Vector& b);
+
+int conjugateGradientMethod(const Matrix& A, const Vector& b, double eps, int maxIter=1000, bool verbose=false);
+
 #endif

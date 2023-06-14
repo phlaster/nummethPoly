@@ -151,30 +151,15 @@ Matrix generateRndSymPos(int n)
 }
 
 
-int conjugateGradientMethod(const Matrix& A, const Vector& b, double eps, int maxIter=1000)
+void printVector(const Vector& v)
 {
-    int n = A.size();
-    int k = 0;
-    Vector q;
-    Vector x = Vector(n);
-    Vector r = vecSum(1, b, -1, multiplyMatrixVector(A, x));
-    Vector p = r;
-    double alpha, beta, pq_denom;
-    while (euclideanNorm(r) > eps && k <= maxIter)
+    cout << "[";
+    for (auto item : v)
     {
-        q = multiplyMatrixVector(A, p);
-        pq_denom = dotProduct(p, q);
-        alpha = dotProduct(r, p) / pq_denom; 
-        r = vecSum(1, r, -alpha, q);        
-        x = vecSum(1, x, alpha, p);
-        beta = dotProduct(r, q) / pq_denom;
-        p = vecSum(1, r, -beta, p);
-        k++;
+        cout << item << " ";
     }
-    return k <= maxIter ? k : -1;
+    cout << "]\n";
 }
-
-
 void printMatrix(const Matrix& A)
 {
     int n = A.size();
@@ -200,3 +185,51 @@ void printSLAE(const Matrix& A, const Vector& x, const Vector& b)
 	}
     cout << "\n";
 }
+
+
+int conjugateGradientMethod(const Matrix& A, const Vector& b, double eps, int maxIter=1000, bool verbose=false)
+{
+    int k = 0;
+    Vector q;
+    Vector x = Vector(b.size());
+    Vector r = b; //vecSum(1, b, -1, multiplyMatrixVector(A, x));
+    Vector p = r;
+
+    if (verbose)
+    {
+        cout << "A:\n"; printMatrix(A);
+        cout << "b = "; printVector(b);
+        cout << "k = " << k << endl;
+        cout << "x_i = "; printVector(x);
+        cout << "r = "; printVector(r);
+        cout << "p = "; printVector(p);
+        cout << endl;
+    }
+
+    double alpha, beta, pq_denom;
+    while (euclideanNorm(r) > eps && k <= maxIter)
+    {
+        q = multiplyMatrixVector(A, p);
+        pq_denom = dotProduct(p, q);
+        alpha = dotProduct(r, p) / pq_denom; 
+        r = vecSum(1, r, -alpha, q);        
+        x = vecSum(1, x, alpha, p);
+        beta = dotProduct(r, q) / pq_denom;
+        p = vecSum(1, r, -beta, p);
+
+        if (verbose)
+        {
+            cout << "k = " << k << endl;
+            cout << "alpha = " << alpha << endl;
+            cout << "beta = " << beta << endl;
+            cout << "x_i = "; printVector(x);
+            cout << "||r||=" << euclideanNorm(r) << ", r = "; printVector(r);
+            cout << "p = "; printVector(p);
+            cout << "q = "; printVector(q);
+            cout << endl;
+        }
+        k++;
+    }
+    return k <= maxIter ? k : -1;
+}
+
