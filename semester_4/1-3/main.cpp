@@ -1,27 +1,35 @@
 #include "functions.hpp"
-
+#include "Types.hpp"
 #include <iostream>
-#include <vector>
 #include <cmath>
 
 using namespace std;
 
+void PCG(const Matrix& A, const Vector& b, int lowestDeg, int maxIter = 1000)
+{
+    cout << "eps,iters,n="<<b.size()<<"\n";
+    for (int p = -1; p >= lowestDeg; p--)
+    {
+        double eps = pow(10, p);
+        int n_iters = conjugateGradientMethod(A, b, eps, maxIter);
+        if (n_iters == -1)
+        {
+            cout << eps << " и далее " <<">"<< maxIter <<" итераций.\n";
+            break;
+        } else {
+            cout << eps << "," << n_iters<<"\n"; 
+        }
+    }
+}
 
 int main() {
     Matrix A;
     Vector x, b;
-    int n = 4;
-
-    A = generateRandomMatrix(x, n);
+    int n = 100;
+    A = generateRndSymPos(n);
+    x = generateRandomVector(n);
     b = multiplyMatrixVector(A, x);
-    printMatrix(A, x, b);
+    PCG(A, b, -16, 500);
 
-    for (int p = -1; p > -2; p--)
-    {
-        double tolerance = pow(10, p);
-        int numberOfIterations = conjugateGradientMethod(A, b, tolerance);
-        cout << tolerance << " | " << numberOfIterations<<"\n\n"; 
-    }
-
-   return 0;
+    return 0;
 }

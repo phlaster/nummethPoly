@@ -1,5 +1,4 @@
 #include "Types.hpp"
-#include <algorithm>
 #include <stdexcept>
 #include <vector>
 #include <random>
@@ -7,105 +6,54 @@
 #include <iomanip>
 #include <cmath>
 
-
 using namespace std;
 
-Matrix generateRandomMatrix(Vector& x, int n) {
-    // Инициализация генератора случайных чисел
-    random_device rd;
-    mt19937 gen(rd());
-    
-    // Создание распределения равномерного распределения на интервале [0, 10]
-    uniform_real_distribution<> distrib(0.0, 10.0);
-    
-    Matrix A;
-    A.resize(n);
-    for (int i = 0; i < n; ++i) {
-        A[i].resize(n);
-        x.push_back(distrib(gen)); // Модификация вектора решений
+Matrix upperTriang(const Matrix& A)
+{
+    if (A.size() != A[0].size()) {
+        throw invalid_argument("Только квадратные матрцы!");
     }
-     
-    // Заполнение матрицы случайными значениями из заданного распределения 
+
+    int n = A.size();
+    Matrix UT(n, Vector(n));
+
     for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            A[i][j] = distrib(gen);
+        for (int j = i; j < n; ++j) {
+            UT[i][j] = A[i][j];
+            UT[j][i] = A[i][j];
+        }
+    }
+    return UT;
+}
+Matrix transpose(const Matrix& matrix)
+{
+    int rows = matrix.size();
+    int cols = matrix[0].size();
+
+    Matrix result(cols, Vector(rows));
+
+    for (int i = 0; i < rows; ++i) {
+        for(int j = 0; j < cols; ++j) {
+            result[j][i] = matrix[i][j];
         }
     }
 
-    return A;
+    return result;
 }
 
-Vector generateRandomVector(int n) {
-    random_device rd;
-    mt19937 gen(rd());
-    
-    // Создание распределения равномерного распределения на интервале [0, 10]
-    uniform_real_distribution<> distrib(0, 10.0);
-    
-    Vector x0;
 
-    for (int i = 0; i < n; ++i) {
-        x0.push_back(distrib(gen));
-    }
-
-    return x0;
-}
-
-void printMatrix(const Matrix& A, const Vector& x,
-                 const Vector& b) {
-    int n = A.size();
-    
-    // Выводим заголовки столбцов
-    cout << "A:" << setw(9*n - 1) << "| x:" << setw(10) << "| b:" << '\n';
-
-	// Выводим значения матрицы, вектора x и вектора b
-	for(int i=0; i<n; ++i){
-		for(int j=0; j<n; ++j)
-			cout << setw(4) << A[i][j] << " ";
-		cout<<"| "<< setw(4) << x[i] << " |"<< setw(4) << b[i] << "\n";
-	}
-    cout << "\n";
-}
-
-Matrix matmul(const Matrix& A, const Matrix& B) {
-    int n = A.size();
-    int m = B.size();
-    int k = B[0].size();
-    
-    // Проверка возможности умножения матриц
-    if (A[0].size() != m) {
-        throw invalid_argument("Invalid matrix sizes");
-    }
-    
-     // Создание новой матрицы с нулевыми значениями
-     Matrix res(n, Vector(k));
-     
-     for (int i = 0; i < n; ++i) {
-         for (int j = 0; j < k; ++j) {
-             double sum = 0.0;
-             
-             for (int l = 0; l < m; ++l) {                
-                 sum += A[i][l] * B[l][j];
-             }
-             
-             res[i][j] = sum;
-         }         
-     }
-     
-     return res;
-}
-
-Vector scalarMultiply(double scalar, const Vector& vec) {
+Vector scalarMultiply(double scalar, const Vector& vec)
+{
     Vector result;
     for (double value : vec) {
         result.push_back(scalar * value);
     }
     return result;
 }
-
-Vector vecSum(double c1, const Vector& vec1, double c2, const Vector& vec2) {
+Vector vecSum(double c1, const Vector& vec1, double c2, const Vector& vec2)
+{
    if (vec1.size() != vec2.size()) {
-      throw std::invalid_argument("Vectors must be same length.");
+      throw std::invalid_argument("Можно складывать только векторы одинаковой длины!");
    }
    
    Vector v1 = scalarMultiply(c1, vec1);
@@ -120,9 +68,11 @@ Vector vecSum(double c1, const Vector& vec1, double c2, const Vector& vec2) {
    return result;
 }
 
-double dotProduct(const Vector& vec1, const Vector& vec2){
+
+double dotProduct(const Vector& vec1, const Vector& vec2)
+{
     if (vec1.size() != vec2.size()) {
-        throw invalid_argument("Dot product is only defined for two vectors of same length.");
+        throw invalid_argument("Скалярное произведение только для векторов одинаковой длины!");
     }
     double result = 0.0;
     for (int i = 0; i < vec1.size(); ++i) {
@@ -130,14 +80,16 @@ double dotProduct(const Vector& vec1, const Vector& vec2){
     }
     return result;
 }
-
-double euclideanNorm(const Vector& vec) {
+double euclideanNorm(const Vector& vec)
+{
     return sqrt(dotProduct(vec, vec));
 }
 
-Vector multiplyMatrixVector(const Matrix& A, const Vector& x) {
+
+Vector multiplyMatrixVector(const Matrix& A, const Vector& x)
+{
     if (A[0].size() != x.size()) {
-        throw std::invalid_argument("Matrix and vector must be compatible.");
+        throw std::invalid_argument("Для умножения матрицы на вектор размеры должны согласовываться!");
     }
     Vector result;
     for (const auto& row : A) {       
@@ -145,79 +97,106 @@ Vector multiplyMatrixVector(const Matrix& A, const Vector& x) {
     }
     return result;
 }
-
-bool goodSolution(const Vector& r, double tolerance) {       
-    return euclideanNorm(r) <= tolerance;
-}
-
-// Вычисление вектора невязки
-Vector computeResiduals(const Matrix& A, const Vector& b, const Vector& x_i)
-{
-    Vector r = vecSum(1, b, -1, multiplyMatrixVector(A, x_i));
-    return r;
-}
-
-// Вычисления направления поиска p на каждой итерации
-Vector computeDirection(const Matrix& A, const Vector& p) {
-    Vector Ap = multiplyMatrixVector(A, p);
-    double alpha = dotProduct(p, p) / dotProduct(p, Ap);
-    return scalarMultiply(alpha, p);
-}
-
-// Проверка деления на ноль при расчете коэффициента alpha_k или beta
-void checkDivideByZero(double value, double tolerance)
-{
-    if(fabs(value)<tolerance){
-        throw runtime_error("Error: division by zero");
-    }
-}
-
-int conjugateGradientMethod(const Matrix& A, const Vector& b, double tolerance)
+Matrix matMul(const Matrix& A, const Matrix& B)
 {
     int n = A.size();
-    Vector x_i = generateRandomVector(n);
-    Vector r = computeResiduals(A, b, x_i);
-    Vector p = r;
-    int k = 0;
-
-    while (!goodSolution(r, tolerance) && k < 10) {
-        Vector q = multiplyMatrixVector(A, p);
-        double alpha_num = dotProduct(r, p);
-        double alpha_denom = dotProduct(q, p);
-        
-        checkDivideByZero(alpha_denom, tolerance);
-        double alpha = alpha_num/alpha_denom; 
-        // cout << "alpha: " << alpha << "\n";
-        x_i = vecSum(1, x_i, alpha, p);
-
-        Vector r_next = vecSum(1, r, -alpha, q);
-
-        if(goodSolution(r_next, tolerance)) break;
-
-        double beta_num = dotProduct(r_next,q);        
-        double beta_denom = dotProduct(p,q);  
-        
-        checkDivideByZero(beta_denom, tolerance);
-        
-        double beta=(beta_num/beta_denom);
-
-        cout <<"k=" << k <<
-            ", |r|=" << euclideanNorm(r) <<
-            ", a=" << alpha <<
-            ", b=" << beta << "\n";
-
-        for (auto c : x_i)
-        {
-            cout << c << " ";
-        }
-        cout << endl;
-        
-        // cout << "beta: " << beta << "\n";
-        p = vecSum(1, r_next, -beta, p);
-        swap(r,r_next);
-        k++;
+    int m = B.size();
+    int k = B[0].size();
+    
+    // Проверка возможности умножения матриц
+    if (A[0].size() != m) {
+        throw invalid_argument("Размеры матриц несовместимы для умножения!");
     }
-    return k;
+    Matrix At = transpose(A);
+
+    // Создание новой матрицы с нулевыми значениями
+    Matrix res(n, Vector(k));
+    
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < k; ++j) {
+            res[i][j] = dotProduct(At[i], B[j]);
+        }         
+    }
+     
+     return res;
 }
 
 
+Vector generateRandomVector(int n, double lower=0, double upper=10)
+{
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> distrib(lower, upper);
+    
+    Vector vec;
+    for (int i = 0; i < n; ++i) {
+        vec.push_back(distrib(gen));
+    }
+
+    return vec;
+}
+Matrix generateRandomMatrix(int rows, int cols=-1, double lower=0, double upper=10)
+{
+    cols = cols <= 0 ? rows : cols;
+    Matrix A;
+    for (int i = 0; i < rows; ++i) {
+        A.push_back(generateRandomVector(cols, lower, upper));
+    }
+    return A;
+}
+Matrix generateRndSymPos(int n)
+{
+    Matrix M = generateRandomMatrix(n);
+    return upperTriang(matMul(M, transpose(M)));
+}
+
+
+int conjugateGradientMethod(const Matrix& A, const Vector& b, double eps, int maxIter=1000)
+{
+    int n = A.size();
+    int k = 0;
+    Vector q;
+    Vector x = Vector(n);
+    Vector r = vecSum(1, b, -1, multiplyMatrixVector(A, x));
+    Vector p = r;
+    double alpha, beta, pq_denom;
+    while (euclideanNorm(r) > eps && k <= maxIter)
+    {
+        q = multiplyMatrixVector(A, p);
+        pq_denom = dotProduct(p, q);
+        alpha = dotProduct(r, p) / pq_denom; 
+        r = vecSum(1, r, -alpha, q);        
+        x = vecSum(1, x, alpha, p);
+        beta = dotProduct(r, q) / pq_denom;
+        p = vecSum(1, r, -beta, p);
+        k++;
+    }
+    return k <= maxIter ? k : -1;
+}
+
+
+void printMatrix(const Matrix& A)
+{
+    int n = A.size();
+	for(int i=0; i<n; ++i){
+		for(int j=0; j<n; ++j)
+			cout << setw(4) << A[i][j] << " ";
+		cout << "\n";
+	}
+    cout << "\n";
+}
+void printSLAE(const Matrix& A, const Vector& x, const Vector& b)
+{
+    int n = A.size();
+    
+    // Выводим заголовки столбцов
+    cout << "A:" << setw(9*n - 1) << "| x:" << setw(10) << "| b:" << '\n';
+
+	// Выводим значения матрицы, вектора x и вектора b
+	for(int i=0; i<n; ++i){
+		for(int j=0; j<n; ++j)
+			cout << setw(4) << A[i][j] << " ";
+		cout<<"| "<< setw(4) << x[i] << " |"<< setw(4) << b[i] << "\n";
+	}
+    cout << "\n";
+}
