@@ -11,5 +11,6 @@ build/
 **/*.csv
 **/*.dat
 **/*.json
+!**/.vscode/*.json
 
 **/.ipynb_checkpoints/
