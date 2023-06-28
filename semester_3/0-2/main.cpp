@@ -5,30 +5,52 @@
 */
 #include "functions.hpp"
 // #include <fstream>
-#include <iomanip>
+// #include <iomanip>
 
-const Vec F1_INTERVAL = {0.5, 3.0};
-const Vec F2_INTERVAL = {-2.5, 2.3};
+const Vec LIMS_1 = {0.5, 2.9};
+const Vec LIMS_2 = {-2.5, 2.3};
+
 
 
 int main()
 {
-    int N = 6; // число узлов интерполяции
+    int N = 3; // Степень полинома Лагранжа
+    double dx = 0.5;
     double (*f)(double, bool) = f1;
+    Vec lims = (f==f1) ? LIMS_1 : LIMS_2;
 
-    Vec interval = (f == f1) ? F1_INTERVAL : F2_INTERVAL;
+    // С использованием полинома Лагранжа
+    Graphic function = calculateGraphic(f, lims[0], lims[1], dx);
+    Graphic derivative = calculateDerivativeNumerical(f, function, N);
 
-    auto [x_grid, y_prescise] = calculateGraphic(f, interval, N);
-
-    double x = 1;
-    while (x <= 2)
-    {
-        double y = lagrange(x, x_grid, y_prescise);
-        cout << fixed << setprecision(1) << x << "  "
-             << scientific << setprecision(2) << fabs(f(x, false) - y)
-             << endl;
-        x += 0.1;
-    }
+    // cout.precision(3);
+    cout << function.N << " значений функции.\n";
+    cout << derivative.N << " значений её производной.\n";
+    cout << " i    x       f(x)    df/dx    dL/dx\n";
     
+    for (int i = 0; i<5; i++){
+        cout << i+1 << "   " << fixed
+            << function.xVals[i] << "   "
+            << function.yVals[i] << "   "
+            << f(function.xVals[i], true) << "   "
+            << derivative.yVals[i] << "   "
+            << endl;
+    }
+    cout << "<...>\n";
+    for (int i= function.N -5; i<function.N ; i++){
+        cout << i+1 << "   " << fixed
+            << function.xVals[i] << "   "
+            << function.yVals[i] << "   "
+            << f(function.xVals[i], true) << "   "
+            << derivative.yVals[i] << "   "
+            << endl;
+    }
+
+    Graphic H = hermiteSpline(function, derivative, 0.1);
+    cout << "Эрмитов сплайн:\nx:                 y:\n";
+    for (int i=0; i<H.N; i++)
+    {
+        cout << i<< " " << H.xVals[i] << " " << H.yVals[i] << endl;
+    }
     return 0;
 }

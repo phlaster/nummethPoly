@@ -4,7 +4,7 @@ SOURCE_DIR=.
 OBJECT_DIR=objects
 BIN_NAME=build
 
-SOURCES=main functions
+SOURCES=main functions algorithms graphicBuild
 
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))
 
