@@ -1,7 +1,7 @@
 #include "functions.hpp"
 
 
-double lagrange(double x, const Vec& x_values, const Vec& y_values)
+double lagrangeTerm(double x, const Vec& x_values, const Vec& y_values)
 {
     double result = 0;
     for (size_t i = 0; i < x_values.size(); ++i) {
@@ -28,7 +28,7 @@ Graphic lagrangeInterpol(const Graphic& func, double left, double right, int N)
     Vec xVals(N), yVals(N);
     for (int i = 0; i < N; ++i) {
         xVals[i] = left + i * dx;
-        yVals[i] = lagrange(xVals[i], func.xVals, func.yVals);
+        yVals[i] = lagrangeTerm(xVals[i], func.xVals, func.yVals);
     }
     return Graphic({xVals, yVals, dx, N});
 }
@@ -80,4 +80,10 @@ Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, double
         } while (t < b);
     }
     return hermite;
+}
+
+Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N)
+{
+    double dt = function.dx / N;
+    return hermiteSpline(function, derivative, dt);
 }
