@@ -8,18 +8,20 @@
 #include <fstream>
 #include <iomanip>
 
-const Vec LIMS_1 = {0.5, 2.9};
-const Vec LIMS_2 = {-2.5, 2.3};
+const Vec LIMS_1 = {0.5, 2.75};
+const Vec LIMS_2 = {-2.4, 2.1};
 
-int task2(double (*f)(double, bool), int N, Str filename)
+int task2(double (*f)(double, bool), int nNodes, int nInterpol, Str filename)
 {
     Vec lims = (f==f1) ? LIMS_1 : LIMS_2; // Подходящие пределы
+    double left = lims[0];
+    double right = lims[1];
 
     // Небольшое количество точных узлов для дальнейших расчётов
-    Graphic exactNodes = tabulateFunction(f, lims[0], lims[1], N);
+    Graphic exactNodes = tabulateFunction(f, left, right, nNodes);
 
     //Точная табуляция для сравнения
-    Graphic exactFunction = tabulateFunction(f, lims[0], lims[1], 10*N);
+    Graphic exactFunction = tabulateFunction(f, left, right, nInterpol);
     
     // Точные производные для сравнения
     Graphic exactDerivative = tabulateDerivative(f, exactFunction);
@@ -27,70 +29,64 @@ int task2(double (*f)(double, bool), int N, Str filename)
     // Производные, взятые численно (в соответствии с заданием)
     Graphic derivativeNum = tabulateDerivativeNum(f, exactNodes);
 
-    // У приближений в 10 раз больше узлов
-    Graphic interpolL = lagrangeInterpol(exactNodes, lims[0], lims[1], 10*N);
-    Graphic interpolH = hermiteSpline(exactNodes, derivativeNum, 10);
+    // У приближений больше узлов
+    Graphic interpolL = lagrangeInterpol(exactNodes, left, right, nInterpol);
+    Graphic interpolH = hermiteSpline(exactNodes, derivativeNum, nInterpol);
 
     ofstream outStream(filename);
     if (!outStream.is_open()) {
         throw std::runtime_error("Не удалось открыть файл для записи!");
     }
-    outStream << "n,x_exact,y_exact,dfdx_exact,Lagrange,errL,Hermit,errH\n";
-    for (int i = 0; i<N*10; i++){
+
+    outStream << "n,nodesX,nodesY,derNumY,x_exact,y_exact,dfdx_exact,LagrangeX,LagrangeY,errL,HermitX,HermitY,errH\n";
+    for (int i = 0; i<nInterpol; i++){
         double abs_errL = fabs(exactFunction.yVals[i] - interpolL.yVals[i]);
         double abs_errH = fabs(exactFunction.yVals[i] - interpolH.yVals[i]);
 
         int decimalsL = abs_errL < 1e-2 ? ceil(-log10(abs_errL)) : 2;
         int decimalsH = abs_errH < 1e-2 ? ceil(-log10(abs_errH)) : 2;
         
-        outStream << i+1 << "," << fixed << setprecision(16)
+        outStream << i+1 << ",";
+        if (i>=nNodes) {
+            outStream << ",,,";
+        }
+        else {
+            outStream
+            << exactNodes.xVals[i] << ","
+            << exactNodes.yVals[i] << ","
+            << derivativeNum.yVals[i] << ",";
+        }
+        
+        outStream 
+            // << fixed << setprecision(16)
             << exactFunction.xVals[i] << ","
             << exactFunction.yVals[i] << ","
             << exactDerivative.yVals[i] << ","
-            << fixed << setprecision(decimalsL)
+            // << fixed << setprecision(decimalsL)
+            << interpolL.xVals[i] << ","
             << interpolL.yVals[i] << ","
-            << scientific << setprecision(1) << abs_errL << ","
-            << fixed << setprecision(decimalsH)
+            // << scientific << setprecision(1) 
+            << abs_errL << ","
+            // << fixed << setprecision(decimalsH)
+            << interpolH.xVals[i] << ","
             << interpolH.yVals[i] << ","
-            << scientific << setprecision(1) << abs_errH << "\n";
+            // << scientific << setprecision(1)
+            << abs_errH << "\n";
     }
+
+
     outStream.close();
     return 0;
 }
 
 
-int main()
+int main(int argc, char *argv[])
 {
-    task2(f1, 6, "f1.csv");
-    task2(f2, 6, "f2.csv");
     
+    int nNodes = stoi(argv[1]);
+    int nInterpol = stoi(argv[2]);
 
-    
-
-    
-    // for (int i = 0; i<5; i++){
-    //     cout << i+1 << "   " << fixed
-    //         << function.xVals[i] << "   "
-    //         << function.yVals[i] << "   "
-    //         << f(function.xVals[i], true) << "   "
-    //         << derivative.yVals[i] << "   "
-    //         << endl;
-    // }
-    // cout << "<...>\n";
-    // for (int i= function.N -5; i<function.N ; i++){
-    //     cout << i+1 << "   " << fixed
-    //         << function.xVals[i] << "   "
-    //         << function.yVals[i] << "   "
-    //         << f(function.xVals[i], true) << "   "
-    //         << derivative.yVals[i] << "   "
-    //         << endl;
-    // }
-
-    // Graphic H = hermiteSpline(function, derivative, 0.1);
-    // cout << "Эрмитов сплайн:\nx:                 y:\n";
-    // for (int i=0; i<H.N; i++)
-    // {
-    //     cout << i<< " " << H.xVals[i] << " " << H.yVals[i] << endl;
-    // }
+    task2(f1, nNodes, nInterpol, "f1.csv");
+    task2(f2, nNodes, nInterpol, "f2.csv");
     return 0;
 }

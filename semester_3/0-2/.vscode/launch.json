@@ -3,13 +3,13 @@
   "configurations": [
     {
       "name": "C/C++ Runner: Debug Session",
-      "type": "lldb",
+      "type": "cppdbg",
       "request": "launch",
       "args": [],
-      "stopAtEntry": true,
+      "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/home/alex/Documents/Git/Hub/nummethpoly/semester_3/0-2",
-      "program": "/home/alex/Documents/Git/Hub/nummethpoly/semester_3/0-2/build.out",
+      "program": "/home/alex/Documents/Git/Hub/nummethpoly/semester_3/0-2/build/Debug/outDebug",
       "MIMode": "lldb",
       "miDebuggerPath": "lldb",
       "setupCommands": [

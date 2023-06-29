@@ -6,13 +6,16 @@ Graphic tabulateFunction(double (*f)(double, bool),
                         double right,
                         int N)
 {
-    double dx = (right - left) / (N - 1);
-    Vec x_grid(N), y_prescise(N);
+    Graphic g;
+    g.N = N;
+    g.dx = (right - left) / (N - 1);
+    g.xVals = Vec(N);
+    g.yVals = Vec(N);
     for (int i = 0; i < N; ++i) {
-        x_grid[i] = left + i * dx;
-        y_prescise[i] = f(x_grid[i], false);
+        g.xVals[i] = left + i * g.dx;
+        g.yVals[i] = f(g.xVals[i], false);
     }
-    return Graphic({x_grid, y_prescise, dx, N});
+    return g;
 }
 
 // Табуляция с выбранным шагом
@@ -27,9 +30,9 @@ Graphic tabulateFunction(double (*f)(double, bool),
 
 
 // Вычисление точек производной
-Graphic tabulateDerivative(double (*f)(double, bool), const Graphic& nodes)
+Graphic tabulateDerivative(double (*f)(double, bool), const Graphic& g)
 {
-    Graphic derivative({nodes.xVals, Vec(), nodes.dx, nodes.N});
+    Graphic derivative({g.xVals, Vec(), g.dx, g.N});
     for (auto x_i : derivative.xVals) 
     {
         derivative.yVals.push_back(f(x_i, true));
@@ -38,41 +41,43 @@ Graphic tabulateDerivative(double (*f)(double, bool), const Graphic& nodes)
 }
 
 // Внутренние производные
-Graphic truncatedTangents(const Graphic& gr)
+Graphic truncatedTangents(const Graphic& g)
 {
-    int n_tg = gr.N-2;
-    Vec tangents(n_tg), x_grid;
-    double dx = gr.dx;
-    for (int i=1; i<=n_tg; i++)
+    Graphic t({Vec(g.N-2), Vec(g.N-2), g.dx, g.N-2});
+    for (int i=0; i<t.N; i++)
     {
-        tangents[i-1] = (gr.yVals[i+1]-gr.yVals[i-1])/(2*dx);
-        x_grid.push_back(gr.xVals[i]);
+        t.xVals[i] = g.xVals[i+1];
+        t.yVals[i] = (g.yVals[i+2]-g.yVals[i])/(g.xVals[i+2]-g.xVals[i]);
     }
-    return Graphic({x_grid, tangents, dx, n_tg});
+    return t;
 }
 
 // Добавляем внешние (по Лагранжу)
-Graphic merge3(double left, const Graphic& main, double right){
-    Vec xVals = {main.xVals[0] - main.dx};
-    xVals.insert(xVals.end(), main.xVals.begin(), main.xVals.end());
-    xVals.push_back(main.xVals[main.N-1] + main.dx);
+Graphic merge3(double left, const Graphic& g, double right){
+    Graphic merged({Vec(g.N+1), Vec(g.N+1), g.dx, g.N+2});
 
-    Vec yVals = {left};
-    yVals.insert(yVals.end(), main.yVals.begin(), main.yVals.end());
-    yVals.push_back(right);
+    merged.xVals[0] = (g.xVals[0] - g.dx);
+    merged.yVals[0] = (left);
 
-    int N = main.N + 2;
-    double dx = main.dx;
+    for (int i=0; i<g.N; i++)
+    {
+        merged.xVals[i+1] = g.xVals[i];
+        merged.yVals[i+1] = g.yVals[i];
+    }
 
-    return Graphic({xVals, yVals, dx, N});
+    merged.xVals.push_back(g.xVals[g.N-1] + g.dx);
+    merged.yVals.push_back(right);
+   
+
+    return merged;
 }
 
 
-Graphic tabulateDerivativeNum(double (*f)(double, bool), const Graphic& main, int LagrangePoints)
+Graphic tabulateDerivativeNum(double (*f)(double, bool), const Graphic& g, int LagrangePoints)
 {
-    double left = main.xVals[0];
-    double right = main.xVals[main.N-1];
-    double dx = main.dx;
+    double left = g.xVals[0];
+    double right = g.xVals[g.N-1];
+    double dx = g.dx;
 
     Graphic leftEnd = tabulateFunction(f, left-(LagrangePoints-1)*dx, left, LagrangePoints);
     double beyondLeft = lagrangeTerm(left-dx, leftEnd.xVals, leftEnd.yVals);
@@ -80,7 +85,7 @@ Graphic tabulateDerivativeNum(double (*f)(double, bool), const Graphic& main, in
     Graphic rightEnd = tabulateFunction(f, right, right+(LagrangePoints-1)*dx, LagrangePoints);
     double beyondRight = lagrangeTerm(right+dx, rightEnd.xVals, rightEnd.yVals);
 
-    Graphic extended = merge3(beyondLeft, main, beyondRight);
+    Graphic extended = merge3(beyondLeft, g, beyondRight);
 
     return truncatedTangents(extended);
 }

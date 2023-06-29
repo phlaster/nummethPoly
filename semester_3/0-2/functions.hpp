@@ -40,9 +40,9 @@ double lagrangeTerm(double x, const Vec& x_i, const Vec& y_i);
 Graphic lagrangeInterpol(const Graphic& func, double left, double right, int N);
 Graphic lagrangeInterpol(const Graphic& func, double left, double right, double dx);
 
-double hermitePolynomial(double a, double b, double fa, double fb, double dfa, double dfb, double t);
-Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, double dt);
-Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N);
 
+double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t);
+Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N);
+Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, double dt);
 
 #endif
