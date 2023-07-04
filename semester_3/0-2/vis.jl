@@ -2,245 +2,113 @@ using Plots, ColorSchemes, LaTeXStrings
 using CSV
 using DataFrames
 
-fname1 = "f1.csv"
+S_common = Dict(
+    :size => (900,650),
+    :background_color => :white,
+
+    :legendfontsize=>13,
+
+    :markerstrokewidth => 0,
+    :grid => true,
+    :gridstyle => :dash,
+    :gridlinewidth =>2,
+    :gridalpha=> 0.1,
+)
+S1_L = merge(S_common, Dict(
+    :xlims => (0.4,2.9),
+    :xticks=>(0.5:0.25:3),
+    :ylims => (1, 6),
+    :legend=>:topleft,
+    :fname=>L"f_1(x) = ctg(x) + x^2"
+))
+S2_L = merge(S_common, Dict(
+    :xlims => (-2.5,2.3),
+    :xticks =>(-2.5:0.25:2),
+    :ylims => (-10, 25),
+    :legend=>:topright,
+    :fname=>L"f_2(x) = x^5 - 3.2x^3 + 2.5x^2 - 7x + 1.5"
+))
+S1_H = merge(S_common, Dict(
+    :xlims => (0.4,2.9),
+    :xticks=>(0.5:0.25:3),
+    :ylims => (-3.8, 7),
+    :legend=>:topleft,
+    :fname=>L"f_1(x) = ctg(x) + x^2"
+))
+S2_H = merge(S_common, Dict(
+    :xlims => (-2.5, 2.2),
+    :xticks =>(-2.5:0.25:2),
+    :ylims => (-18,40),
+    :legend=>:top,
+    :fname=>L"f_2(x) = x^5 - 3.2x^3 + 2.5x^2 - 7x + 1.5"
+))
+
+nNodes = [4, 5, 6, 7, 10, 15, 30, 50]
+fname1 = "CSVs/f1_$(nNodes[end]).csv"
 df1 = CSV.read(fname1, DataFrame)
-fname2 = "f2.csv"
+fname2 = "CSVs/f2_$(nNodes[end]).csv"
 df2 = CSV.read(fname2, DataFrame)
 
-S1 = Dict(
-    :size => (800,500),
-    :xlims => (0.4,2.9),
-    :ylims => (-5.3, 7),
-    :background_color => :white,
-    :legend=>:bottom,
-    # :legendfontsize=>13,
-    
-    :grid => true,
-    :gridalpha=> 0.7,
-
-    :minorgrid => true,
-    :minorgridalpha=> 0.2,
-
-    
-    # :markeralpha=>0.5,
-    :markerstrokewidth => 0,
-
-    # :linewidth => 3,
-    # :linealpha => 0.7,
-    
-    # :palette => ColorSchemes.berlin10[1:3:end],
-    :fname=>L"f_1(x) = ctg(x) + x^2"
-)
-
-S2 = Dict(
-    :size => (800,500),
-    :xlims => (-2.5, 2.2),
-    :ylims => (-18,55),
-    :background_color => :white,
-    :legend=>:top,
-    # :legendfontsize=>13,
-    
-    :grid => true,
-    :gridalpha=> 0.7,
-
-    :minorgrid => true,
-    :minorgridalpha=> 0.2,
-
-    :markerstrokewidth => 0,
-
-    :fname=>L"f_2(x) = x^5 - 3.2x^3 + 2.5x^2 - 7x + 1.5"
-)
-
-function plotall(df, S)
-    p = scatter(
-        df.nodesX, df.nodesY,
-        label="Узлы ($(count(!ismissing, df.nodesX))шт.)",
-        color = :black,
-        markeralpha=0.4,
-        markersize=7.7,
-
-        ; S...
-    )
-    title!(S[:fname])
-    plot!(
-        df.x_exact, df.y_exact,
-        label=L"f(x)"*" точно",
-        color = :black,
-        alpha = 0.45,
-        linewidth = 8,
-        markersize=3,
-        ; S...
-    )
-    plot!(
-        df.x_exact, df.dfdx_exact,
-        label=L"f'(x)"*" точно",
-        color = :green,
-        linewidth=8,
-        alpha=0.25,
-        markersize=3,
-        ; S...
-    )
-    scatter!(
-        df.nodesX, df.derNumY,
-        label=L"f'(x)"*" численно по узлам",
-        color = :green,
-        markersize=6,
-        alpha=.4,
-        ; S...
-    )
-    plot!(
-        df.nodesX, df.derNumY,
-        label=false,
-        line=:dash,
-        color = :green,
-        alpha=.4,
-        ; S...
-    )
-    plot!(
-        df.LagrangeX, df.LagrangeY,
-        label="Полином Лагранжа",
-        color = :blue,
-        line=:dash,
-        linewidth = 4,
-        ; S...
-    )
-    plot!(
-        df.HermitX, df.HermitY,
-        label="Сплайн",
-        color=:red,
-        line=:dashdot,
-        linewidth=2,
-    )
-    
-    plot!(twinx(),
-        df.LagrangeX, df.errL,
-        yaxis = ((1e-16, maximum(df.errH)*1e12), :log),
-        minorgrid=true,
-        yticks=((10. .^(-16:2:0))),
-    )
-
-    return p
-end
-
-
-
-function plotHerm(df, S)
-
-end
-
-
-p1 = plotall(df1, S1)
-
-p2 = plotall(df2, S2)
-
-
-
 function plotLagr(df, S)
-    plot()
-    title!("Интерполяция  "*S[:fname][1:8]*"\$ полиномом Лагранжа", titlefontsize=S[:legendfontsize]+1)
+    p = plot()
+
+    # title!("Интерполяция  "*S[:fname][1:8]*"\$ полиномом Лагранжа",
+    #     titlefontsize=S[:legendfontsize]+1
+    # )
+
     plot!(
         df.x_exact, df.y_exact,
         label=S[:fname],
         color = :blue,
-        # alpha = 0.45,
         line=:dash,
         linewidth = 1,
         markersize=3,
         ; S...
     )
+
     scatter!(
         df.nodesX, df.nodesY,
-        label="Узлы функции: $(count(!ismissing, df.nodesX)) шт.",
+        label=latexstring("Узлы\\ функции:\\ $(count(!ismissing, df.nodesX))\\ шт."),
         color = :black,
         markeralpha=0.8,
         markersize=4,
         ; S...
     )
+
     plot!(
-        df.LagrangeX, df.LagrangeY,
-        label="Полином Лагранжа",
+        df.x_exact, df.LagrangeY,
+        label=L"Полином\ Лагранжа",
         color = :red,
-        line=:dashdot,
-        linewidth = 1,
+        linewidth = 1.2,
         ; S...
     )
-    
+
     plot!(twinx(),
-        df.LagrangeX, df.errL,
-        yaxis = (L"ε", (1e-16, maximum(df.errL)*1e12), :log),
-        xlims = S[:xaxis][2],
-        color=:grey60,
-        minorgrid=true,
-        legend=false,
+        df.x_exact, df.errL,
+        yaxis = (L"\varepsilon", (1e-16, 1e16), :log),
+        xlims = S[:xlims],
+        color=:black,
+        alpha=0.35,
+        label=false,
         yticks=((10. .^(-16:2:0))),
+        ; S...
+        
     )
-    plot!([0],[0],color=:grey60, label=L"ε")
+
+    plot!([0],[0],
+        color=:black,
+        alpha=0.35,
+        label=L"Профиль\ абсолютной\ ошибки\ \varepsilon"
+    )
 end
-S1_L = Dict(
-    :size => (700,500),
-    :xaxis=> (L"x", (0.4,2.9)),
-    :yaxis=> (L"f_1(x)", (1, 6)),
-    # :xlims => (0.4,2.9),
-    # :ylims => (0, 6),
-    :background_color => :white,
-    :legend=>:topleft,
-    :legendfontsize=>11,
-    
-    :grid => true,
-    :gridalpha=> 0.7,
-
-    :minorgrid => true,
-    :minorgridalpha=> 0.2,
-
-    
-    # :markeralpha=>0.5,
-    :markerstrokewidth => 0,
-
-    # :linewidth => 3,
-    # :linealpha => 0.7,
-    
-    # :palette => ColorSchemes.berlin10[1:3:end],
-    :fname=>L"f_1(x) = ctg(x) + x^2"
-)
-plotLagr(df1, S1_L)
-
-S2_L = Dict(
-    :size => (700,500),
-    :xaxis=> (L"x", (-2.5,2.3)),
-    :yaxis=> (L"f_2(x)", (-10, 25)),
-    # :xlims => (0.4,2.9),
-    # :ylims => (0, 6),
-    :background_color => :white,
-    :legend=>:topright,
-    :legendfontsize=>11,
-    
-    :grid => true,
-    :gridalpha=> 0.7,
-
-    :minorgrid => true,
-    :minorgridalpha=> 0.2,
-
-    
-    # :markeralpha=>0.5,
-    :markerstrokewidth => 0,
-
-    # :linewidth => 3,
-    # :linealpha => 0.7,
-    
-    # :palette => ColorSchemes.berlin10[1:3:end],
-    :fname=>L"f_2(x) = x^5 - 3.2x^3 + 2.5x^2 - 7x + 1.5"
-)
-plotLagr(df2, S2_L)
-
 
 function plotHerm(df, S)
     plot()
-    title!("Интерполяция "*S[:fname][1:8]*"\$ сплайном Эрмита", titlefontsize=S[:legendfontsize]+1)
+    # title!("Интерполяция "*S[:fname][1:8]*"\$ сплайном Эрмита", titlefontsize=S[:legendfontsize]+1)
     plot!(
         df.x_exact, df.y_exact,
         label=S[:fname],
         color = :blue,
-        # alpha = 0.45,
         line=:dash,
         linewidth = 1,
         markersize=3,
@@ -248,7 +116,7 @@ function plotHerm(df, S)
     )
     scatter!(
         df.nodesX, df.nodesY,
-        label="Узлы функции: $(count(!ismissing, df.nodesX)) шт.",
+        label=latexstring("Узлы\\ функции:\\ $(count(!ismissing, df.nodesX))\\ шт."),
         color = :black,
         markeralpha=0.8,
         markersize=4,
@@ -256,7 +124,7 @@ function plotHerm(df, S)
     )
     plot!(
         df.x_exact, df.dfdx_exact,
-        label=L"f'(x)"*" точно",
+        label=latexstring("f'_{$(S[:fname][4])}(x)"),
         color = :green,
         linewidth=8,
         alpha=0.25,
@@ -265,7 +133,7 @@ function plotHerm(df, S)
     )
     scatter!(
         df.nodesX, df.derNumY,
-        label=L"f'(x)"*" численно по узлам",
+        label=latexstring("\\mathtt{f'}_{$(S[:fname][4])}(x)"),
         color = :green,
         markersize=6,
         alpha=.4,
@@ -281,77 +149,63 @@ function plotHerm(df, S)
     )
     plot!(
         df.HermitX, df.HermitY,
-        label="Сплайн Эрмита",
+        label=L"Сплайн\ Эрмита",
         color = :red,
-        line=:dash,
-        linewidth = 1,
+        linewidth = 1.2,
         ; S...
     )
     
     plot!(twinx(),
         df.HermitX, df.errH,
-        yaxis = (L"ε", (1e-16, maximum(df.errH)*1e12), :log),
-        xlims = S[:xaxis][2],
-        color=:grey60,
-        minorgrid=true,
-        legend=false,
+        yaxis = (L"\varepsilon", (1e-16, 1e16), :log),
+        color=:black,
+        alpha=0.35,
+        label=false,
         yticks=((10. .^(-16:2:0))),
+        ; S...
     )
-    plot!([0],[0],color=:grey60, label=L"ε")
+    plot!([0],[0],color=:black, alpha=0.35, label=L"Профиль\ абсолютной\ ошибки\ \varepsilon")
 end
 
-S1_H = Dict(
-    :size => (700,500),
-    :xaxis=> (L"x", (0.4,2.9)),
-    :yaxis=> (L"f_1(x)", (-4, 8)),
-    :xlims => (0.4,2.9),
-    :ylims => (-5.3, 7),
-    :background_color => :white,
-    :legend=>:topleft,
-    :legendfontsize=>11,
+function plotsGen(nNodes, S1_L, S2_L, S1_H, S2_H)
+    for n in nNodes
+        filename1 = "CSVs/f1_$n.csv"
+        filename2 = "CSVs/f2_$n.csv"
     
-    :grid => true,
-    :gridalpha=> 0.7,
-
-    :minorgrid => true,
-    :minorgridalpha=> 0.2,
-
+        df1 = CSV.read(filename1, DataFrame)
+        df2 = CSV.read(filename2, DataFrame)
     
-    # :markeralpha=>0.5,
-    :markerstrokewidth => 0,
-
-    # :linewidth => 3,
-    # :linealpha => 0.7,
+        l1 = plotLagr(df1, S1_L)
+        l2 = plotLagr(df2, S2_L)
     
-    # :palette => ColorSchemes.berlin10[1:3:end],
-    :fname=>L"f_1(x) = ctg(x) + x^2"
-)
-plotHerm(df1, S1_H)
-
-S2_H = Dict(
-    :size => (700,500),
-    :xaxis=> (L"x", (-2.5,2.3)),
-    :yaxis=> (L"f_2(x)", (-20, 50)),
-    :xlims => (-2.5, 2.2),
-    :ylims => (-18,55),
-    :background_color => :white,
-    :legend=>:top,
-    :legendfontsize=>8,
+        h1 = plotHerm(df1, S1_H)
+        h2 = plotHerm(df2, S2_H)
     
-    :grid => true,
-    :gridalpha=> 0.7,
-
-    :minorgrid => true,
-    :minorgridalpha=> 0.2,
-
+        savefig(l1, "plots/f1_Lagrange_$n.png")
+        savefig(l2, "plots/f2_Lagrange_$n.png")
     
-    # :markeralpha=>0.5,
-    :markerstrokewidth => 0,
+        savefig(h1, "plots/f1_Hermit_$n.png")
+        savefig(h2, "plots/f2_Hermit_$n.png")
+    end
+end
 
-    # :linewidth => 3,
-    # :linealpha => 0.7,
-    
-    # :palette => ColorSchemes.berlin10[1:3:end],
-    :fname=>L"f_2(x) = x^5 - 3.2x^3 + 2.5x^2 - 7x + 1.5"
-)
-plotHerm(df2, S2_H)
+
+
+# tex = "CSVs/f1_4.csv"
+
+# dtex = CSV.read(tex, DataFrame)
+# plotLagr(dtex, S1_L)
+# plotHerm(dtex, S1_H)
+
+# plotLagr(dtex, S2_L)
+# plotHerm(dtex, S2_H)
+
+# dtex[5:40:end, [5, 6, 9, 12, 13]][[1,3,4,5,6,7,8], :].errH  |> extrema|> print
+# dtex.y_exact[5:40:end]
+
+# dtex.derNumY[1:4] .- dtex.dfdx_exact[[1, 134, 267, 400]]
+
+cheb = "CSVs/f2_Cheb_30.csv"
+chebdf = CSV.read(cheb, DataFrame)
+
+plotLagr(chebdf, S2_L)

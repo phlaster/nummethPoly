@@ -1,5 +1,25 @@
 #include "functions.hpp"
 
+Vec evenlySpacedGrid(double a, double b, int n) {
+    Vec grid(n);
+    double dx = (b - a) / (n - 1);
+    for(int i = 0; i < n; i++) {
+        
+        grid[i] = a + i * dx;
+    }
+    return grid;
+}
+
+Vec chebyshevGrid(double a, double b, int n) {
+    Vec grid(n);
+    for(int i = 0; i < n; i++) {
+        double x_i = (a + b) / 2.0 + ((b - a) / 2.0) * cos((2.0 * i + 1.0) * M_PI / (2.0 * n));
+        grid[i] = x_i;
+    }
+    return grid;
+}
+
+
 // Табуляция с известным количеством точек
 Graphic tabulateFunction(double (*f)(double, bool),
                         double left,
@@ -28,6 +48,20 @@ Graphic tabulateFunction(double (*f)(double, bool),
     return tabulateFunction(f, left, right, N);
 }
 
+// Табуляция на заданной решётке
+Graphic tabulateFunction(double (*f)(double, bool), const Vec& grid)
+{
+    Graphic g;
+    g.N = grid.size();
+    g.xVals = Vec(g.N);
+    g.yVals = Vec(g.N);
+    for (int i=0; i<g.N; i++)
+    {
+        g.xVals[i] = grid[i];
+        g.yVals[i] = f(grid[i], false);
+    }
+    return g;
+}
 
 // Вычисление точек производной
 Graphic tabulateDerivative(double (*f)(double, bool), const Graphic& g)
@@ -79,11 +113,19 @@ Graphic tabulateDerivativeNum(double (*f)(double, bool), const Graphic& g, int L
     double right = g.xVals[g.N-1];
     double dx = g.dx;
 
-    Graphic leftEnd = tabulateFunction(f, left-(LagrangePoints-1)*dx, left, LagrangePoints);
-    double beyondLeft = lagrangeTerm(left-dx, leftEnd.xVals, leftEnd.yVals);
+    // Graphic leftEnd = tabulateFunction(f, left-(LagrangePoints-1)*dx, left, LagrangePoints);
 
-    Graphic rightEnd = tabulateFunction(f, right, right+(LagrangePoints-1)*dx, LagrangePoints);
-    double beyondRight = lagrangeTerm(right+dx, rightEnd.xVals, rightEnd.yVals);
+    double beyondLeft = lagrangeTerm(
+        left-dx,
+        Vec(g.xVals.begin(),g.xVals.begin()+LagrangePoints),
+        Vec(g.yVals.begin(), g.yVals.begin()+LagrangePoints)
+    );
+
+    double beyondRight = lagrangeTerm(
+        right+dx,
+        Vec(g.xVals.end()-LagrangePoints,g.xVals.end()),
+        Vec(g.yVals.end()-LagrangePoints,g.yVals.end())
+    );
 
     Graphic extended = merge3(beyondLeft, g, beyondRight);
 

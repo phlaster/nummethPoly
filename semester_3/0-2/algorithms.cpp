@@ -12,7 +12,7 @@ double lagrangeTerm(double x, const Vec& x_values, const Vec& y_values)
         }
 
         for (size_t j = 0; j < x_values.size(); ++j) {
-            if (j != i && fabs(x - x_values[j]) > DBL_EPSILON) {
+            if (j != i && fabs(x_values[i] - x_values[j]) > DBL_EPSILON) {
                 term *= (x - x_values[j]) / (x_values[i] - x_values[j]);
             }
         }
@@ -21,17 +21,17 @@ double lagrangeTerm(double x, const Vec& x_values, const Vec& y_values)
     return result;
 }
 
-Graphic lagrangeInterpol(const Graphic& g, double left, double right, int N)
-{
-    double dx = (right - left) / (N - 1);
+// Graphic lagrangeInterpol(const Graphic& g, double left, double right, int N)
+// {
+//     double dx = (right - left) / (N - 1);
 
-    Vec xVals(N), yVals(N);
-    for (int i = 0; i < N; ++i) {
-        xVals[i] = left + i * dx;
-        yVals[i] = lagrangeTerm(xVals[i], g.xVals, g.yVals);
-    }
-    return Graphic({xVals, yVals, dx, N});
-}
+//     Vec xVals(N), yVals(N);
+//     for (int i = 0; i < N; ++i) {
+//         xVals[i] = left + i * dx;
+//         yVals[i] = lagrangeTerm(xVals[i], g.xVals, g.yVals);
+//     }
+//     return Graphic({xVals, yVals, dx, N});
+// }
 
 Graphic lagrangeInterpol(const Graphic& g, int N)
 {
@@ -68,34 +68,6 @@ double hermiteTerm(double a, double b, double fa, double fb, double dfa, double 
     // Вычисляем значение полинома Эрмита H(t)
     return fa*h00 + dfa*(b-a)*h10 + fb*h01 + dfb*(b-a)*h11;
 }
-
-// Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, double dt)
-// {
-//     Graphic hermite;
-//     hermite.N = 0;
-//     hermite.dx = dt < function.dx ? dt : function.dx;
-//     for (int i = 0; i < function.N - 1; ++i)
-//     {
-//         double a  = function.xVals[i];    // Начальная точка подотрезка
-//         double b  = function.xVals[i+1];  // Конечная точка подотрезка
-
-//         double fa = function.yVals[i];    // Значение функции в начальной точке
-//         double fb = function.yVals[i+1];  // Значение функции в конечной точке
-
-//         double dfa= derivative.yVals[i];  // Значение производной в начальной точке 
-//         double dfb= derivative.yVals[i+1];// Значение производной в конечной точке 
-
-//         double t = a;
-//         do {
-//             hermite.xVals.push_back(t);
-//             hermite.yVals.push_back(hermiteTerm(a, b, fa, fb, dfa, dfb, t));
-//             hermite.N++;
-//             t += dt;
-//         } while (t < b);
-//     }
-//     return hermite;
-// }
-
 
 Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N)
 {
