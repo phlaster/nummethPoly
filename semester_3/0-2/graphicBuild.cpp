@@ -1,21 +1,18 @@
 #include "functions.hpp"
+#include <random>
 
 Vec evenlySpacedGrid(double a, double b, int n) {
     Vec grid(n);
     double dx = (b - a) / (n - 1);
-    for(int i = 0; i < n; i++) {
-        
+    for(int i = 0; i < n; i++)
         grid[i] = a + i * dx;
-    }
     return grid;
 }
 
 Vec chebyshevGrid(double a, double b, int n) {
     Vec grid(n);
-    for(int i = 0; i < n; i++) {
-        double x_i = (a + b) / 2.0 + ((b - a) / 2.0) * cos((2.0 * i + 1.0) * M_PI / (2.0 * n));
-        grid[i] = x_i;
-    }
+    for(int i = 0; i < n; i++)
+        grid[i] = ((a+b) + (b-a)*cos((i+i+1)*M_PI/(n+n)))/2;
     return grid;
 }
 
@@ -68,9 +65,7 @@ Graphic tabulateDerivative(double (*f)(double, bool), const Graphic& g)
 {
     Graphic derivative({g.xVals, Vec(), g.dx, g.N});
     for (auto x_i : derivative.xVals) 
-    {
         derivative.yVals.push_back(f(x_i, true));
-    }
     return derivative;
 }
 
@@ -101,19 +96,16 @@ Graphic merge3(double left, const Graphic& g, double right){
 
     merged.xVals.push_back(g.xVals[g.N-1] + g.dx);
     merged.yVals.push_back(right);
-   
 
     return merged;
 }
 
 
-Graphic tabulateDerivativeNum(double (*f)(double, bool), const Graphic& g, int LagrangePoints)
+Graphic tabulateDerivativeNum(const Graphic& g, int LagrangePoints)
 {
     double left = g.xVals[0];
     double right = g.xVals[g.N-1];
     double dx = g.dx;
-
-    // Graphic leftEnd = tabulateFunction(f, left-(LagrangePoints-1)*dx, left, LagrangePoints);
 
     double beyondLeft = lagrangeTerm(
         left-dx,
@@ -130,4 +122,15 @@ Graphic tabulateDerivativeNum(double (*f)(double, bool), const Graphic& g, int L
     Graphic extended = merge3(beyondLeft, g, beyondRight);
 
     return truncatedTangents(extended);
+}
+
+Graphic deviate(const Graphic& g, double modulo)
+{
+    random_device randomSource;
+    mt19937 rGen(randomSource());
+    normal_distribution<double> normDist(-modulo, modulo);
+    Graphic dev({g.xVals, Vec(g.N), g.dx, g.N});
+    for (int i=0; i< g.N; i++)
+        dev.yVals[i] = g.yVals[i] + normDist(rGen);
+    return dev;
 }

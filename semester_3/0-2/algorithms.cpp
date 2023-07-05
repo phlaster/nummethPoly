@@ -21,17 +21,6 @@ double lagrangeTerm(double x, const Vec& x_values, const Vec& y_values)
     return result;
 }
 
-// Graphic lagrangeInterpol(const Graphic& g, double left, double right, int N)
-// {
-//     double dx = (right - left) / (N - 1);
-
-//     Vec xVals(N), yVals(N);
-//     for (int i = 0; i < N; ++i) {
-//         xVals[i] = left + i * dx;
-//         yVals[i] = lagrangeTerm(xVals[i], g.xVals, g.yVals);
-//     }
-//     return Graphic({xVals, yVals, dx, N});
-// }
 
 Graphic lagrangeInterpol(const Graphic& g, int N)
 {

@@ -15,9 +15,7 @@ Vec errorProfile(const Vec& v1, const Vec& v2)
     assert(v1.size()==v2.size() && "Для вычисления ошибки векторы должны иметь одинаковую длину!\n");
     Vec errs(v1.size());
     for (int i=0; i< v1.size(); i++)
-    {
         errs[i] = fabs(v1[i]-v2[i]);
-    }
     return errs;
 }
 
@@ -28,7 +26,7 @@ double ctg(double x){
 
 double f1(double x, bool derivative){
     return !derivative ? x*x + ctg(x) :
-                         2*x - 1/pow(sin(x),2);
+                         x+x - 1/pow(sin(x),2);
 }
 
 double f2(double x, bool derivative){
