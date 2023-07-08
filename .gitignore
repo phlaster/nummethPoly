@@ -12,5 +12,9 @@ build/
 **/*.dat
 **/*.json
 
+**/*.png
+**/*.svg
+
 
 **/.ipynb_checkpoints/
+**/.vscode/
