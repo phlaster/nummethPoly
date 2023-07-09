@@ -6,42 +6,29 @@ double lagrangeTerm(double x, const Vec& x_values, const Vec& y_values)
     double result = 0;
     for (size_t i = 0; i < x_values.size(); ++i) {
         double term = y_values[i];
-        
-        if(fabs(x - x_values[i]) < DBL_EPSILON) {
+        if(fabs(x - x_values[i]) < DBL_EPSILON)
             return term;
-        }
-
-        for (size_t j = 0; j < x_values.size(); ++j) {
-            if (j != i && fabs(x_values[i] - x_values[j]) > DBL_EPSILON) {
+        for (size_t j = 0; j < x_values.size(); ++j)
+            if (j != i && fabs(x_values[i] - x_values[j]) > DBL_EPSILON)
                 term *= (x - x_values[j]) / (x_values[i] - x_values[j]);
-            }
-        }
         result += term;
     }
     return result;
 }
 
 
-Graphic lagrangeInterpol(const Graphic& g, int N)
+Graphic lagrangeInterpol(const Graphic& g, int nInterpol)
 {
     double left = g.xVals[0];
     double right = g.xVals[g.N-1];
-    double dx = (right - left) / (N-1);
-    Graphic lagrange({Vec(N), Vec(N), dx, N});
-    for (int i = 0; i < N; ++i) {
+    double dx = (right - left) / (nInterpol-1);
+    Graphic lagrange({Vec(nInterpol), Vec(nInterpol), dx, nInterpol});
+    for (int i = 0; i < nInterpol; ++i) {
         lagrange.xVals[i] = left + i * dx;
         lagrange.yVals[i] = lagrangeTerm(lagrange.xVals[i], g.xVals, g.yVals);
     }
     return lagrange;
 }
-
-
-Graphic lagrangeInterpol(const Graphic& g, double left, double right, double dx)
-{
-    int N = ceil((right - left) / dx);
-    return lagrangeInterpol(g, left, right, N);
-}
-
 
 
 double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t) {
@@ -86,11 +73,4 @@ Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N)
             i_F++;
     }
     return hermite;
-}
-
-
-Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, double dt)
-{
-    int N = ceil((function.xVals[function.N-1] - function.xVals[0]) / dt);
-    return hermiteSpline(function, derivative, N);
 }

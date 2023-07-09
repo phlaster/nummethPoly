@@ -7,7 +7,6 @@ Str Buffer::doubleToString(double value, int digits) {
 }
 
 void Buffer::append(const Str& str) {
-    lock_guard<std::mutex> lock(mutex);
     this->data += str;
 }
 

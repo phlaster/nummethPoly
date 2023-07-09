@@ -1,4 +1,5 @@
 #include "functions.hpp"
+#include <cstddef>
 
 double mean(const Vec& v)
 {
@@ -9,23 +10,19 @@ double mean(const Vec& v)
     return sum/double(N);
 }
 
-// Ошибка вектора -- средняя абсолютная ошибка его компонентов
+// Профиль ошибки: абсолютные ошибки каждого компонента
 Vec errorProfile(const Vec& v1, const Vec& v2)
 {
     assert(v1.size()==v2.size() && "Для вычисления ошибки векторы должны иметь одинаковую длину!\n");
     Vec errs(v1.size());
-    for (int i=0; i< v1.size(); i++)
+    for (size_t i=0; i<v1.size(); i++)
         errs[i] = fabs(v1[i]-v2[i]);
     return errs;
 }
 
 
-double ctg(double x){
-	return cos(x)/sin(x);
-}
-
 double f1(double x, bool derivative){
-    return !derivative ? x*x + ctg(x) :
+    return !derivative ? x*x + cos(x)/sin(x) :
                          x+x - 1/pow(sin(x),2);
 }
 

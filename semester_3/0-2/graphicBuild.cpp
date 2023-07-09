@@ -1,7 +1,8 @@
 #include "functions.hpp"
 #include <random>
 
-Vec evenlySpacedGrid(double a, double b, int n) {
+// Равномерная решётка
+Vec uniformGrid(double a, double b, int n) {
     Vec grid(n);
     double dx = (b - a) / (n - 1);
     for(int i = 0; i < n; i++)
@@ -9,41 +10,15 @@ Vec evenlySpacedGrid(double a, double b, int n) {
     return grid;
 }
 
+// Решётка Чебышева 
 Vec chebyshevGrid(double a, double b, int n) {
     Vec grid(n);
     for(int i = 0; i < n; i++)
-        grid[i] = ((a+b) + (b-a)*cos((i+i+1)*M_PI/(n+n)))/2;
+        // grid[i-1] = 0.5*(a+b) + 0.5*(b-a)*cos(M_PI*(i-0.5)/n);
+        grid[i] = 0.5*(a+b) + 0.5*(b-a)*cos(M_PI*i/n);
     return grid;
 }
 
-
-// Табуляция с известным количеством точек
-Graphic tabulateFunction(double (*f)(double, bool),
-                        double left,
-                        double right,
-                        int N)
-{
-    Graphic g;
-    g.N = N;
-    g.dx = (right - left) / (N - 1);
-    g.xVals = Vec(N);
-    g.yVals = Vec(N);
-    for (int i = 0; i < N; ++i) {
-        g.xVals[i] = left + i * g.dx;
-        g.yVals[i] = f(g.xVals[i], false);
-    }
-    return g;
-}
-
-// Табуляция с выбранным шагом
-Graphic tabulateFunction(double (*f)(double, bool),
-                        double left,
-                        double right,
-                        double dx)
-{
-    int N = ceil((right - left) / dx);
-    return tabulateFunction(f, left, right, N);
-}
 
 // Табуляция на заданной решётке
 Graphic tabulateFunction(double (*f)(double, bool), const Vec& grid)
@@ -128,7 +103,7 @@ Graphic deviate(const Graphic& g, double modulo)
 {
     random_device randomSource;
     mt19937 rGen(randomSource());
-    normal_distribution<double> normDist(-modulo, modulo);
+    normal_distribution<double> normDist(0, modulo);
     Graphic dev({g.xVals, Vec(g.N), g.dx, g.N});
     for (int i=0; i< g.N; i++)
         dev.yVals[i] = g.yVals[i] + normDist(rGen);
