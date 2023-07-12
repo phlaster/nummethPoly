@@ -52,9 +52,8 @@ Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N)
     double dt = (finish - start) / (N-1);
     Graphic hermite({Vec(N), Vec(N), dt, N});
     double t = start;
-    int i_H = 0;
     int i_F = 0;
-    while (t<=finish || i_H<N){
+    for (int i_H=0; i_H<N; i_H++){
         double a  = function.xVals[i_F];
         double b  = function.xVals[i_F+1];
 
@@ -67,8 +66,7 @@ Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N)
         hermite.xVals[i_H] = t;
         hermite.yVals[i_H] = hermiteTerm(a, b, fa, fb, dfa, dfb, t);
 
-        t += dt;
-        i_H++;
+        t = start + dt * (i_H+1);
         if (t>b)
             i_F++;
     }
