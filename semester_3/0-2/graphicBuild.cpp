@@ -27,6 +27,7 @@ Graphic tabulateFunction(double (*f)(double, bool), const Vec& grid)
     g.N = grid.size();
     g.xVals = Vec(g.N);
     g.yVals = Vec(g.N);
+    g.dx = fabs(grid[grid.size()-1] - grid[0])/(g.N-1);
     for (int i=0; i<g.N; i++)
     {
         g.xVals[i] = grid[i];
@@ -84,14 +85,14 @@ Graphic tabulateDerivativeNum(const Graphic& g, int LagrangePoints)
 
     double beyondLeft = lagrangeTerm(
         left-dx,
-        Vec(g.xVals.begin(),g.xVals.begin()+LagrangePoints),
+        Vec(g.xVals.begin(), g.xVals.begin()+LagrangePoints),
         Vec(g.yVals.begin(), g.yVals.begin()+LagrangePoints)
     );
 
     double beyondRight = lagrangeTerm(
         right+dx,
-        Vec(g.xVals.end()-LagrangePoints,g.xVals.end()),
-        Vec(g.yVals.end()-LagrangePoints,g.yVals.end())
+        Vec(g.xVals.end()-LagrangePoints, g.xVals.end()),
+        Vec(g.yVals.end()-LagrangePoints, g.yVals.end())
     );
 
     Graphic extended = merge3(beyondLeft, g, beyondRight);
