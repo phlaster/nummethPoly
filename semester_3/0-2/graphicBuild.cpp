@@ -11,12 +11,14 @@ Vec uniformGrid(double a, double b, int n) {
 }
 
 // Решётка Чебышева 
-Vec chebyshevGrid(double a, double b, int n) {
-    Vec grid(n);
-    for(int i = 0; i < n; i++)
-        // grid[i-1] = 0.5*(a+b) + 0.5*(b-a)*cos(M_PI*(i-0.5)/n);
-        grid[i] = 0.5*(a+b) + 0.5*(b-a)*cos(M_PI*i/n);
-    return grid;
+Vec chebyshevGrid(double a, double b, int n)
+{
+  Vec grid(n);
+  for(int k = 0; k < n; k++) {
+    double t = cos(M_PI * (k + 0.5) / n); 
+    grid[n-k-1] = (a+b)/2 + t*(b-a)/2;
+  }
+  return grid;
 }
 
 
@@ -25,12 +27,11 @@ Graphic tabulateFunction(double (*f)(double, bool), const Vec& grid)
 {
     Graphic g;
     g.N = grid.size();
-    g.xVals = Vec(g.N);
+    g.xVals = grid;
     g.yVals = Vec(g.N);
     g.dx = fabs(grid[grid.size()-1] - grid[0])/(g.N-1);
     for (int i=0; i<g.N; i++)
     {
-        g.xVals[i] = grid[i];
         g.yVals[i] = f(grid[i], false);
     }
     return g;
