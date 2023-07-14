@@ -48,7 +48,7 @@ Graphic tabulateDerivative(double (*f)(double, bool), const Graphic& nodes);
 Graphic tabulateDerivativeNum(const Graphic& main, int LagrangePoints=3);
 
 double lagrangeTerm(double x, const Vec& x_i, const Vec& y_i);
-Graphic lagrangeInterpol(const Graphic& exactNodes, int N);
+Graphic lagrangeInterpol(const Graphic& nodes, const Vec& grid);
 
 double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t);
 Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N);

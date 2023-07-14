@@ -29,7 +29,7 @@ void task2_3(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMul
         Graphic uniformTab_Der = tabulateDerivative(f, uniformTab);
         
         // Вычисляем полином Лагранжа и сплайн Эрмита
-        Graphic uniformLagr = lagrangeInterpol(uniformNodes, nInterpol);
+        Graphic uniformLagr = lagrangeInterpol(uniformNodes, uniformTab_grid);
         Graphic uniformHerm = hermiteSpline(uniformNodes, uniformNodes_DerNum, nInterpol);
 
         // Вычисляем профили ошибок для интерполяций
@@ -79,7 +79,7 @@ void task4(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult,
         // Табулируем значение функции по подробной решётке
         Graphic uniformTab = tabulateFunction(f, uniformTab_grid);
         // Вычисляем полином Лагранжа на подробной решётке
-        Graphic uniformLagr = lagrangeInterpol(uniformNodes, nInterpol);
+        Graphic uniformLagr = lagrangeInterpol(uniformNodes, uniformTab_grid);
 
 
         // Задаем решётки Чебышева для узлов и для подробно табулированной функции
@@ -87,7 +87,7 @@ void task4(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult,
         // Вычисляем значение функции в узлах решётки Чебышева
         Graphic chebNodes = tabulateFunction(f, chebNodes_grid);
         // Вычисляем полином Лагранжа на подробной решётке Чебышева
-        Graphic chebLagr = lagrangeInterpol(chebNodes, nInterpol);
+        Graphic chebLagr = lagrangeInterpol(chebNodes, uniformTab_grid);
         Graphic chebLagrTab = tabulateFunction(f, chebLagr.xVals);
 
 
@@ -146,9 +146,9 @@ void task5(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult,
         Graphic uniformNodes_Noize_DerNum = tabulateDerivativeNum(uniformNodes_Noize);
 
         // Интерполируем на решётках с шумом
-        Graphic uniformLagr_Noize = lagrangeInterpol(uniformNodes_Noize, nInterpol);
+        Graphic uniformLagr_Noize = lagrangeInterpol(uniformNodes_Noize, uniformTab_grid);
         Graphic uniformHerm_Noize = hermiteSpline(uniformNodes_Noize, uniformNodes_Noize_DerNum, nInterpol);
-        Graphic chebLagr_Noize = lagrangeInterpol(chebNodes_Noize, nInterpol);
+        Graphic chebLagr_Noize = lagrangeInterpol(chebNodes_Noize, uniformTab_grid);
 
         // Табулируем точные значения функции и производной по подробной решётке для вычисления ошибок
         Graphic uniformTab = tabulateFunction(f, uniformTab_grid);

@@ -16,20 +16,18 @@ double lagrangeTerm(double x, const Vec& x_values, const Vec& y_values)
     return result;
 }
 
-
-Graphic lagrangeInterpol(const Graphic& g, int nInterpol)
+Graphic lagrangeInterpol(const Graphic& nodes, const Vec& grid)
 {
-    double left = g.xVals[0];
-    double right = g.xVals[g.N-1];
+    int nInterpol = grid.size();
+    double left = grid[0];
+    double right = grid[nInterpol-1];
     double dx = (right - left) / (nInterpol-1);
-    Graphic lagrange({Vec(nInterpol), Vec(nInterpol), dx, nInterpol});
+    Graphic lagrange({grid, Vec(nInterpol), dx, nInterpol});
     for (int i = 0; i < nInterpol; ++i) {
-        lagrange.xVals[i] = left + i * dx;
-        lagrange.yVals[i] = lagrangeTerm(lagrange.xVals[i], g.xVals, g.yVals);
+        lagrange.yVals[i] = lagrangeTerm(grid[i], nodes.xVals, nodes.yVals);
     }
     return lagrange;
 }
-
 
 double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t) {
     // Вычисляем нормализованное значение t на отрезке [0, 1]
