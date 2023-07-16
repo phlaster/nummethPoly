@@ -178,7 +178,7 @@ void write5(
         << "x_uniformNodes_Noize,y_uniformNodes_Noize,y_uniformNodes_Noize_DerNum,"
         << "x_chebNodes_Noize,y_chebNodes_Noize,"
 
-        << "x_uniformTab,y_uniformTab,y_uniformTab_Der"
+        << "x_uniformTab,y_uniformTab,y_uniformTab_Der,"
         << "y_uniformLagr_Noize,y_uniformHerm_Noize,y_chebLagr_Noize,"
         << "err_uniformLagr_Noize,err_uniformHerm_Noize,err_chebLagr_Noize\n";
     for (int i = 0; i<nInterpol; i++){
