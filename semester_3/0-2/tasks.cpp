@@ -117,7 +117,7 @@ void task4(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult,
     }
 }
 
-void task5(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, double distModulo, Vec lims, Str threadname, Buffer& buffer)
+void task5(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, double deviation, Vec lims, Str threadname, Buffer& buffer)
 {
     double left = lims[0];
     double right = lims[1];
@@ -138,9 +138,12 @@ void task5(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult,
         Graphic uniformNodes = tabulateFunction(f, uniformNodes_grid);
         Graphic chebNodes = tabulateFunction(f, chebNodes_grid);
 
+        double devUni = amplitude(uniformNodes.yVals) * deviation;
+        double devCheb = amplitude(chebNodes.yVals) * deviation;
+
         // Добавляем шум в узлах
-        Graphic uniformNodes_Noize = deviate(uniformNodes, distModulo);
-        Graphic chebNodes_Noize = deviate(chebNodes, distModulo);
+        Graphic uniformNodes_Noize = deviate(uniformNodes, devUni);
+        Graphic chebNodes_Noize = deviate(chebNodes, devCheb);
 
         // Вычисляем методом секущих производные в узлах с шумом
         Graphic uniformNodes_Noize_DerNum = tabulateDerivativeNum(uniformNodes_Noize);
@@ -167,7 +170,7 @@ void task5(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult,
         buffer.append(mean(err_uniformHerm_Noize), true);
 
         write5(
-            "CSVs/task5_" + threadname + "_" + to_string(nNodes)+"_"+to_string(distModulo)+"_.csv",
+            "CSVs/task5_" + threadname + "_" + to_string(nNodes)+"_"+to_string(deviation)+"_.csv",
             uniformNodes_Noize,
             chebNodes_Noize,
             uniformNodes_Noize_DerNum,

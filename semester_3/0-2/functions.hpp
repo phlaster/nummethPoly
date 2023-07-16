@@ -55,10 +55,11 @@ Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N)
 
 Graphic deviate(const Graphic& g, double modulo=0.2);
 
+double amplitude(Vec vector);
 
 void task2_3(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, Vec lims, Str threadname, Buffer& buffer);
 void task4(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, Vec lims, Str threadname, Buffer& buffer);
-void task5(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, double distModulo, Vec lims, Str threadname, Buffer& buffer);
+void task5(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, double deviation, Vec lims, Str threadname, Buffer& buffer);
 
 void write2_3(
     const Str& filename,
@@ -106,7 +107,5 @@ void write5(
     const Vec& err_uniformHerm_Noize,
     const Vec& err_chebLagr_Noize
 );
-
-
 
 #endif

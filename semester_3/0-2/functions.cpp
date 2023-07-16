@@ -1,4 +1,5 @@
 #include "functions.hpp"
+#include <cmath>
 #include <cstddef>
 
 double mean(const Vec& v)
@@ -8,6 +9,18 @@ double mean(const Vec& v)
     for (int i=0; i<N; i++)
         sum += v[i];
     return sum/double(N);
+}
+
+double amplitude(Vec vector)
+{
+    double min = INFINITY;
+    double max = -INFINITY;
+    for (auto n: vector)
+    {
+        if (n > max) max = n;
+        if (n < min) min = n;
+    }
+    return (max - min)/2.0;
 }
 
 // Профиль ошибки: абсолютные ошибки каждого компонента
