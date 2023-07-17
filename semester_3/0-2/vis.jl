@@ -385,7 +385,8 @@ function plotNoizeProgression(df1, df2)
         df1.dev,
         [df1.err_LagrUniform_Noize df2.err_LagrUniform_Noize df1.err_Herm_Noize df2.err_Herm_Noize df1.err_LagrCheb_Noize df2.err_LagrCheb_Noize],
         label=[L"L_U(f_1)" L"L_U(f_2)" L"H_U(f_1)" L"H_U(f_2)" L"L_T(f_1)" L"L_T(f_2)"],
-        color=[vik25[3] vik25[22] vik25[8] vik25[17] vik25[10] vik25[15]],
+        ls=[:solid :solid :solid :solid :dot :dot],
+        color=[:royalblue3 :red3 :steelblue3 :tomato2 :skyblue :lightsalmon],
         linewidth=4,
     )
 end
@@ -526,5 +527,3 @@ if abspath(PROGRAM_FILE) == @__FILE__
     p29 = plotNoizeProgression(df1, df2)
     savefig(p29, apath * "pic29.png")
 end
-
-

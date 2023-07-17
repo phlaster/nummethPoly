@@ -77,7 +77,7 @@ Graphic merge3(double left, const Graphic& g, double right){
     return merged;
 }
 
-
+// Взятие производных методом секущих
 Graphic tabulateDerivativeNum(const Graphic& g, int LagrangePoints)
 {
     double left = g.xVals[0];
@@ -101,11 +101,12 @@ Graphic tabulateDerivativeNum(const Graphic& g, int LagrangePoints)
     return truncatedTangents(extended);
 }
 
-Graphic deviate(const Graphic& g, double modulo)
+// Внесение шума в график
+Graphic deviate(const Graphic& g, double sigma)
 {
     random_device randomSource;
     mt19937 rGen(randomSource());
-    normal_distribution<double> normDist(0, modulo);
+    normal_distribution<double> normDist(0, sigma);
     Graphic dev({g.xVals, Vec(g.N), g.dx, g.N});
     for (int i=0; i< g.N; i++)
         dev.yVals[i] = g.yVals[i] + normDist(rGen);

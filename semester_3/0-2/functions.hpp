@@ -36,14 +36,13 @@ private:
 double f1(double x, bool derivative=false);
 double f2(double x, bool derivative=false);
 double mean(const Vec& v);
+double amplitude(Vec vector);
 
 Vec chebyshevGrid(double a, double b, int n);
 Vec uniformGrid(double a, double b, int n);
-
 Vec errorProfile(const Vec& v1, const Vec& v2);
 
 Graphic tabulateFunction(double (*f)(double, bool), const Vec& grid);
-
 Graphic tabulateDerivative(double (*f)(double, bool), const Graphic& nodes);
 Graphic tabulateDerivativeNum(const Graphic& main, int LagrangePoints=3);
 
@@ -53,9 +52,8 @@ Graphic lagrangeInterpol(const Graphic& nodes, const Vec& grid);
 double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t);
 Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N);
 
-Graphic deviate(const Graphic& g, double modulo=0.2);
+Graphic deviate(const Graphic& g, double sigma);
 
-double amplitude(Vec vector);
 
 void task2_3(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, Vec lims, Str threadname, Buffer& buffer);
 void task4(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, Vec lims, Str threadname, Buffer& buffer);
