@@ -1,6 +1,5 @@
-using Plots, ColorSchemes, LaTeXStrings
+using Plots, LaTeXStrings
 using Plots: plot, plot!
-using ColorSchemes: vik25
 using CSV
 using DataFrames
 
