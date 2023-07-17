@@ -1,4 +1,4 @@
-CC=clang++
+CC=g++ #clang++
 CFLAGS_DBG=-g3 -O0 -Wall -Wextra --std=c++17
 CFLAGS=-O3 --std=c++17
 SOURCE_DIR=.
