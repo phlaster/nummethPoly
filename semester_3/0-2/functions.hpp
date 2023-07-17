@@ -60,6 +60,7 @@ double amplitude(Vec vector);
 void task2_3(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, Vec lims, Str threadname, Buffer& buffer);
 void task4(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, Vec lims, Str threadname, Buffer& buffer);
 void task5(double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, double deviation, Vec lims, Str threadname, Buffer& buffer);
+void task5progression(double (*f)(double, bool), int nNodes, int coeffMult, Vec lims, Str threadname, Buffer& buffer);
 
 void write2_3(
     const Str& filename,

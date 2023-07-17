@@ -10,7 +10,7 @@ const Vec LIMS_1 = {0.5, 2.75};
 const Vec LIMS_2 = {-2.4, 2.1};
 
 
-void do_task(int numer, double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, double distModulo=0)
+void do_task(int numer, double (*f)(double, bool), int minNodes, int maxNodes, int coeffMult, double deviation=0)
 {
     Vec lims;
     Str threadname;
@@ -43,8 +43,14 @@ void do_task(int numer, double (*f)(double, bool), int minNodes, int maxNodes, i
 
         case 5:
         {
-            task5(f, minNodes, maxNodes, coeffMult, distModulo, lims, threadname, ref(buffer));
-            summaryName += "5_"+threadname+"_summ_"+to_string(minNodes)+"-"+to_string(maxNodes)+"_"+to_string(distModulo);
+            task5(f, minNodes, maxNodes, coeffMult, deviation, lims, threadname, ref(buffer));
+            summaryName += "5_"+threadname+"_summ_"+to_string(minNodes)+"-"+to_string(maxNodes)+"_"+to_string(deviation);
+            break; 
+        }
+        case 6:
+        {
+            task5progression(f, maxNodes, coeffMult, lims, threadname, ref(buffer));
+            summaryName += "5_"+threadname+"_prog_"+to_string(maxNodes)+"_"+to_string(deviation);
             break; 
         }
         default:
@@ -68,7 +74,7 @@ int main(int argc, char *argv[])
     assert(minNodes <= maxNodes && "Сначала нижняя граница!\n");
     thread t1, t2;
 
-    for (int i=3; i<=5; i++)
+    for (int i=3; i<=6; i++)
     {
         t1 = thread(do_task, i, f1, minNodes, maxNodes, interpolCoeff, distModulo);
         t2 = thread(do_task, i, f2, minNodes, maxNodes, interpolCoeff, distModulo);
