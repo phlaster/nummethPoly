@@ -241,20 +241,6 @@ double det(const Mtr& M) {
     return determinant;
 }
 
-// double det(const Mtr& M) {
-//     if (!issquare(M))
-//         throw invalid_argument("Определитель считают только для квадратных матриц!");
-
-//     size_t n = M.size();
-//     if (n == 1) return M[0][0];
-//     auto [L, U, p] = LU_decomposition(M);
-//     double D = 1.;
-//     for (size_t i=0; i<n; i++)
-//         D *= U[i][i] * L[i][i];
-
-//     return D;
-// }
-
 double cond(const Mtr& M){
     return euclideanNorm(M) * euclideanNorm(inv(M));
 }
