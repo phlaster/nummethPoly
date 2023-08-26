@@ -323,65 +323,6 @@ pair<Mtr, Mtr> _separateLU(const Mtr& M){
     return make_pair(L, U);
 }
 
-LU_result LU_decomposition(Mtr M) {
-    int n = M.size();
-    
-    vector<int> perm;
-    for (int i = 0; i < n; i++)
-        perm.push_back(i);
-    
-    // По каждому столбцу
-    for (int k = 0; k < n; k++) {
-        double maxVal = abs(M[k][k]);
-        int maxRow = k;
-
-        // Найти максимальное значение и соответствующий индекс строки
-        // для опорного элемента в столбце k, сравнивая абсолютные
-        // значения элементов ниже опорного элемента.
-        for (int i = k + 1; i < n; i++) 
-            if (abs(M[i][k]) > maxVal) {
-                maxVal = abs(M[i][k]);
-                maxRow = i;
-            }
-        
-        if (M[k][k] == 0){
-            cerr << "Невозможно диагонализовать матрицу! Встречен нулевой элемент. Пропуск шага.\n";
-            continue;
-        }
-        
-        // Поменять местами текущую строку на строку, содержащую
-        // максимальное значение, как в матрице M, так и в векторе
-        // перестановки perm. Этот шаг гарантирует, что сводный элемент
-        // будет иметь наибольшее значение в своем столбце.
-        if (maxRow != k) {
-            // Поменять строки в M
-            for (int j = 0; j < n; j++)
-                swap(M[k][j], M[maxRow][j]);
-            // Обновить вектор перестановок
-            int temp = perm[k];
-            perm[k] = perm[maxRow];
-            perm[maxRow] = temp;
-        }
-        
-        // Шаг исключения, чтобы исключить элементы ниже опорного элемента в столбце k.
-        for (int i = k + 1; i < n; i++) {
-
-            // Для каждой строки i ниже опорного элемента вычислить множитель, разделив
-            // каждый элемент на опорный элемент.
-            M[i][k] /= M[k][k];
-
-            // Обновить элементы строки i, вычитая произведение множителя на
-            // соответствующий элемент в опорной строке.
-            for (int j = k + 1; j < n; j++)
-                M[i][j] -= M[i][k] * M[k][j];   
-        }
-    }
-    auto [L, U] = _separateLU(M);
-
-    return {L, U, perm};
-}
-
-
 Mtr apply_row_permutation(const Mtr& M, const vector<int>& perm){
     int n = M.size();
     Mtr permuted(n, Vec(n));
@@ -405,7 +346,7 @@ Vec solveLinearEquation(const Mtr& L,
             sum += L[i][j] * y[j];
         y[i] = b[permutation[i]] - sum;
     }
-    
+
     // Обратная подстановка (Ux = y)
     Vec x(n, 0.0);
     for (int i = n - 1; i >= 0; --i) {
@@ -413,8 +354,8 @@ Vec solveLinearEquation(const Mtr& L,
         for (int j= i + 1 ; j < n ; ++j)
             sum += U[i][j] * x[j];
         x[i] =(y[i]-sum)/U[i][i];
-     }
-     return x;
+    }
+    return x;
 }
 
 Vec residual(const Mtr& A, const Vec& x, const Vec& b) {
@@ -427,4 +368,60 @@ Vec residual(const Mtr& A, const Vec& x, const Vec& b) {
         residual[i] -= b[i];
     }
     return residual;
+}
+
+// Функция для поиска максимального элемента в столбце и его строки
+int _findMaxElementRow(const Mtr& M, int startRow, int mtr_size) {
+    double maxVal = abs(M[startRow][startRow]);
+    int maxRow = startRow;
+    
+    for (int i = startRow + 1; i < mtr_size; i++) {
+        if (abs(M[i][startRow]) > maxVal) {
+            maxVal = abs(M[i][startRow]);
+            maxRow = i;
+        }
+    }
+    return maxRow;
+}
+Mtr _eliminationStepForColumn(const Mtr& M, int col_num) {
+    int mtr_size = M.size();
+    Mtr result = M;
+
+    for (int row_num = col_num + 1; row_num < mtr_size; ++row_num) {
+        result[row_num][col_num] /= result[col_num][col_num];
+        for (int j = col_num + 1; j < mtr_size; ++j) {
+            result[row_num][j] -= result[row_num][col_num] * result[col_num][j];
+        }
+    }
+    return result;
+}
+
+// Основная функция для разложения матрицы на L и U с перестановкой элементов
+LU_result LU_decomposition(Mtr M) {
+    int mtr_size = M.size();
+
+    // Вектор для хранения текущей перестановки элементов
+    vector<int> perm;
+
+    // Инициализация начальной перестановки [0,1,...,(n-1)]
+    for (int i = 0; i < mtr_size; i++)
+        perm.push_back(i);
+
+
+    for (int col_num=0; col_num<mtr_size; ++col_num){
+        int maxRow = _findMaxElementRow(M,col_num,mtr_size);
+        if (M[col_num][col_num] == 0){
+            cerr << "Невозможно диагонализовать матрицу! Нулевой элемент на диагонали. Пропуск шага.\n";
+            continue;
+        }
+
+        if(maxRow!=col_num){
+            for(int j=col_num;j<mtr_size;++j)
+                swap(M[col_num][j], M[maxRow][j]);
+            swap(perm[col_num], perm[maxRow]);
+        }
+        M = _eliminationStepForColumn(M, col_num);
+    }
+    auto [L, U] = _separateLU(M);
+    return {L, U, perm};
 }

@@ -1,6 +1,5 @@
 // Решение СЛАУ прямыми методами
 #include "LinearAlgebra.hpp"
-#include <algorithm>
 
 int main() {
     size_t n;
