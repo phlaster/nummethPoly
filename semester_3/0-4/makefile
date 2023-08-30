@@ -6,10 +6,13 @@ OBJECT_DIR=objects
 DBG_NAME=debug
 BIN_NAME=build
 SAMPLE_NAME=sample
+TASK_3_NAME=task3
 
 SOURCES=main LinearAlgebra Printers
 SAMPLE_SOURSES=report_sample LinearAlgebra Printers
+TASK_3_SOURCES=task_3 LinearAlgebra Printers
 
+TASK_3_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(TASK_3_SOURCES)))
 SAMPLE_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SAMPLE_SOURSES)))
 DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))
@@ -28,6 +31,10 @@ $(OBJECT_DIR):
 
 sample:
 $(SAMPLE_NAME): $(SAMPLE_OBJECTS)
+	$(CC) $(CFLAGS) $^ -o $@.out
+
+task3:
+$(TASK_3_NAME): $(TASK_3_OBJECTS)
 	$(CC) $(CFLAGS) $^ -o $@.out
 
 
