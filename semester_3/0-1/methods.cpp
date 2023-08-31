@@ -3,19 +3,20 @@
 ans bisection(double (*f)(double), double exact, Vec lims, double eps){
     double a = lims[0];
     double b = lims[1];
-    double c = (a+b)/2;
+    double c;
 
     int nSteps = 0; 
-    while (abs(exact-c) > eps)
+    for(;;)
     {
+        c = (a+b)/2;
+        if (fabs(a-c) <= eps)
+            return ans({c, fabs(a-c), nSteps});
         if (sign(f(a)) != sign(f(c)))
             b = c;
         else
             a = c;
-        c = (a+b)/2;
         nSteps++;
     }
-    return ans({c, abs(exact-c),nSteps});
 }
 
 ans newton(double (*f)(double), double exact, Vec lims, double eps){
@@ -40,14 +41,18 @@ ans newton(double (*f)(double), double exact, Vec lims, double eps){
 
     // Выбор начального приближения из условия сходимости метода
     // (равенство значения и 2-й производной в точке)
-    // double x0 = sign(f(a))==sign(fd2(f)(a)) ? a : b;
-    double x0 = a;
-
+    double x0 = sign(f(a))==sign(fd2(f)(a)) ? a : b;
     int nSteps = 0; 
-    while (abs(exact-x0) > eps)
+    double x_n;
+
+    for (;;)
     {
-        x0 -= f(x0)/fd1(f)(x0);
+        x_n = x0 - f(x0)/fd1(f)(x0);
+        if (fabs(x_n-x0) <= eps)
+            return ans({x0, fabs(x_n-x0), nSteps});
+        x0 = x_n;
         nSteps++;
     }
+
     return ans({x0, abs(exact-x0),nSteps});
 }

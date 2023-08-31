@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iomanip>
 
-const Vec F1_INTERVAL = {0.5, 2.73205};
+const Vec F1_INTERVAL = {0.99, 3};
 const Vec F2_INTERVAL = {0.6, 1.5};
 
 const double X1 = 1.732050807568877;

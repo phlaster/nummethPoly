@@ -22,4 +22,4 @@ clean:
 	rm -f $(OBJECT_DIR)/*
 
 purge:
-	rm -rf $(OBJECT_DIR)/; rm build.out output.bin
+	rm -rf $(OBJECT_DIR)/; rm build.out *.csv
