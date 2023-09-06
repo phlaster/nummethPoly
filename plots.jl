@@ -37,35 +37,36 @@ abs(0.9885 - 0.9496)
 # ╔═╡ ceb294d1-6d27-47ee-8d9e-97fa4fbc95b4
 let
 	f = Figure(resolution = (1100, 500))
-	ax1 = Axis(f[1, 2], title="Отрицательный интервал (1)")
+	ax1 = Axis(f[1:3, 1:3], title="Отрицательный интервал (1)")
 	hlines!(0, color=:black)
 	
 	a1, b1 = -(1+√2), -(1+ 1/3^(1/3))
 	x1 = range(a1, b1, length=100)
-	lines!(ax1, x1, f1.(x1), label = L"f_i", linewidth=7, color=:dodgerblue1)
-	lines!(ax1, x1, d1f1.(x1), label = L"f_i'", linewidth=5, color=:skyblue2)
-	lines!(ax1, x1, d2f1.(x1), label = L"f_i''", linewidth=3, color=:lightblue2)
+	lines!(ax1, x1, f1.(x1), label = L"f_i", linewidth=6, color=:crimson)
+	lines!(ax1, x1, d1f1.(x1), label = L"f_i'", linewidth=4, color=:tomato)
+	lines!(ax1, x1, d2f1.(x1), label = L"f_i''", linewidth=2, color=:lightsalmon)
 
 
 	a2, b2 = 0.5, 3
-	ax2 = Axis(f[1, 3], title="Положительный интервал (1)")
+	ax2 = Axis(f[1:3, 4:6], title="Положительный интервал (1)")
 	hlines!(0, color=:black)
 	
 	x2 = range(a2, b2, length=100)
-	lines!(ax2, x2, f1.(x2), label = L"f_i", linewidth=7, color=:dodgerblue1)
-	lines!(ax2, x2, d1f1.(x2), label = L"f_i'", linewidth=5, color=:skyblue2)
-	lines!(ax2, x2, d2f1.(x2), label = L"f_i''", linewidth=3, color=:lightblue2)
+	lines!(ax2, x2, f1.(x2), label = L"f_i", linewidth=6, color=:crimson)
+	lines!(ax2, x2, d1f1.(x2), label = L"f_i'", linewidth=4, color=:tomato)
+	lines!(ax2, x2, d2f1.(x2), label = L"f_i''", linewidth=2, color=:lightsalmon)
 
 	a3, b3 = 0.6, 1.5
-	ax3 = Axis(f[1, 4], title="Интервал для (2)")
+	ax3 = Axis(f[1:3, 7:9], title="Интервал для (2)")
 	hlines!(0, color=:black)
 	
 	x3 = range(a3, b3, length=100)
-	lines!(ax3, x3, f2.(x3), label = L"f_i", linewidth=7, color=:dodgerblue1)
-	lines!(ax3, x3, d1f2.(x3), label = L"f_i'", linewidth=5, color=:skyblue2)
-	lines!(ax3, x3, d2f2.(x3), label = L"f_i''", linewidth=3, color=:lightblue2)
+	lines!(ax3, x3, f2.(x3), label = L"f_i", linewidth=6, color=:dodgerblue1)
+	lines!(ax3, x3, d1f2.(x3), label = L"f_i'", linewidth=4, color=:skyblue2)
+	lines!(ax3, x3, d2f2.(x3), label = L"f_i''", linewidth=2, color=:lightblue2)
 
-	Legend(f[1, 1], ax1, "")
+	Legend(f[4, 3:4], ax1, "")
+	Legend(f[4, 8], ax3, "")
 
 	current_figure()
 end
