@@ -71,6 +71,30 @@ let
 	current_figure()
 end
 
+# ╔═╡ 35cede26-698e-4cce-ad37-93f4a5133bc9
+let
+	f1(x) = cot(x) + x^2
+	f2(x) = x^5 - 3.2x^3 + 2.5x^2 - 7x + 1.5
+	
+	f = Figure(resolution = (600, 900))
+	ax1 = Axis(f[1, 1], title=L"f_1(x)=\cot(x) + x^2;~~~~x\in[0.5, 2.75]")
+	a1, b1 = [0.5, 2.75]
+	x1 = range(a1, b1, length=100)
+	lines!(ax1, x1, f1.(x1), linewidth=4, color=:crimson)
+
+	
+	ax2 = Axis(f[2, 1], title=L"f_2(x) = x^5 - 3.2x^3 + 2.5x^2 - 7x + 1.5;~~~~x\in[-2.4, 2.1]")
+	a2, b2 = [-2.4, 2.1]
+	x2 = range(a2, b2, length=100)
+	lines!(ax2, x2, f2.(x2), linewidth=4, color=:dodgerblue1)
+
+
+	# Legend(f[4, 3:4], ax1, "")
+	# Legend(f[4, 8], ax3, "")
+
+	current_figure()
+end
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -1644,5 +1668,6 @@ version = "3.5.0+0"
 # ╠═b935ede4-1f3d-4c21-b18c-9642dfaf8f8e
 # ╠═82d9cad9-5c3b-41d6-b7d4-dfc7329f16e0
 # ╠═ceb294d1-6d27-47ee-8d9e-97fa4fbc95b4
+# ╠═35cede26-698e-4cce-ad37-93f4a5133bc9
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
