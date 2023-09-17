@@ -1,8 +1,8 @@
 #include "functions.hpp"
-#include <random>
 
 // Равномерная решётка
-Vec uniformGrid(double a, double b, int n) {
+Vec uniformGrid(double a, double b, int n)
+{
     Vec grid(n);
     double dx = (b - a) / (n - 1);
     for(int i = 0; i < n; i++)
@@ -13,12 +13,12 @@ Vec uniformGrid(double a, double b, int n) {
 // Решётка Чебышева 
 Vec chebyshevGrid(double a, double b, int n)
 {
-  Vec grid(n);
-  for(int k = 0; k < n; k++) {
-    double t = cos(M_PI * (k + 0.5) / n); 
-    grid[n-k-1] = (a+b)/2 + t*(b-a)/2;
-  }
-  return grid;
+    Vec grid(n);
+    for(int k = 0; k < n; k++) {
+        double t = cos(M_PI * (k + 0.5) / n); 
+        grid[n-k-1] = (a+b)/2 + t*(b-a)/2;
+    }
+    return grid;
 }
 
 
@@ -31,9 +31,7 @@ Graphic tabulateFunction(double (*f)(double, bool), const Vec& grid)
     g.yVals = Vec(g.N);
     g.dx = fabs(grid[grid.size()-1] - grid[0])/(g.N-1);
     for (int i=0; i<g.N; i++)
-    {
         g.yVals[i] = f(grid[i], false);
-    }
     return g;
 }
 
@@ -53,7 +51,7 @@ Graphic truncatedTangents(const Graphic& g)
     for (int i=0; i<t.N; i++)
     {
         t.xVals[i] = g.xVals[i+1];
-        t.yVals[i] = (g.yVals[i+2]-g.yVals[i])/(g.xVals[i+2]-g.xVals[i]);
+        t.yVals[i] = (g.yVals[i+2]-g.yVals[i]) / (g.xVals[i+2]-g.xVals[i]);
     }
     return t;
 }

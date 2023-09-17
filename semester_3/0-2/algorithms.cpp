@@ -1,6 +1,7 @@
 #include "functions.hpp"
 
 
+// Лагранжев член
 double lagrangeTerm(double x, const Vec& x_values, const Vec& y_values)
 {
     double result = 0;
@@ -29,7 +30,8 @@ Graphic lagrangeInterpol(const Graphic& nodes, const Vec& grid)
     return lagrange;
 }
 
-double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t) {
+double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t)
+{
     // Вычисляем нормализованное значение t на отрезке [0, 1]
     double tNorm = (t - a) / (b - a);
     

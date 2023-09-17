@@ -35,6 +35,7 @@ private:
 
 double f1(double x, bool derivative=false);
 double f2(double x, bool derivative=false);
+double sum(const Vec& v);
 double mean(const Vec& v);
 double amplitude(Vec vector);
 

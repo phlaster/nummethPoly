@@ -82,14 +82,14 @@ function plotErr23(df1, df2, S)
     p = plot()
     plot!(
         df1[!, "nNodes"], df1[!, "err_LagrUniform"],
-        label=L"Средняя\ ошибка\ полинома\ Лагранжа\ для\ f_1(x)",
+        label=L"Максимальная\ ошибка\ полинома\ Лагранжа\ для\ f_1(x)",
         color=:royalblue1,
         line=:dash,
         ; S...
     )
     plot!(
         df2[!, "nNodes"], df2[!, "err_LagrUniform"],
-        label=L"Средняя\ ошибка\ полинома\ Лагранжа\ для\ f_2(x)",
+        label=L"Максимальная\ ошибка\ полинома\ Лагранжа\ для\ f_2(x)",
         color=:tomato,
         line=:dash,
         ; S...
@@ -441,6 +441,7 @@ if abspath(PROGRAM_FILE) == @__FILE__
     Lagr1 = CSV.read("CSVs/task2-3_f1_4.csv", DataFrame)
     Lagr1[[1, 2, 3, 399, 400], [4, 5, 7, 9]]
     apath = "/home/alex/Documents/Edu/4сем/Nummethods/Labs/Отчёты/0-2/pics/"
+    Lagr1.err_uniformLagr |> maximum |> println
     
     p1 = drawer23L("f1", 4, S1_L)
     savefig(p1, apath * "pic1.png")
@@ -460,11 +461,27 @@ if abspath(PROGRAM_FILE) == @__FILE__
     savefig(p7, apath * "pic7.png")
     errsdf2 = CSV.read("CSVs/task2-3_f2_summ_4-100_.csv", DataFrame)
     errsdf2[[1, 3, 27], :]
+
     df1 = CSV.read("CSVs/task2-3_f1_summ_4-100_.csv", DataFrame)
     df2 = CSV.read("CSVs/task2-3_f2_summ_4-100_.csv", DataFrame)
+    
+    let
+        maxerr_1 = Float64[]
+        maxerr_2 = Float64[]
+        for i=4:100
+            e1 = CSV.read("CSVs/task2-3_f1_$i.csv", DataFrame).err_uniformLagr
+            e2 = CSV.read("CSVs/task2-3_f2_$i.csv", DataFrame).err_uniformLagr
+            push!(maxerr_1, e1 |> maximum)
+            push!(maxerr_2, e2 |> maximum)
+        end
 
-    p8 = plotErr23(df1, df2, S_err)
-    savefig(p8, apath * "pic8.png")
+        df1 = DataFrame("nNodes"=>4:100, "err_LagrUniform"=>maxerr_1)
+        df2 = DataFrame("nNodes"=>4:100, "err_LagrUniform"=>maxerr_2)
+
+        p8 = plotErr23(df1, df2, S_err)
+        savefig(p8, apath * "pic8.png")
+    end
+
     p9 = drawer23H("f1", 4, S1_H)
     savefig(p9, apath * "pic9.png")
     p10 = drawer23H("f1", 9, S1_H)

@@ -2,13 +2,17 @@
 #include <cmath>
 #include <cstddef>
 
+double sum(const Vec& v)
+{
+    double S = 0;
+    for (auto i : v)
+        S += i;
+    return S;
+}
+
 double mean(const Vec& v)
 {
-    double sum = 0;
-    int N = v.size();
-    for (int i=0; i<N; i++)
-        sum += v[i];
-    return sum/double(N);
+    return sum(v)/v.size();
 }
 
 double amplitude(Vec vector)
