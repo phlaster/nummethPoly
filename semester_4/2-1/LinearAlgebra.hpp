@@ -29,10 +29,13 @@ Mtr upperTrSymmetric(const Mtr& A);
 Mtr T(const Mtr& M);
 
 double max(const Vec& v);
+double min(const Vec& v);
 Vec mul(double scalar, const Vec& V);
 Vec sum(const Vec& V1, const Vec& V2, double c1=1, double c2=1);
 Mtr sum(const Mtr& M1, const Mtr& M2, double c1=1, double c2=1);
-Vec div(const Vec& v1, const Vec& v2);
+double sum(const Vec& v);
+double mean(const Vec& v);
+Vec div(const Vec& v1, const Vec& v2, double eps=1e-16);
 
 double dot(const Vec& V1, const Vec& V2);
 double euclideanNorm(const Vec& V);
@@ -66,6 +69,12 @@ Vec solveLinearEquation(const Mtr& L,
                         const std::vector<int>& permutation,
                         const Vec& b);
 Vec residual(const Mtr& A, const Vec& x, const Vec& b);
+
+pair<int, double> naive_PM(const Mtr& A, double eps=1e-7);
+pair<int, double> normed_PM(const Mtr& A, double eps=1e-7);
+
+
+
 
 
 void print(const Vec& v);

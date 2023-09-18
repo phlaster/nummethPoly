@@ -105,6 +105,11 @@ Mtr sum(const Mtr& m1, const Mtr& m2, double c1, double c2) {
             result[i][j] = mat1[i][j] + mat2[i][j];
     return result;
 }
+double sum(const Vec& v){
+    double S = 0;
+    for (auto x : v) S+= x;
+    return S;
+}
 
 double dot(const Vec& V1, const Vec& V2){
     if (V1.size() != V2.size())
@@ -446,12 +451,16 @@ double maxdiff(const Vec& v1, const Vec& v2) {
     return diff; 
 }
 
-Vec div(const Vec& v1, const Vec& v2){
+Vec div(const Vec& v1, const Vec& v2, double eps){
     if (v1.size() != v2.size())
         throw invalid_argument("Операция применима только к векторам одинаковой длины");
     Vec res;
-    for (size_t i = 0; i < v1.size(); i++)
-        res.push_back(v1[i]/v2[i]);
+    for (size_t i = 0; i < v1.size(); i++){
+        if (fabs(v2[i]) > eps)
+            res.push_back(v1[i]/v2[i]);
+        else
+            cerr << "Одно из значений в знаменателе оказалось меньше порогового, сокращаем вектор результата\n";
+    }        
     return res;
 }
 
@@ -460,4 +469,15 @@ double max(const Vec& v){
     for (auto x : v)
         res = (x > res) ? x : res;
     return res;
+}
+
+double min(const Vec& v){
+    double res = INFINITY;
+    for (auto x : v)
+        res = (x < res) ? x : res;
+    return res;
+}
+
+double mean(const Vec& v){
+    return sum(v)/size(v);
 }
