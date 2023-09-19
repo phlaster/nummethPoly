@@ -34,8 +34,8 @@ pair<int, double> normed_PM(const Mtr& A, double delta){
         x_k = normalize(y);
 
         lambda_k = div(y, x, delta);
-        if (lambda_k.size() == 0){ // Если не осталось ни одного x_i, вернуть lambda с предыдущего шага
-            cerr << "Все x_i в знаменателе меньше пороговых значений, используем \n";
+        if (lambda_k.size() == 0){
+            cerr << "Все x_i в знаменателе меньше пороговых значений, используем lambda с предыдущего шага\n";
             return make_pair(nsteps, mean(lambda));
         }
         

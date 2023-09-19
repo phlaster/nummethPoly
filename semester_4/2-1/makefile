@@ -5,13 +5,11 @@ SOURCE_DIR=.
 OBJECT_DIR=objects
 DBG_NAME=debug
 BIN_NAME=build
-SIMPLE_PM_NAME=simple_PM
 
 
-SIMPLE_PM_SOURCES=simple_PM LinearAlgebra Printers
+SOURCES=main LinearAlgebra Printers algos
 
 
-SIMPLE_PM_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SIMPLE_PM_SOURCES)))
 DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))
 
@@ -24,12 +22,6 @@ $(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
 
 $(OBJECT_DIR):
 	mkdir -p $@
-
-
-simple_PM:
-$(SIMPLE_PM_NAME): $(SIMPLE_PM_OBJECTS)
-	$(CC) $(CFLAGS) $^ -o $@.out
-
 
 
 debug:
