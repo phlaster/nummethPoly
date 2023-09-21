@@ -5,7 +5,7 @@
 using namespace std;
 
 // Variant 23:
-double polynom(double x)
+double f(double x)
 {
     return  pow(x,5) -\
         3.2*pow(x,3) +\
@@ -31,65 +31,100 @@ double integralPrescise(double a=-0.7, double b=1.6)
 }
 
 //Numeric calculations within given segment
-double integral(int n, double a=-0.7, double b=1.6)
-{
+double integral_rectangular(int n_steps, double a=-0.7, double b=1.6) {
+    double h = (b-a)/n_steps;
     double I = 0.0;
-    double left = a;
-    double dx = (b-a)/n;
-    double right = a + dx;
-    for(int i=1; i <= n; i++)
-        {
-            I += 0.5 * dx * (polynom(left) + polynom(right));
-            left = right;
-            right += dx;
-        }
-    return I;
-}
-
-void integralBase(int nSteps = 2000)
-{
-    double I_presc = integralPrescise();
-    ofstream outfile("baseResult.csv");
-    if (outfile.is_open()) {
-        for(int n = 1; n<=nSteps; n++)
-        {
-            outfile << abs(I_presc-integral(n)) << endl;
-        }
-        outfile.close();
-        cout << "baseResult.csv has been written!" << endl;
+    for(int i=0; i < n_steps; i++){
+        double left = a + i*h;
+        I += f(left) + f(left + h);
     }
-    else cerr << "Couldn't write to file baseResult.csv!" << endl;
+    return (h/2) * I;
 }
 
+double integral_trapez(int n_steps, double a=-0.7, double b=1.6){
+    double h = (b-a)/n_steps;
+    double I = (f(a) + f(b)) / 2;
+    for(int i=1; i < n_steps; i++)
+        I += f(a + i*h);
+    return h * I;
+}
 
-void integralRunge(int lowestPower = -10)
-{
-    double ETA = 1/3.0; // Method constant for trapez method
-    ofstream outfile("rungeResult.csv");
-    if (outfile.is_open()) {
-        for(int eps_power = -1; eps_power >= lowestPower; eps_power--)
-        {
-            double delta = 1.0; // Initial *big* error
-            int n = 1;
-            double eps = pow(10, eps_power); //higher prescision at each iteration
-            while(delta > eps) // Runge method
-            {        
-                delta = ETA*abs(integral(2*n) - integral(n));
-                n *= 2;
-            }
-            // n, not n/2, bc we've allready reached integral(2*n)
-            outfile << n << "," << delta << "," << eps << endl;
-        }
-        outfile.close();
-        cout << "rungeResult.csv has been written!" << endl;
+pair<int, double> integral_trapez_runge(double eps, double a=-0.7, double b=1.6) {
+    int n_steps = 1;
+    double I1 = integral_trapez(n_steps, a, b);
+    n_steps *= 2;
+    double I2 = integral_trapez(n_steps, a, b);
+    while (fabs(I2 - I1) / 3 > eps) {
+        n_steps *= 2;
+        I1 = I2;
+        I2 = integral_trapez(n_steps, a, b);
     }
-    else cerr << "Couldn't write to file rungeResult.csv!" << endl;
+    return make_pair(n_steps, I2);
 }
+
+double integral_trapez_adaptive_runge(double eps, int& n_steps, double a=-0.7, double b=1.6) {
+    double h = b-a;
+    double I1 = integral_trapez(1, a, b);
+    double I2 = integral_trapez(2, a, b);
+    double delta = 1./3. * fabs(I2 - I1);
+
+    if (delta <= eps * h / 2)
+    {
+        n_steps++;
+        return I2;
+    }else{
+        return integral_trapez_adaptive_runge(eps, n_steps, a, (a+b)/2.) +\
+               integral_trapez_adaptive_runge(eps, n_steps, (a+b)/2., b);
+    }
+}
+
+void int_convergence_1(int maxiters){
+    double I_r, I_t, I_true = integralPrescise();
+    int di = 0;
+    cout << "n_steps,err_rect,err_trapez,delta_err\n";
+    for (int i = 2; i <= maxiters; i *= 2){
+        I_r = integral_rectangular(i);
+        I_t = integral_trapez(i);
+
+        cout << i  << "," << fabs(I_r - I_true) << "," << fabs(I_t - I_true) << "," << fabs(I_r - I_t) << '\n';
+    }
+    cout << endl;
+}
+
+void int_convergence_2(int minpower=12){
+    double I_true = integralPrescise();
+    cout << "n_steps,eps,err\n";
+    for (int i = 1; i <= minpower; i += 1){
+        double eps = pow(10, -i);
+
+        auto [nsteps, I] = integral_trapez_runge(eps);
+        cout << nsteps  << "," << eps << "," << fabs(I - I_true) << '\n';
+    }
+    cout << endl;
+}
+
+void int_convergence_3(int minpower=12){
+    double I_true = integralPrescise();
+    cout << "n_steps,eps,err\n";
+    for (int i = 1; i <= minpower; i += 1){
+        double eps = pow(10, -i);
+        int nsteps = 1;
+        double I = integral_trapez_adaptive_runge(eps, nsteps);
+        cout << nsteps  << "," << eps << "," << fabs(I - I_true) << '\n';
+    }
+    cout << endl;
+}
+
 
 int main(void)
 {
+    cout << "1:\n";
+    int_convergence_1(pow(2, 25));
 
-    integralBase();
-    integralRunge();
+    cout << "\n\n2:\n";
+    int_convergence_2();
+
+    cout << "\n\n3:\n";
+    int_convergence_3();
     return 0;
 }
