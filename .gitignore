@@ -19,6 +19,8 @@ build/
 **/.ipynb_checkpoints/
 **/.vscode/
 
+**/report/*
+
 # LaTeX
 **/tex/*.aux
 **/tex/*.log
