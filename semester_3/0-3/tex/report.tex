@@ -1,0 +1,329 @@
+\documentclass[a4paper]{article}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\setstretch{1.5}
+\usepackage{anyfontsize}
+\usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{listings}
+\geometry{a4paper, portrait, margin=10mm, bmargin=15mm, tmargin=15mm}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.65,0.65,0.65}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.93, 0.95, 0.96}
+\definecolor{keywordcolor}{rgb}{0.23, 0.37, 0.8}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{keywordcolor}\bf,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+\begin{document}
+\include{titlepage}
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{2}
+
+{\Large{\textbf{A. Приближение данных полиномиальным МНК}}}\\
+{\textbf{1. Приближение данных полиномиальным МНК при помощи функции \texttt{polyfit}}}
+\begin{lstlisting}[language=Octave]
+a=0.5; b=4.5; x=a:0.05:b;
+p = [1, -8.1, 19.04, -10.56];
+p_legend = 'y = x^3 - 8.1x^2 + 19.04x - 10.56';
+y = polyval(p, x);
+plot(x, y, 'b'); grid on;
+legend(p_legend); title('Polynomial');
+saveas(gcf, '1.png'); hold off;
+\end{lstlisting}
+\begin{center}
+    \includegraphics[width=1\linewidth]{1}
+\end{center}
+
+\newpage
+\begin{lstlisting}[language=Octave, firstnumber=8]
+x = linspace(a,b,150); t = linspace(a,b,1001);
+y = polyval(p,x) + randn(size(x));
+p1 = polyfit(x,y,1); y1 = polyval(p1,t);
+err1 = y - polyval(p1,x);
+
+subplot(2,1,1);
+plot(x, y, 'b.');
+hold on; grid on;
+plot(t, y1, 'r');
+xlabel('x'); ylabel('y');
+title('Approximation with polynomial with degree 1'); hold off;
+
+subplot(2, 1, 2);
+plot(x, err1,'r.'); grid on;
+xlabel('x'); ylabel('Err'); title('max error ', max(abs(err1)));
+saveas(gcf, '2.png');
+\end{lstlisting}
+\begin{center}
+    \includegraphics[width=1\linewidth]{2}
+\end{center}
+{\singlespacing
+\begin{verbatim}
+p1 =
+
+   -0.3013    1.9069
+\end{verbatim}}
+
+
+\newpage
+\begin{lstlisting}[language=Octave, firstnumber=24]
+p2 = polyfit(x,y,2); y2 = polyval(p2,t);
+err2 = y - polyval(p2, x);
+
+subplot(2,1,1);
+plot(x, y, 'b.');
+hold on; grid on;
+plot(t, y2, 'r');
+xlabel('x'); ylabel('y');
+title('Approximation with polynomial with degree 2'); hold off;
+
+subplot(2, 1, 2);
+plot(x, err2,'r.'); grid on;
+xlabel('x'); ylabel('Err'); title('max error ', max(abs(err2)));
+saveas(gcf, '3.png');
+\end{lstlisting}
+\begin{center}
+    \includegraphics[width=1\linewidth]{3}
+\end{center}
+{\singlespacing
+\begin{verbatim}
+p2 =
+
+   -0.6739    3.0683   -1.3945
+\end{verbatim}}
+
+
+\newpage
+\begin{lstlisting}[language=Octave, firstnumber=38]
+p3 = polyfit(x,y,3); y3 = polyval(p3,t);
+err3 = y - polyval(p3, x);
+
+subplot(2,1,1);
+plot(x, y, 'b.');
+hold on; grid on;
+plot(t, y3, 'r');
+xlabel('x'); ylabel('y');
+title('Approximation with polynomial with degree 3'); hold off;
+
+subplot(2, 1, 2);
+plot(x, err3,'r.'); grid on;
+xlabel('x'); ylabel('Err'); title('max error ', max(abs(err3)));
+saveas(gcf, '4.png');
+\end{lstlisting}
+\begin{center}
+    \includegraphics[width=1\linewidth]{4}
+\end{center}
+{\singlespacing
+\begin{verbatim}
+p3 =
+
+    0.9653   -7.9136   18.8197  -10.6079
+\end{verbatim}}
+
+
+
+\newpage
+\begin{lstlisting}[language=Octave, firstnumber=52]
+p4 = polyfit(x,y,4); y4 = polyval(p4,t);
+err4 = y - polyval(p4, x);
+
+subplot(2,1,1);
+plot(x, y, 'b.');
+hold on; grid on;
+plot(t, y4, 'r');
+xlabel('x'); ylabel('y');
+title('Approximation with polynomial with degree 4'); hold off;
+
+subplot(2, 1, 2);
+plot(x, err4,'r.'); grid on;
+xlabel('x'); ylabel('Err'); title('max error ', max(abs(err4)));
+saveas(gcf, '5.png');
+\end{lstlisting}
+\begin{center}
+    \includegraphics[width=1\linewidth]{5}
+\end{center}
+{\singlespacing
+\begin{verbatim}
+p4 =
+
+   -0.0474    1.4392   -9.5262   20.9586  -11.4969
+\end{verbatim}}
+
+
+
+\newpage
+{\textbf{2. Приближение данных полиномиальным МНК в приложении \texttt{cftool}}}\\
+Первая степерь:
+\begin{center}
+    \includegraphics[width=1\linewidth]{6}
+\end{center}
+Вторая степерь:
+\begin{center}
+    \includegraphics[width=1\linewidth]{7}
+\end{center}
+
+\newpage
+
+Третья степерь:
+\begin{center}
+    \includegraphics[width=1\linewidth]{8}
+\end{center}
+Четвёртая степерь:
+\begin{center}
+    \includegraphics[width=1\linewidth]{9}
+\end{center}
+Коэффициенты $p_i$, полученные в приложении \texttt{cftool} соответствуют -- полученным с помощью функции \texttt{polyfit}.
+\newpage
+
+{\Large{\textbf{Б. Приближение данных с выбросами}}}\\
+{\textbf{3. Приближение данных с выбросами в приложении \texttt{cftool}}}
+\begin{lstlisting}[language=Octave, firstnumber=66]
+y1 = y; y1(1:10:end) = 10;
+\end{lstlisting}
+Robust: Off
+\begin{center}
+    \includegraphics[width=1\linewidth]{10}
+\end{center}
+Robust: Bisquare
+\begin{center}
+    \includegraphics[width=1\linewidth]{11}
+\end{center}
+
+\newpage
+Robust: LAR
+\begin{center}
+    \includegraphics[width=1\linewidth]{12}
+\end{center}
+
+\newpage
+
+{\Large{\textbf{В. Приближение данных сглаживающими сплайнами}}}\\
+{\textbf{4. Приближение данных сглаживающими сплайнами в \texttt{cftool}}}\\
+Smoothing Parameter: 0
+\begin{center}
+    \includegraphics[width=1\linewidth]{13}
+\end{center}
+Smoothing Parameter: 0.5
+\begin{center}
+    \includegraphics[width=1\linewidth]{14}
+\end{center}
+
+\newpage
+Smoothing Parameter: 0.9
+\begin{center}
+    \includegraphics[width=1\linewidth]{15}
+\end{center}
+Smoothing Parameter: 0.999
+\begin{center}
+    \includegraphics[width=1\linewidth]{16}
+\end{center}
+
+\newpage
+Smoothing Parameter: 0.9999
+\begin{center}
+    \includegraphics[width=1\linewidth]{17}
+\end{center}
+Smoothing Parameter: 1
+\begin{center}
+    \includegraphics[width=1\linewidth]{18}
+\end{center}
+
+
+\newpage
+{\textbf{5. Приближение данные сглаживающим сплайном при помощи функции \texttt{csaps}}}
+\begin{lstlisting}[language=Octave, firstnumber=67]
+plot(x,y,'b.'); hold on; grid on;
+pp = csaps(x, y, 0.8);
+yt = fnval(pp, t); plot(t, yt,'r');
+saveas(gcf, '19.png');
+\end{lstlisting}
+\begin{center}
+    \includegraphics[width=1\linewidth]{19}
+\end{center}
+
+\newpage
+{\Large{\textbf{Г. Приближение данных нелинейными моделями МНК}}}\\
+{\textbf{6. Приближение данных нелинейными моделями МНК в приложении \texttt{cftool}}}
+\begin{lstlisting}[language=Octave, firstnumber=72]
+a0=-3;  b0=3;  x=a0:0.05:b0;
+
+a=2.0;  b=0.8;  c=2.8;  d=0.3;
+y = exp(a-b*x.^2) .* cos(sqrt(d+c * x.^2));
+plot(x,y,'b'); grid on;
+saveas(gcf, '20.png');
+\end{lstlisting}
+\begin{center}
+    \includegraphics[width=0.5\linewidth]{20}
+\end{center}
+\begin{lstlisting}[language=Octave, firstnumber=78]
+x=linspace(a0, b0, 150); rnd(1);
+y=exp(a-b*x.^2) .* cos(sqrt(d+c * x.^2)) + randn(size(x));
+\end{lstlisting}
+Degree: 6
+\begin{center}
+    \includegraphics[width=1\linewidth]{21}
+\end{center}
+
+\newpage
+Оптимальная функция: $y=\exp(a-bx^2) \cdot \cos(\sqrt{d+c x^2})$, где: $a=2;b=0.8;c=2.8;d=0.3;$
+
+Приближение: $f(x) = \exp(-bx^2) \cdot \cos(\sqrt{vx^2})$, стартовые параметры: b\textleftarrow 1; c\textleftarrow 3
+\begin{center}
+    \includegraphics[width=1\linewidth]{22}
+\end{center}
+Приближение: $f(x) =\exp(a-bx^2) \cdot \cos(\sqrt{d+c x^2})$, стартовые параметры: a\textleftarrow 2; b\textleftarrow 1; c\textleftarrow 3; d\textleftarrow 0;
+\begin{center}
+    \includegraphics[width=1\linewidth]{23}
+\end{center}
+
+\newpage
+{\textbf{7. Приближение данных нелинейными моделями МНК при помощи функции fit}}
+\begin{lstlisting}[language=Octave, firstnumber=80]
+NlModel = 'exp(a-b*x*x).*cos(sqrt(d+c*x*x))';
+StartPoint=[2,1,3,0];
+f1 = fit(x',y',NlModel,'Start', StartPoint);
+plot(f1, x, y); grid on;
+saveas(gcf, '24.png');
+\end{lstlisting}
+\begin{center}
+    \includegraphics[width=1\linewidth]{24}
+\end{center}
+{\singlespacing
+\begin{verbatim}
+f1 =
+
+    General model:
+    f1(x) = exp(a-b*x*x).*cos(sqrt(d+c*x*x))
+    Coefficients (with 95% confidence bounds):
+      a =       4.297  (-383.4, 392)
+      b =       1.165  (-13.46, 15.79)
+      c =      0.3782  (-142.4, 143.1)
+      d =       2.196  (-100.1, 104.5)
+\end{verbatim}}
+Коэффициенты $a,b,c,d$, полученные в приложении \texttt{cftool} соответствуют -- полученным с помощью функции \texttt{fit}.
+
+\end{document}
