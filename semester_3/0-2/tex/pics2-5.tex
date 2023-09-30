@@ -1,0 +1,29 @@
+\begin{figure}[H]
+    \centering
+    \caption{График интерполяции $f_1(x)$ глобальным полиномом Лагранжа по 4 узлам, $\varepsilon~\le~0.188516$}
+    \includegraphics[width=0.8\linewidth]{pics/pic1}
+    \label{pic:1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{Та же функция, 9 узлов, $\varepsilon \le 0.0112927$}
+    \includegraphics[width=0.8\linewidth]{pics/pic2}
+    \label{pic:2}
+\end{figure}
+
+В узлах значение полинома в точности совпадает со значением интерполируемой функции. С ростом числа узлов растёт точность, особенно в середине интервала.
+
+\begin{figure}[H]
+    \centering
+    \caption{На $30$ узлах середина отрезка достигает машинной точности, $\varepsilon \le 1.40768\cdot10^{-7}$}
+    \includegraphics[width=0.8\linewidth]{pics/pic3}
+    \label{pic:3}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \caption{С дальнейшим ростом числа узлов всё заметнее проявляется феномен Рунге, $\varepsilon \le 0.00170522$}
+    \includegraphics[width=0.8\linewidth]{pics/pic4}
+    \label{pic:4}
+\end{figure}
