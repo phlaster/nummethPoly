@@ -1,0 +1,458 @@
+\input{settings}
+
+\begin{document}
+
+\include{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{2}
+{\Large{\textbf{1. Даны два уравнения:}}}
+\begin{align}
+    &x^4-x^3-2x^2+3x-3=0\\
+    &3e^x=5x+3
+\end{align}\\
+
+{\Large{\textbf{2. Для алгебраического уравнения $(1)$ найти отрезки, содержащие все корни:}}}\\
+Пусть для алгебраического уравнения $(1)$ степени $n$ с комплексными коэффициентами $a_i\in\mathbb{C}; i\in \{0, 1, ..., n\}$, записанного в общем виде как:
+\[
+    a_0z^n+a_1z^{n-1}+...+a_n=0,
+\]
+для которого $a=\max(|a_1|,...,|a_n|)=3, a'=\max(|a_0|,...,|a_{n-1}|)=3$, по теореме о границе расположения корней алгебраического многочлена его комплексные корни находятся в кольце:
+\begin{align}
+    \frac{|a_n|}{a'+|a_n|}\le |z| \le 1+\frac{a}{|a_0|}
+\end{align}
+\[
+    \frac{3}{3+3}\le |z| \le 1+\frac{3}{1}
+\]
+\begin{align}
+    \frac{1}{2}\le |z| \le 4.
+\end{align}
+Грубо получив кольцо (в геометрическом смысле -- кольцо на комплексной плоскости), пользуясь соответствующей теоремой возможно уточнить местонахождение вещественных корней. В нашем случае, когда коэффициенты действительные, примем $A_1=3$ -- максимальный модуль отрицательного коэффициента; $m_1=1$ -- порядковый (начиная с $0$) номер первого отрицательного коэффициента. Тогда верхняя граница положительных корней определяется в соответствии с теоремой, по формуле:
+\begin{align}
+    1 + \sqrt[m]{\frac{A_1}{a_{01}}} = 1 +\frac{3}{1} = 4
+\end{align}
+Чтобы найти нижнюю границу, заменим в $(1)$ $x$ на $x^{-1}$:
+\begin{align}
+    x^{-4}-x^{-3}-2x^{-2}+3x^{-1}-3=0 \hspace{0.5cm} \implies \hspace{0.5cm}
+    3x^4-3x^3+2x^2+x-1=0
+    \begin{cases}
+        A_2 = 3 \\
+        m_2 = 1
+    \end{cases}
+\end{align}
+Верхняя граница для $x^{-1}:$ $1+\sqrt[m_2]{\frac{A_2}{a_{02}}} = 1 +\frac{3}{3} = 2\implies$ нижняя граница для $x$: $\frac{1}{2}$. То есть положительные корни лежат в промежутке $[0.5\ldots3]$.
+По этому же принципу заменим в $(1)$ $x$ на $-x$:
+\begin{align}
+    x^4+x^3-2x^2-3x-3=0; \implies
+     \begin{cases}
+        A_3 = 3 \\
+        m_3 = 2
+    \end{cases}
+\end{align}
+Получим верхнюю границу {\it модуля} возможных отрицательных корней: $1+\sqrt[m_3]{\frac{A_3}{a_{03}}} = 1 +\sqrt[2]{\frac{3}{1}} = 2.73205$
+Наконец, в $(1)$ заменим $x$ на $-x^{-1}$:
+\begin{align}
+    x^{-4}+x^{-3}-2x^{-2}-3x^{-1}-3=0 \hspace{0.5cm} \implies \hspace{0.5cm}
+    3x^4+3x^3+2x^2-x-1=0
+    \begin{cases}
+        A_4 = 1 \\
+        m_4 = 3
+    \end{cases}
+\end{align}
+Получим {\bf нижнюю} границу {\it модуля} возможных отрицательных корней: $1+\sqrt[m_4]{\frac{A_4}{a_{04}}} = 1 +\sqrt[3]{\frac{1}{3}} = 1.693$. Таким образом:
+\begin{align}
+    \begin{matrix}
+        \text{Интервал положительных корней:} & [0.5 \ldots 4] \\
+        \text{Интервал отрицательных корней:} & [-2.73205 \ldots -1.693]
+    \end{matrix}
+\end{align}
+
+{\Large{\textbf{3. Для каждого уравнения найти отрезок, содержащий корень для уточнения:}}}\\
+
+{\large\bf{I. Алгебраическое уравнение $(1)$:}}\\
+Произвольно выберем интервал с положительными корнями и воспользуемся теоремой Штурма:
+\begin{tabbing}
+    \hspace*{4cm}\= \hspace*{6cm} \= \kill
+    \> $f(x) = x^4 - x^3 - 2x^2 + 3x - 3$:\> сама функция $(1)$;\\
+    \> $f_1(x) = f'_x(x) = 4x^3 - 3x^2 - 4x + 3$:\> первая производная;\\
+    \> $f_2(x) = 1.188x^2-2x+2.813$:\> взятый с обратным знаком остаток от деления $\frac{f(x)}{f_1(x)}$;\\
+    \> $f_3(x) = 7.180x+5.850$:\> взятый с обратным знаком остаток от деления $\frac{f_1(x)}{f_2(x)}$;\\
+    \> $f_4(x) = -5.231$:\> взятый с обратным знаком остаток от деления $\frac{f_2(x)}{f_3(x)}$.
+\end{tabbing}
+Согласно теореме, число действительных корней $k$ на отрезке $[c_1 \ldots c_2]$ равно разности между числом $p_1$ перемен знака в последовательности $seq_1=\{f(c1), f_1(c_1), f_2(c_1), f_3(c_1), f_4(c_1)\}$ и числом
+$p_2$ перемен знака в последовательности $seq_2=\{f(c_2), f_1(c_2), f_2(c_2), f_3(c_2), f_4(c_2)\}$:
+\begin{align}
+    \begin{rcases}
+        c_1 =0.5 \\
+        c_2 =3
+    \end{rcases}
+    \longrightarrow
+    \begin{rcases}
+        seq_1=&\{-2.063, 0.750, 2.110, 9.440, -5.231\} \\
+        seq_2=&\{42, 72, 7.505, 27.390, -5.231\}
+    \end{rcases}
+    \longrightarrow
+    \begin{rcases}
+        p_1=2 \\
+        p_2=1
+    \end{rcases}
+    \longrightarrow
+    k=p_1-p_2=1
+\end{align}
+То есть на участке $[0.5 \ldots 3]$ находится единственный корень (кратные корни на этом участке отсутствуют, т.к. последний член последовательностей $seq_i$:  $f_4(x)=const$).
+
+\newpage
+
+{\large\bf{II. Трансцендентное уравнение $(2)$:}}\\
+Представим $(2)$ в виде $\psi(x)=\varphi(x)$, построим отдельно кривые $\psi(x)=0$ и $\varphi(x)=0$:\\
+Рис. 1: Графическое отделение корней трансцендентного уравнения.
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{pic1}
+\end{center}
+Искомые корни находятся в точках пересечения этих кривых. Для исследования возьмём (выбранный произвольно) промежуток содержащий один из корней:
+\begin{align}
+    [0.6 \ldots 1.5]
+\end{align}
+
+\newpage
+
+{\Large{\textbf{4. Решить оба уравнения при помощи функции \texttt{fzero} (MatLab), методом половинного деления (МПД) и методом Ньютона:}}}\\
+
+{\large\bf{I. Решение уравнений функцией Matlab \texttt{fzero}:}}\\
+\texttt{fzero} использует комбинированный подход с использованием метода Ньютона, метода простых итераций и МПД. Судя по источникам, метод Ньютона как самый быстро сходящийся используется в первую очередь. Если с ним возникают проблемы, подключаются менее быстрые и менее же привередливые методы.
+
+\begin{lstlisting}[language=Octave]
+% Polynomial function
+f1 = @(x) polyval([1,-1,-2,3,-3], x);
+X1_0 = [-2.732, -1.693];
+X1 = fzero(f1, X1_0);
+sprintf('Exact root on chosen interval: %.15f', X1)
+\end{lstlisting}
+{\singlespacing
+\begin{verbatim}
+ans =
+
+    'Exact root on chosen interval: -1.732050807568877'
+\end{verbatim}}
+\begin{lstlisting}[language=Octave, firstnumber=6]
+% Transcendental function
+f2 = @(x) 3*exp(x) + polyval([-5, -3], x);
+X2_0 = [0.6, 1.5];
+X2 = fzero(f2, X2_0);
+sprintf('Exact root on chosen interval: %.15f', X2)
+\end{lstlisting}
+{\singlespacing
+\begin{verbatim}
+ans =
+
+    'Exact root on chosen interval: 0.947404881615151'
+\end{verbatim}}
+\begin{lstlisting}[language=Octave, firstnumber=11]
+% Root for interval, where Newton method conditions violate
+X1_ERR = [0.5, 4];
+X3 = fzero(f1, X1_0);
+sprintf('Exact root on chosen (unappropriate) interval: %.15f', X3)
+\end{lstlisting}
+{\singlespacing
+    \begin{verbatim}
+ans =
+
+    'Exact root on chosen (unappropriate) interval: -1.732050807568877'
+\end{verbatim}}
+
+\newpage
+
+{\large\bf{II. Метод  Половинного Деления (МПД, метод биекции):}}
+\begin{enumerate}
+    \item Задать отрезок для приближения: $[a, b]$, выбрать желаемую точность: $\varepsilon$;
+    \item Проверить условия применимости метода: $f(x)$ непрерывна на $[a, b]$ и имеет на нём единственный корень;
+    \item $c:=\frac{a+b}{2};$
+    \item Если $|a-c|\le\varepsilon\implies \widetilde{x}:=c\implies\blacksquare$
+    \item Если $sign(f(a)) \ne sign(f(c))\implies b:=c$, иначе $a:=c$;
+    \item Вернуться к 3.
+\end{enumerate}
+Все выбранные отрезки: (9), (11) удовлетворяют условиям метода.\\
+
+{\large\bf{III. Метод  Ньютона (касательных):}}
+\begin{enumerate}
+    \item Задать отрезок для приближения: $[a, b]$, выбрать желаемую точность: $\varepsilon$;
+    \item Проверить условия применимости метода:
+        \begin{itemize}
+%            \item $f(x)$ ограничена на  $[a, b]$ имеет на нём единственный корень;
+%            \item $f(x)$ дважды дифференциируема на $[a, b]$, гладкая;
+            \item $f \in C^2$
+            \item $f'_x(x)$ не обращается в нуль на $[a, b]$;
+            \item $f''_{xx}(x)$ ограничена на $[a, b]$;
+        \end{itemize}
+    \item Выбрать константы $\forall x \in [a,~ b]$:
+        \begin{itemize}
+            \item $\alpha: ~ |f'(x)|\ge\alpha>0$
+            \item $\beta: ~ |f''(x)|\le\beta<\infty$
+        \end{itemize}
+    \item Выбрать на отрезке начальное приближение $x_0: sign(f(x_0))=sign(f''_{xx}(x_0))$;
+    \item Вычислить $x_{k+1}=x_k-\frac{f(x_k)}{f'_x(x_k)}$
+    \item Если $\frac{\beta}{2\alpha}|x_{k+1}-x_k|^2\le\varepsilon
+    \implies \widetilde{x}:=x_{k+1}\implies\blacksquare$;
+    \item Вернуться к 4.
+\end{enumerate}
+Рассмотрим имеющиеся интервалы функций (1), (2)...\\
+Рис. 2: Интервалы нахождения корней, полученные из применения теоремы о верхней границы:
+\begin{center}
+    \includegraphics[width=0.9\linewidth]{pic2}
+\end{center}
+Из графиков очевидно, что положительный интервал функции (1) не удовлетворяет условиям применимости метода Ньютона, т.к. первая производная функции не отделена от нуля.
+\newpage
+
+{\large\bf{IV. Примененние алгоритмов к трансцендентной функции (2):}}\\
+{\bf МПД:}
+\begin{itemize}
+    \item $[a, b]=[0.6, 1.5]; \hspace{0.5cm} \varepsilon = \mathit{0.1}$;
+    \item $c=\frac{a+b}{2}=1.05;$
+    \item $|a-c|=\mathbf{0.9}\stackrel{1}{>}\varepsilon$;
+    \item $sign(f(a)) \ne sign(f(c))\implies b:=1.05$;
+    \item $c=\frac{a+b}{2}=0.825;$
+    \item $|a-c|=\mathbf{0.45}\stackrel{2}{>}\varepsilon$;
+    \item $sign(f(a)) = sign(f(c))\implies a:=0.825$;
+    \item $c=\frac{a+b}{2}=0.9375;$
+    \item $|a-c|=\mathbf{0.225}\stackrel{3}{>}\varepsilon$;
+    \item $sign(f(a)) = sign(f(c))\implies a:=0.9375$;
+    \item $c=\frac{a+b}{2}=0.99375;$
+    \item $|a-c|=\mathbf{0.1125}\stackrel{4}{>}\varepsilon$;
+    \item $sign(f(a)) \ne sign(f(c))\implies b:=0.99375$;
+    \item $c=\frac{a+b}{2}=0.965625;$
+    \item $|a-c|= \mathbf{0.05625} \stackrel{5}{<} \varepsilon \implies \widetilde{x} := c = \mathit{0.965625} \implies \blacksquare$;
+\end{itemize}
+Метод сошёлся после 5 сравнений очередных приближений с заданной точностью $\varepsilon$
+
+{\bf Метод Ньютона:}
+\begin{itemize}
+    \item $[a, b]=[0.6, 1.5]; \hspace{0.5cm} \varepsilon = \mathit{0.1}$;
+    \item $sign(f(b))=sign(f''_{xx}(x_0)) \implies x_0 := b = 1.5;$
+    \item $x_1 := x_0 - \frac{f(x_0)}{f'_x(x_0)} = 1.5 - \frac{2.9451}{8.4451} = 1.15127$
+    \item $|x_1-x_0| = \mathbf{0.3487} \stackrel{1}{>} \varepsilon \implies x_2 := x_1 - \frac{f(x_1)}{f'_x(x_1)} = 1.5 - \frac{0.7303}{4.4866} = 0.9885$
+    \item $|x_2-x_1| = \mathbf{0.1628} \stackrel{2}{>} \varepsilon \implies x_3 := x_2 - \frac{f(x_2)}{f'_x(x_2)} = 0.9885 - \frac{0.1191}{3.0616} = 0.9496$
+    \item $|x_3-x_2| = \mathbf{0.0389} \stackrel{3}{<} \varepsilon \implies\widetilde{x}:=x_3=\mathit{0.9496}\implies\blacksquare$
+\end{itemize}
+Метод сошёлся после 3 сравнений очередных приближений с заданной точностью $\varepsilon$.
+
+{\bf Итог:} Метод Ньютона сошёлся быстрее метода биекции.\\
+
+\newpage
+
+{\Large{\textbf{5. Построить зависимости числа итераций от заданной точности:}}}\\
+{\large\bf{I. Matlab \texttt{fzero}:}}
+\begin{lstlisting}[language=Octave, firstnumber=15]
+n_iters_1 = zeros(1, 15);
+n_iters_2 = zeros(1, 15);
+epsilon = zeros(1, 15);
+for i = 1:15
+    epsilon(i) = 10^(-i);
+    options = optimset(tolX=epsilon(i));
+    [~, ~, ~, output_1] = fzero(f1, X1_0, options);
+    [~, ~, ~, output_2] = fzero(f2, X2_0, options);
+    n_iters_1(i) = output_1.iterations;
+    n_iters_2(i) = output_2.iterations;
+end
+
+semilogx(eps, n_iters_1, 'red');
+hold on; grid on;
+semilogx(eps, n_iters_2, 'blue');
+xlabel('eps'); ylabel('N iters'); title('fzero'); legend("f1", "f2");
+saveas(gcf, 'fzero.png'); hold off;
+\end{lstlisting}
+Рис. 3: Зависимость скорости сходимости функции \texttt{fzero} от заданной точности для алгебраической и трансцендентной функций:
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{fzero}
+\end{center}
+
+\newpage
+
+{\large\bf{II. C++ МПД:}}
+\begin{lstlisting}[language=c++]
+// C++
+struct ans {
+    double root;
+    double absErr;
+    int nSteps;
+};
+ans bisection(double (*f)(double), double exact, vector<double> lims, double eps){
+    double a = lims[0], b = lims[1], c;
+    int nSteps = 1;
+    for(;;){
+        c = (a+b)/2;
+        if (fabs(a-c) <= eps)
+            return ans({c, fabs(exact-c), nSteps});
+        if (sign(f(a)) != sign(f(c)))
+            b = c;
+        else
+            a = c;
+        nSteps++;
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}[language=Octave, firstnumber=32]
+% Matlab
+bisect1 = readtable('bisect1.csv');
+bisect2 = readtable('bisect2.csv');
+semilogx(bisect1.eps, bisect1.steps, 'red');
+grid on; hold on;
+semilogx(bisect2.eps, bisect2.steps, 'blue');
+title('bisection method'); xlabel('eps'); ylabel('N iters'); legend("f1","f2");
+saveas(gcf, 'mpd.png'); hold off;
+\end{lstlisting}
+Рис. 4: Зависимость скорости сходимости МПД от заданной точности для алгебраической и трансцендентной функций:
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{mpd}
+\end{center}
+
+\newpage
+
+{\large\bf{III. C++ Метод Ньютона:}}
+\begin{lstlisting}[language=c++, firstnumber=21]
+// C++
+ans newton(double (*f)(double), double exact, vector<double> lims, double eps){
+    // Appropriate 1-st and 2-nd derivative choice as anonymous functions
+    auto d1 = [](double (*f)(double)){ return (f==f1) ? f1d1 : f2d1; };
+    auto d2 = [](double (*f)(double)){ return (f==f1) ? f1d2 : f2d2; };
+
+    double a = lims[0], b = lims[1], x_n, delta, x0 = (f(a)*d2(f)(a) > 0) ? a : b;
+    int nSteps = 1;
+    for (;;){
+        x_n = x0 - f(x0)/d1(f)(x0);
+        delta = fabs(x_n-x0);
+        if (delta <= eps)
+            return ans({x_n, fabs(exact-x_n), nSteps}); // `struct ans` defined below
+        x0 = x_n;
+        nSteps++;
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}[language=Octave, firstnumber=40]
+% Matlab
+newton1 = readtable('newton1.csv');
+newton2 = readtable('newton2.csv');
+semilogx(newton1.eps, newton1.steps, 'red');
+grid on; hold on;
+semilogx(newton2.eps, newton2.steps, 'blue');
+title('Newton method'); xlabel('eps'); ylabel('N iters'); legend("f1","f2");
+saveas(gcf, 'newton.png'); hold off;
+\end{lstlisting}
+Рис. 5: Зависимость скорости сходимости метода Ньютона от заданной точности для алгебраической и трансцендентной функций (совпадают):
+\begin{center}
+    \includegraphics[width=0.75\linewidth]{newton}
+\end{center}
+
+\newpage
+
+{\Large{\textbf{6. Исследовать сходимость метода при нарушении условий применимости:}}}\\
+Для демонстрации изменения сходимости метода Ньютона при нарушении условий применимости достаточно взять найденный  для алгебраического полинома положительный интервал содержащий корень. На нём, как было показано, нарушается условие отделённости первой производной от нуля. Также, дополнительно нарушим условие $sign(f(x_0))=sign(f''(x_0))$ для начального приближения, выбрав на Рис.2 <<на глаз>> точку $x_0=1.1$, где знаки функции и её второй производной противоположны.
+\begin{lstlisting}[language=c++, firstnumber=38]
+// C++
+ans newton_broken(double exact, vector<double> lims, double x0, double eps){
+    double a = lims[0], b = lims[1], x_n, delta;
+    int nSteps = 1;
+    for (;;){
+        x_n = x0 - f1(x0)/f1d1(x0);
+        delta = fabs(x_n-x0);
+        if (delta <= eps)
+            return ans({x_n, fabs(exact-x_n), nSteps});
+        x0 = x_n;
+        nSteps++;
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}[language=Octave, firstnumber=48, literate={∈}{{$\in$}}1]
+% Matlab
+broken_limits = readtable('broken_newton(limits).csv');
+broken_limits_x0 = readtable('broken_newton(limits+x0).csv');
+
+subplot(2,1,1);
+semilogx(newton1.eps, newton1.steps);
+grid on; hold on;
+semilogx(broken_limits.eps, broken_limits.steps, '-.');
+semilogx(broken_limits_x0.eps, broken_limits_x0.steps, 'x');
+title('broken Newton conversion'); xlabel('eps'); ylabel('N iters');
+
+subplot(2,1,2);
+loglog(newton1.eps, newton1.err);
+grid on; hold on;
+loglog(broken_limits.eps, broken_limits.err, '-.');
+loglog(broken_limits_x0.eps, broken_limits_x0.err, 'x');
+title('broken Newton errors'); xlabel('eps'); ylabel('err');
+
+legend("No violations","0 ∈ f'", "0 ∈ f'; f(x_0)*f''(x_0)<0", 'Location', 'west');
+saveas(gcf, 'broken_newton.png'); hold off;
+\end{lstlisting}
+
+\newpage
+
+Рис. 6: Зависимость скорости сходимости и фактической ошибки метода Ньютона от заданной точности при нарушении условий применимости метода:
+\begin{center}
+    \includegraphics[width=1\linewidth]{broken_newton}
+\end{center}
+
+Из графиков следует, что при нарушении условия применимости метода количество итераций до схождения метода увеличивается. Также, хотя в данном случае метод сошёлся корректно, невозможно заранее знать, сойдётся ли метод к корню на выбранном интервале, к корню снаружи интервала или же вовсе будет расходиться. Также явно, что фактическая ошибка нахождения корня много выше, чем заданная точность, т.к. на втором графике кривые лежат ниже диагонали.
+
+Метод Ньютона, хотя и выгодно отличается по порядку сходимости от метода половинного деления, требует особого внимания к соблюдению условий его применимости.
+
+\newpage
+
+{\large\bf{Модульная структура программы (полный исходный код прилагается в архиве):}}\\
+{\bf Заголовочный файл \texttt{functions.hpp}:}
+\begin{lstlisting}[language=c++]
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <vector>
+#include <fstream>
+#include <iomanip>
+using namespace std; using Vec = vector<double>;
+// Struct, containing answer:
+struct ans {
+    double root;
+    double absErr;
+    int nSteps;
+};
+
+// Functions and their analitical derivatives:
+double f1(double x);    double f2(double x);
+double f1d1(double x);  double f2d1(double x);
+double f1d2(double x);  double f2d2(double x);
+
+// Methods:
+ans bisection(double (*f)(double), double exact, Vec lims, double eps);
+ans newton(double (*f)(double), double exact, Vec lims, double eps);
+ans newton_broken(double exact, Vec lims, double x0, double eps);
+
+// Writes to file iterations for unviolated methods:
+void errorConverg(double exact, Vec interval,
+                  ans    (*method)(double (*f)(double), double, Vec, double),
+                  double (*f)     (double),
+                  string filename);
+// Writes to file iterations for broken Newton method:
+void brokenConverg(double exact, double x0, Vec lims, string filename);
+\end{lstlisting}
+{\bf Точка входа \texttt{main.cpp}:}
+\begin{lstlisting}[language=c++]
+#include "functions.hpp"
+// Consts appearing in report
+const Vec F1_INTERVAL = {-2.414, -1.693},  F2_INTERVAL = {0.6, 1.5};
+const double X1 = -1.732050807568877, X2 = 0.947404881615152, X3 = 1.732050807568877;
+
+int main(){
+    errorConverg(X1, F1_INTERVAL, bisection, f1, "bisect1.csv");
+    errorConverg(X2, F2_INTERVAL, bisection, f2, "bisect2.csv");
+    errorConverg(X1, F1_INTERVAL, newton, f1, "newton1.csv");
+    errorConverg(X2, F2_INTERVAL, newton, f2, "newton2.csv");
+
+    brokenConverg(X3, 0.5, {0.5,3}, "broken_newton(limits).csv"); // See (*) below
+    brokenConverg(X3, 1.1, {0.5,3}, "broken_newton(limits+x0).csv");
+    return 0;
+}
+\end{lstlisting}
+{\tiny (*)Примечание: при построении предпоследней кривой стартовым приближением намеренно выбрана точка $x_0=0.5$ слева от абсциссы перехода производной через нуль, т.к. иначе влияние этого фактора не играло бы роли и разницы в сходимости бы не наблюдалось. }
+\end{document}
