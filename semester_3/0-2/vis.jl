@@ -82,14 +82,14 @@ function plotErr23(df1, df2, S)
     p = plot()
     plot!(
         df1[!, "nNodes"], df1[!, "err_LagrUniform"],
-        label=L"Максимальная\ ошибка\ полинома\ Лагранжа\ для\ f_1(x)",
+        label=L"f_1(x)\ -\ трансцендентная",
         color=:royalblue1,
         line=:dash,
         ; S...
     )
     plot!(
         df2[!, "nNodes"], df2[!, "err_LagrUniform"],
-        label=L"Максимальная\ ошибка\ полинома\ Лагранжа\ для\ f_2(x)",
+        label=L"f_2(x)\ -\ полином",
         color=:tomato,
         line=:dash,
         ; S...
@@ -440,7 +440,7 @@ S_err = merge(S_common, Dict(
 if abspath(PROGRAM_FILE) == @__FILE__
     Lagr1 = CSV.read("CSVs/task2-3_f1_4.csv", DataFrame)
     Lagr1[[1, 2, 3, 399, 400], [4, 5, 7, 9]]
-    apath = "/home/alex/Documents/Edu/4сем/Nummethods/Labs/Отчёты/0-2/pics/"
+    apath = "~/Documents/Edu/4сем/Nummethods/Labs/3сем/0-2/tex/pics/"
     Lagr1.err_uniformLagr |> maximum |> println
     
     p1 = drawer23L("f1", 4, S1_L)
