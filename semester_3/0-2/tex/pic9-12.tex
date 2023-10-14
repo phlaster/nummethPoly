@@ -1,0 +1,26 @@
+\begin{figure}[H]
+    \centering
+    \caption{График интерполяции $f_1(x)$ сплайном Эрмита по 4 узлам, $\varepsilon \le 0.2986$}
+    \includegraphics[width=1\linewidth]{pics/pic9}
+    \label{pic:9}
+\end{figure}
+На среднем отрезке сплайн пересекает график функции и ошибка устремляется к $0$.
+\begin{figure}[H]
+    \centering
+    \caption{Та же функция, 9 узлов, ошибка $\varepsilon \le 0.0681$}
+    \includegraphics[width=0.9\linewidth]{pics/pic10}
+    \label{pic:10}
+\end{figure}
+Теперь почти на каждом междоузлии есть сплайн пересекает график функции.
+\begin{figure}[H]
+    \centering
+    \caption{Ошибка убывает не так быстро, как у полинома Лагранжа ($\varepsilon \le 0.004229$) Но распределяется более равномерно}
+    \includegraphics[width=0.9\linewidth]{pics/pic11}
+    \label{pic:11}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \caption{В отличие от глобальной интерполяции Лагранжа, сплайн в меньшей степени подвержен феномену Рунге. $\varepsilon \le 0.001096$}
+    \includegraphics[width=0.9\linewidth]{pics/pic12}
+    \label{pic:12}
+\end{figure}
