@@ -30,6 +30,24 @@ Graphic lagrangeInterpol(const Graphic& nodes, const Vec& grid)
     return lagrange;
 }
 
+pair<double, double> lagrange_uniform_single_value_with_error(
+    double (*f)(double, bool),
+    const double x,
+    const Vec& lims,
+    const int nNodes
+){
+    double left = lims[0];
+    double right = lims[1];
+    if (x< left || right < x)
+        throw runtime_error("x не лежит внутри интервала интерполяции!\n");
+    double y_exact = f(x, false);
+    Vec uniformNodes_grid = uniformGrid(left, right, nNodes);
+    Graphic uniformNodes = tabulateFunction(f, uniformNodes_grid);
+    double y_appr = lagrangeTerm(x, uniformNodes.xVals, uniformNodes.yVals);
+    double err = fabs(y_exact - y_appr);
+    return make_pair(y_appr, err);
+}
+
 double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t)
 {
     // Вычисляем нормализованное значение t на отрезке [0, 1]

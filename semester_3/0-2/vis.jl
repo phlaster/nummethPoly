@@ -169,34 +169,47 @@ function drawer23H(fname, N, S)
     plotHerm(df, S)
 end
 
-function plotErr23andHerm(df1, df2, S)
+function get_max_errs(taskf="task2-3_f1", col=:err_uniformLagr)
+    maxerrs = Float64[]
+
+    for i=4:100
+        e = CSV.read("CSVs/$(taskf)_$i.csv", DataFrame)[!, col]
+        push!(maxerrs, e |> maximum)
+    end
+    
+    maxerrs
+end
+
+function plotErr23andHerm(S)
+    x = 4:100
+
     p = plot()
     plot!(
-        df1[!, "nNodes"], df1[!, "err_LagrUniform"],
-        label=L"L(f_1)",
+        x, get_max_errs("task2-3_f1", :err_uniformLagr),
+        label=L"Лагранж,\ трансцендентная",
         color=:royalblue1,
         line=:dash,
         ; S...
     )
     plot!(
-        df2[!, "nNodes"], df2[!, "err_LagrUniform"],
-        label=L"L(f_2)",
+        x, get_max_errs("task2-3_f2", :err_uniformLagr),
+        label=L"Лагранж,\ полином",
         color=:tomato,
         line=:dash,
         ; S...
     )
     plot!(
-        df1[!, "nNodes"], df1[!, "err_Herm"],
-        label=L"H(f_1)",
+        x, get_max_errs("task2-3_f1", :err_uniformHerm),
+        label=L"Эрмит,\ трансцендентная",
         color=:royalblue1,
         ; S...
     )
 
     plot!(
-        df2[!, "nNodes"], df2[!, "err_Herm"],
-        label=L"H(f_2)",
+        x, get_max_errs("task2-3_f2", :err_uniformHerm),
+        label=L"Эрмит,\ полином",
         color=:tomato,
-        legendtitle=L"Средняя\ ошибка\ интерполяции:",
+        legendtitle=L"Максимальная\ ошибка\ интерполяции:",
         ; S...
     )
 end
@@ -464,23 +477,6 @@ if abspath(PROGRAM_FILE) == @__FILE__
 
     df1 = CSV.read("CSVs/task2-3_f1_summ_4-100_.csv", DataFrame)
     df2 = CSV.read("CSVs/task2-3_f2_summ_4-100_.csv", DataFrame)
-    
-    let
-        maxerr_1 = Float64[]
-        maxerr_2 = Float64[]
-        for i=4:100
-            e1 = CSV.read("CSVs/task2-3_f1_$i.csv", DataFrame).err_uniformLagr
-            e2 = CSV.read("CSVs/task2-3_f2_$i.csv", DataFrame).err_uniformLagr
-            push!(maxerr_1, e1 |> maximum)
-            push!(maxerr_2, e2 |> maximum)
-        end
-
-        df1 = DataFrame("nNodes"=>4:100, "err_LagrUniform"=>maxerr_1)
-        df2 = DataFrame("nNodes"=>4:100, "err_LagrUniform"=>maxerr_2)
-
-        p8 = plotErr23(df1, df2, S_err)
-        savefig(p8, apath * "pic8.png")
-    end
 
     p9 = drawer23H("f1", 4, S1_H)
     savefig(p9, apath * "pic9.png")
@@ -505,7 +501,7 @@ if abspath(PROGRAM_FILE) == @__FILE__
 
     df1 = CSV.read("CSVs/task2-3_f1_summ_4-100_.csv", DataFrame)
     df2 = CSV.read("CSVs/task2-3_f2_summ_4-100_.csv", DataFrame)
-    p16 = plotErr23andHerm(df1, df2, S_err)
+    p16 = plotErr23andHerm(S_err)
     savefig(p16, apath * "pic16.png")
 
     p18 = drawer4L("f1", 4, S1_L)
@@ -541,5 +537,5 @@ if abspath(PROGRAM_FILE) == @__FILE__
     df2 = CSV.read("CSVs/task5_f2_prog_20_0.200000_.csv", DataFrame)
 
     p29 = plotNoizeProgression(df1, df2)
-    savefig(p29, apath * "pic29.png")
+    savefig(p29, apath * "pic36.png")
 end

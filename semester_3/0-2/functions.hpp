@@ -39,6 +39,13 @@ double sum(const Vec& v);
 double mean(const Vec& v);
 double amplitude(Vec vector);
 
+pair<double, double> lagrange_uniform_single_value_with_error(
+    double (*f)(double, bool),
+    const double x,
+    const Vec& lims,
+    const int nNodes
+);
+
 Vec chebyshevGrid(double a, double b, int n);
 Vec uniformGrid(double a, double b, int n);
 Vec errorProfile(const Vec& v1, const Vec& v2);
@@ -46,11 +53,7 @@ Vec errorProfile(const Vec& v1, const Vec& v2);
 Graphic tabulateFunction(double (*f)(double, bool), const Vec& grid);
 Graphic tabulateDerivative(double (*f)(double, bool), const Graphic& nodes);
 Graphic tabulateDerivativeNum(const Graphic& main, int LagrangePoints=3);
-
-double lagrangeTerm(double x, const Vec& x_i, const Vec& y_i);
 Graphic lagrangeInterpol(const Graphic& nodes, const Vec& grid);
-
-double hermiteTerm(double a, double b, double fa, double fb, double dfa, double dfb, double t);
 Graphic hermiteSpline(const Graphic& function, const Graphic& derivative, int N);
 
 Graphic deviate(const Graphic& g, double sigma);

@@ -8,56 +8,29 @@
 
 const Vec LIMS_1 = {0.5, 2.75};
 const Vec LIMS_2 = {-2.4, 2.1};
+const double rand_val = 0.9718075809237104;
+
+void error_progression(
+    int nodes_min,
+    int nodes_max,
+    double rand
+){
+    double a_1 = LIMS_1[0], b_1 = LIMS_1[1]; 
+    double rand_x_1 = a_1 + rand*(b_1-a_1)/2;
+
+    double a_2 = LIMS_2[0], b_2 = LIMS_2[1]; 
+    double rand_x_2 = a_2 + rand*(b_2-a_2)/2;
+
+    cout << "nNodes,err_1,err_2\n";
+    for (int nNodes=nodes_min; nNodes<=nodes_max; nNodes++){
+        auto [y_val_1, err_1] = lagrange_uniform_single_value_with_error(f1, rand_x_1, LIMS_1, nNodes);
+        auto [y_val_2, err_2] = lagrange_uniform_single_value_with_error(f2, rand_x_2, LIMS_2, nNodes);
+        cout << nNodes << "," << err_1 << "," << err_2 << endl;
+    }
+}
 
 int main()
 {
-    double t = 0.5;
-    double dot = t * sum(LIMS_1);
-    int nInterpol = 1;
-
-    for (int N=4; N<=100; N++){
-        int nNodes = N * nInterpol;
-
-        Vec uniformNodes_grid = uniformGrid(LIMS_1[0], LIMS_1[1], nNodes);
-        Vec uniformTab_grid = {dot};
-
-        Graphic uniformNodes = tabulateFunction(f1, uniformNodes_grid);
-        
-        // Методом секущих вычисляем значение производной в узлах рабочей решётки
-        Graphic uniformNodes_DerNum = tabulateDerivativeNum(uniformNodes); // ??????????????
-        
-        // Табулируем значения функции и её производной функции по подробной решётке
-        Graphic uniformTab = tabulateFunction(f1, uniformTab_grid);
-        Graphic uniformTab_Der = tabulateDerivative(f1, uniformTab);
-        
-        // Вычисляем полином Лагранжа и сплайн Эрмита
-        Graphic uniformLagr = lagrangeInterpol(uniformNodes, uniformTab_grid);
-        Graphic uniformHerm = hermiteSpline(uniformNodes, uniformNodes_DerNum, nInterpol);
-
-        // Вычисляем профили ошибок для интерполяций
-        Vec err_uniformLagr = errorProfile(uniformLagr.yVals, uniformTab.yVals);
-        Vec err_uniformHerm = errorProfile(uniformHerm.yVals, uniformTab.yVals);
-
-        cout << nNodes << endl;;
-        cout << nInterpol << endl;;
-        cout << mean(err_uniformLagr) << endl;;
-        cout << mean(err_uniformHerm) << endl;;
-
-        write2_3(
-                "CSVs/task2-3_4-100_singledot_f1.csv",
-                uniformNodes,
-                uniformNodes_DerNum,
-
-                uniformTab,
-                uniformTab_Der,
-
-                uniformLagr,
-                uniformHerm,
-
-                err_uniformLagr,
-                err_uniformHerm
-            );
-    }
-    
+    error_progression(4, 100, rand_val);
     return 0;
 }
