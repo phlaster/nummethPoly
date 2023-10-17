@@ -1,0 +1,37 @@
+\babel@toc {russian}{}\relax 
+\contentsline {figure}{\numberline {1}{\ignorespaces Графики функций}}{4}{}%
+\contentsline {figure}{\numberline {2}{\ignorespaces График интерполяции $f_1(x)$ глобальным полиномом Лагранжа по 4 узлам, $\varepsilon ~\le ~0.188516$}}{7}{}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Та же функция, 9 узлов, $\varepsilon \le 0.0112927$}}{7}{}%
+\contentsline {figure}{\numberline {4}{\ignorespaces На $30$ узлах середина отрезка достигает машинной точности, $\varepsilon \le 1.40768\cdot 10^{-7}$}}{8}{}%
+\contentsline {figure}{\numberline {5}{\ignorespaces С дальнейшим ростом числа узлов всё заметнее проявляется феномен Рунге, $\varepsilon \le 0.00170522$}}{8}{}%
+\contentsline {figure}{\numberline {6}{\ignorespaces $\varepsilon \le 12.5019$}}{9}{}%
+\contentsline {figure}{\numberline {7}{\ignorespaces При интерполяции на 6 узлах полином Лагранжа {\bf в точности} совпадает с многочленом 5-й степени, добавлять больше узлов не имеет смысла. $\varepsilon ~\le ~1.42109\cdot 10^{-14}$}}{9}{}%
+\contentsline {figure}{\numberline {8}{\ignorespaces С ростом числа узлов интерполяции так же отметим проявление феномена Рунге. $\varepsilon ~\le ~4.57866\cdot 10^{-9}$}}{10}{}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Для обеих функций зависимость максимальной ошибки интерполяции от количества узлов полинома Лагранжа. В качестве случайной точки выбрано значение $t = 0.9718075809237104$}}{10}{}%
+\contentsline {figure}{\numberline {10}{\ignorespaces График интерполяции $f_1(x)$ сплайном Эрмита по 4 узлам, $\varepsilon \le 0.2986$}}{13}{}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Та же функция, 9 узлов, ошибка $\varepsilon \le 0.0681$}}{14}{}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Ошибка убывает не так быстро, как у полинома Лагранжа ($\varepsilon \le 0.004229$) Но распределяется более равномерно}}{14}{}%
+\contentsline {figure}{\numberline {13}{\ignorespaces В отличие от глобальной интерполяции Лагранжа, сплайн в меньшей степени подвержен феномену Рунге. $\varepsilon \le 0.001096$}}{15}{}%
+\contentsline {figure}{\numberline {14}{\ignorespaces $\varepsilon \le 15.8236$}}{15}{}%
+\contentsline {figure}{\numberline {15}{\ignorespaces В отличие от метода Лагранжа, кубический сплайн Эрмита не совпадает с полиномом высшей степени, даже когда количество $n>5$, $\varepsilon \le 4.6176$}}{16}{}%
+\contentsline {figure}{\numberline {16}{\ignorespaces $\varepsilon \le 0.5379$}}{16}{}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Сводный график зависимости максимальной ошибки на интервале от количества узлов на нём.}}{17}{}%
+\contentsline {figure}{\numberline {18}{\ignorespaces $~~\varepsilon _U\le 0.1885;~~~\varepsilon _T\le 0.1793$}}{19}{}%
+\contentsline {figure}{\numberline {19}{\ignorespaces ~~$\varepsilon _U\le 0.1304;~~~\varepsilon _T\le 0.0958$}}{19}{}%
+\contentsline {figure}{\numberline {20}{\ignorespaces ~~$\varepsilon _U\le 1.174\cdot 10^{-3};~~~\varepsilon _T\le 1.384\cdot 10^{-4}$, минимальная ошибка убывает не так быстро, как у полинома Лагранжа, но профиль ошибки более равномерный:}}{20}{}%
+\contentsline {figure}{\numberline {21}{\ignorespaces ~~$\varepsilon _U\le 6.154\cdot 10^{-8};~~~\varepsilon _T\le 2.334\cdot 10^{-12}$}}{20}{}%
+\contentsline {figure}{\numberline {22}{\ignorespaces $~~\varepsilon _U\le 12.502;~~~\varepsilon _T\le 9.6108$}}{21}{}%
+\contentsline {figure}{\numberline {23}{\ignorespaces ~~$\varepsilon _U\le 6.544;~~~\varepsilon _T\le 3.604$}}{21}{}%
+\contentsline {figure}{\numberline {24}{\ignorespaces ~~$\varepsilon _U\le 1.421\cdot 10^{-14};~~~\varepsilon _T\le 1.776\cdot 10^{-14}$}}{22}{}%
+\contentsline {figure}{\numberline {25}{\ignorespaces ~~$\varepsilon _U\le 6.154\cdot 10^{-8};~~~\varepsilon _T\le 2.334\cdot 10^{-12}$}}{22}{}%
+\contentsline {figure}{\numberline {26}{\ignorespaces Сводный график зависимости ошибки от количества узлов для разных решёток}}{23}{}%
+\contentsline {figure}{\numberline {27}{\ignorespaces $~~\varepsilon _L\le 0.2436;~~~\varepsilon _H\le 0.3151$}}{24}{}%
+\contentsline {figure}{\numberline {28}{\ignorespaces ~~$\varepsilon _L\le 3.727;~~~\varepsilon _H\le 0.5776$}}{25}{}%
+\contentsline {figure}{\numberline {29}{\ignorespaces ~~$\varepsilon _L\le 154.833;~~~\varepsilon _H\le 0.6443$}}{25}{}%
+\contentsline {figure}{\numberline {30}{\ignorespaces ~~$\varepsilon _L\le 3.24125\cdot 10^{6};~~~\varepsilon _H\le 0.576293$}}{26}{}%
+\contentsline {figure}{\numberline {31}{\ignorespaces $~~\varepsilon _L\le 13.0412;~~~\varepsilon _H\le 16.5438$}}{26}{}%
+\contentsline {figure}{\numberline {32}{\ignorespaces ~~$\varepsilon _L\le 3.6373;~~~\varepsilon _H\le 6.8152$}}{27}{}%
+\contentsline {figure}{\numberline {33}{\ignorespaces ~~$\varepsilon _L\le 154.732;~~~\varepsilon _H\le 8.2867$}}{27}{}%
+\contentsline {figure}{\numberline {34}{\ignorespaces ~~$\varepsilon _L\le 1.2572\cdot 10^{6};~~~\varepsilon _H\le 5.6723$}}{28}{}%
+\contentsline {figure}{\numberline {35}{\ignorespaces Зависимость максимальной ошибки интерполяции обеих функций различными методами при фиксированном значении $\mathbf {K}=0.2$ от количества точек интерполяции (без усреднения)}}{29}{}%
+\contentsline {figure}{\numberline {36}{\ignorespaces Зависимость {\it средней} ошибки интерполяции обеих функций различными методами при фиксированном количестве узлов интерполяции $N=20$ от параметра $\mathbf {K}=0.2$ (усреднение по 100)}}{30}{}%

@@ -10,8 +10,8 @@
 \pagenumbering{arabic}
 
 \setcounter{page}{2}
-
-
+\tableofcontents
+\clearpage
 \section*{Исходные данные}
 
 На двух интервалах заданы функции:
@@ -65,11 +65,9 @@
     \end{equation}
     В противном случае в (\ref{l_i}) возникнет множитель с нулём в знаменателе.
 \end{itemize}
-
 {\bf На заданных отрезках (\ref{f1}) и (\ref{f2}) удовлетворяют всем условиям выше.}
 
 \subsection{Численный расчёт}
-
 Рассмотрим алгоритм приближения функций по её известным табличным значениям на примере (\ref{f1}). Вычислим точно её значения в нескольких точках:
 \begin{align}
     \label{4nodes_f1}
@@ -130,14 +128,12 @@
 
 \subsection{Графики}
 
-\subsubsection{$f_1(x):$}
-
+\subsubsection{Трансцендентная $f_1(x):$}
 \input{pics2-5}
 
 \clearpage
 
-\subsubsection{$f_2(x):$}
-
+\subsubsection{Полином 5-й степени $f_2(x):$}
 \input{pics6-9}
 
 \subsubsection*{Комментарий}
@@ -323,10 +319,10 @@
 
 \subsection{Графики}
 
-\subsubsection{$f_1(x):$}
+\subsubsection{Трансцендентная $f_1(x):$}
 \input{pic9-12}
 
-\subsubsection{$f_2(x):$}
+\subsubsection{Полином 5-й степени $f_2(x):$}
 \input{pic13-16}
 
 \subsubsection*{Комментарий}
