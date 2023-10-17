@@ -24,6 +24,7 @@ build/
 # LaTeX
 **/tex/*.aux
 **/tex/*.log
+**/tex/*.toc
 **/tex/*.synctex.gz
 **/tex/*.pdf
 **/tex/titlepage.tex
