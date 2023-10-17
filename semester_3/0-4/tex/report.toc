@@ -1,0 +1,25 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1}Создать случайную СЛАУ заданной размерности с заданным числом обусловленности}{3}{}%
+\contentsline {subsection}{\numberline {1.1}Ручной расчёт}{3}{}%
+\contentsline {section}{\numberline {2}Решить СЛАУ методом LU-разложения с выбором главного элемента}{4}{}%
+\contentsline {subsection}{\numberline {2.1}Алгоритм LUP-разложения}{4}{}%
+\contentsline {subsection}{\numberline {2.2}Решение СЛАУ с помощью полученного разложения}{6}{}%
+\contentsline {section}{\numberline {3}Воспользоваться запрограммированным методом и операцией Matlab «$\backslash $» на тестовых матрицах с нулевым определителем}{7}{}%
+\contentsline {subsection}{\numberline {3.1}Запрограммированный метод}{7}{}%
+\contentsline {subsubsection}{\numberline {3.1.1}Реализация в C++}{7}{}%
+\contentsline {subsubsection}{\numberline {3.1.2}Модульная структура программы}{7}{}%
+\contentsline {subsubsection}{\numberline {3.1.3}Проверка матриц A и B:}{8}{}%
+\contentsline {subsubsection}{\numberline {3.1.4}Комментарий:}{8}{}%
+\contentsline {subsection}{\numberline {3.2}Оператор Matlab <<$\backslash $>>:}{9}{}%
+\contentsline {subsubsection}{\numberline {3.2.1}Код программы в Matlab:}{9}{}%
+\contentsline {subsubsection}{\numberline {3.2.2}Результат:}{9}{}%
+\contentsline {subsubsection}{\numberline {3.2.3}Комментарий:}{9}{}%
+\contentsline {section}{\numberline {4}В MatLab Решить СЛАУ с матрицами Гильберта}{10}{}%
+\contentsline {subsection}{\numberline {4.1}Теория}{10}{}%
+\contentsline {subsection}{\numberline {4.2}Код программы в Matlab:}{10}{}%
+\contentsline {subsection}{\numberline {4.3}Результат:}{10}{}%
+\contentsline {subsection}{\numberline {4.4}Комментарий:}{10}{}%
+\contentsline {section}{\numberline {5}Построить график временных затрат решения СЛАУ для операции Matlab «$\backslash $» в зависимости от размера матрицы}{11}{}%
+\contentsline {subsection}{\numberline {5.1}Код программы в Matlab:}{11}{}%
+\contentsline {subsection}{\numberline {5.2}Графики}{11}{}%
+\contentsline {subsection}{\numberline {5.3}Комментарий:}{12}{}%

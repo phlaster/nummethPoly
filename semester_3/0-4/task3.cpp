@@ -1,26 +1,22 @@
 // Повторение решения из примера
 #include "LinearAlgebra.hpp"
-#include <stdexcept>
 
 void routine(const Mtr& A, const Vec& b){
 
-    print(A);
+    print(A, {"x1", "x2", "x3"}, b);
     print("Определитель:");
     print(det(A));
     
-    try{
-        double c = cond(A);
-        print("Число обусловленности:");
-        print(c);
-    }
-    catch (invalid_argument){
-        print("Расчитать число обусловленности не удалось!\n\n");
-    }
     
 
     print("Для решения системы нужно произвести LU-разложение матрицы:");
-    auto [L, U, perm] = LU_decomposition(A);
+    auto [L, U, perm] = LUP(A);
     print({L, U, perm});
+
+    print("Соберём матрицу назад:");
+    vInt inv_perm = inversePermutation(perm);
+    Mtr reverse_LU = mul(permutationMatrix(inv_perm), mul(L, U));
+    print(reverse_LU);
 
     print("Вычислим вектор неизвестных, основываясь на LU-разложении:");
     Vec x_LU = solveLinearEquation(L, U, perm, b);
@@ -42,14 +38,21 @@ int main() {
     };
     Vec b = randVec(3, -10, 10);
 
+
     print("Проверка матрицы A:");
-    routine(A, b);
+    try {
+        routine(A, b);
+    } catch (const runtime_error& e) {
+        cerr << "Ошибка: " << e.what() << endl;
+    }
+
 
     print("Проверка матрицы B:");
-    routine(mul(1e8, A), b);
-
-    
-
+    try {
+        routine(mul(1e8, A), b);
+    } catch (const runtime_error& e) {
+        cerr << "Ошибка: " << e.what() << endl;
+    }
 
     return 0;
 }

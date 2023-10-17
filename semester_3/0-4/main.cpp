@@ -14,38 +14,37 @@ int main() {
     print("Перед применением алгорима Хаусхолдера ветор будет нормирован:");
     print(normalize(r));
 
-    Mtr Q = householder(r);
-    print("Матрица Q из преобразования Хаусхолдера:");
-    print(Q);
-    
-    print("Число обусловленности Q:");
-    print(cond(Q));
+    Mtr A = householder(r);
+    print("Матрица A из преобразования Хаусхолдера:");
+    print(A);
 
-    print("Зададим вектор неизвестных x в уравнении: Qx=b");
+    print("Зададим вектор неизвестных x в уравнении: Ax=b");
     Vec x = randVec(n);
     print(x);
 
     print("Вычислим вектор b и запишем систему целиком:");
-    Vec b = mul(Q, x);
-    print(Q, x, b);
+    Vec b = mul(A, x);
+    print(A, x, b);
 
-    print("Для решения системы нужно произвести LU-разложение матрицы Q:");
-    auto [L, U, perm] = LU_decomposition(Q);
+    print("Для решения системы нужно произвести LU-разложение матрицы A:");
+    auto [L, U, perm] = LUP(A); //LU_decomposition(A);
     print({L, U, perm});
 
     print("Подтвердим верность расчётов, переможнив L*U и подставив строки в правильном порядке:");
-    Mtr reverse_LU = apply_row_permutation(mul(L, U), perm);
+    // Mtr reverse_LU = apply_row_permutation(mul(L, U), perm);
+    vInt inv_perm = inversePermutation(perm);
+    Mtr reverse_LU = mul(permutationMatrix(inv_perm), mul(L, U));
     print(reverse_LU);
 
-    print("Элементы реконструированной матрицы отличаются от Q не более, чем на:");
-    print(maxdiff(Q, reverse_LU));
+    print("Элементы реконструированной матрицы отличаются от A не более, чем на:");
+    print(maxdiff(A, reverse_LU));
 
-    print("Вычислим вектор неизвестных, основываясь на LU-разложении Q:");
+    print("Вычислим вектор неизвестных, основываясь на LU-разложении A:");
     Vec x_LU = solveLinearEquation(L, U, perm, b);
     print(x_LU);
 
     print("Вектор невязки найденного решения:");
-    Vec res = residual(Q, x_LU, b);
+    Vec res = residual(A, x_LU, b);
     print(res);
 
     print("2-норма вектора невязки:");

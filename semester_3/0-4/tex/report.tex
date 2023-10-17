@@ -1,0 +1,534 @@
+\input{settings}
+\begin{document}
+\include{titlepage}
+\pagenumbering{arabic}
+\setcounter{page}{2}
+\tableofcontents
+\listoffigures
+\clearpage
+\section{Создать случайную СЛАУ заданной размерности с заданным числом обусловленности}
+\subsection{Ручной расчёт}
+\begin{enumerate}
+\item Зададим диагональную матрицу, наибольший элемент которой -- желаемое число обусловленности:
+\begin{equation}
+    \mathbf{D} =
+    \begin{pmatrix}
+        \mathbf{7} & 0 & 0 & 0 \\
+        0 & 2 & 0 & 0 \\
+        0 & 0 & 1 & 0 \\
+        0 & 0 & 0 & -2
+    \end{pmatrix}
+\end{equation}
+
+\item Зададим случайный вектор-столбец длины $\mathbf{4}$ и нормируем его:
+\begin{equation}
+    \mathbf{w}_0 =
+    \begin{pmatrix}
+        0.680 \\
+        0.032 \\
+        0.585 \\
+        0.610
+    \end{pmatrix} \implies
+    \mathbf{w} = \cfrac{\mathbf{w}_0}{||\mathbf{w}_0||_2} =
+    \begin{pmatrix}
+        0.627 \\
+        0.029 \\
+        0.539 \\
+        0.562
+    \end{pmatrix}
+\end{equation}
+
+\item Согласно формуле преобразования Хаусхолдера
+\begin{equation}
+    \mathbf{Q = E - 2ww}^T
+\end{equation}
+получим матрицу $\mathbf{Q}$:
+\begin{equation}
+    \mathbf{Q} =
+    \begin{pmatrix}
+        1 & 0 & 0 & 0 \\
+        0 & 1 & 0 & 0 \\
+        0 & 0 & 1 & 0 \\
+        0 & 0 & 0 & 1
+    \end{pmatrix} - 2
+    \begin{pmatrix}
+        0.627 \\
+        0.029 \\
+        0.539 \\
+        0.562
+    \end{pmatrix} \cdot
+    \begin{pmatrix}
+        0.627 \\
+        0.029 \\
+        0.539 \\
+        0.562
+    \end{pmatrix} ^T =
+    \begin{pmatrix}
+        0.215 & -0.037 & -0.676 & -0.704 \\
+       -0.037 &  0.998 & -0.032 & -0.033 \\
+       -0.676 & -0.032 &  0.419 & -0.606 \\
+       -0.704 & -0.033 & -0.606 &  0.368
+    \end{pmatrix}
+\end{equation}
+
+\item Построим матрицу СЛАУ:
+\begin{equation}
+    \mathbf{A}=\mathbf{Q}^T\mathbf{DQ} =
+    \begin{pmatrix}
+        -0.210&-0.155&-2.150&-0.129\\
+        -0.155& 2.001& 0.058& 0.160\\
+        -2.150& 0.058& 2.637& 3.525\\
+        -0.129& 0.160& 3.525& 3.572
+    \end{pmatrix} \implies cond(\mathbf{A}) = \mathbf{7}
+\end{equation}
+
+\item Зададим точное решение и вычислим правую часть уравнения:
+\begin{equation}
+    \mathbf{x} =
+    \begin{pmatrix}
+        1\\ 2\\ 3\\ 4
+    \end{pmatrix}\implies
+    \mathbf{Ax} = \mathbf{b} =
+     \begin{pmatrix}
+       -7.486\\ 4.661\\ 19.977\\ 25.054
+    \end{pmatrix}
+\end{equation}
+\end{enumerate}
+
+\clearpage
+\section{Решить СЛАУ методом LU-разложения с выбором главного элемента}
+LU-разложение с выбором главного (опорного) элемента это т.н. LUP-разложение, где исходная невырожденная (квадратная с ненулевым определителем) матрица $\mathbf{A}$ представляется в виде:
+\begin{equation}
+    \mathbf{PA} = \mathbf{LU}
+\end{equation}
+Здесь матрица $\mathbf{L}$ -- нижнетреугольная с единицами на главной диагонали, $\mathbf{U}$ -- верхнетреугольная общего вида, а $\mathbf{P}$ -- «матрица перестановок», получаемая из единичной матрицы путём перестановки строк или столбцов. $\mathbf{P}$ соответствует вектору перестановок $\mathbf{p}$, в соответствии с которым нужно поменять местами строки $\mathbf{LU}$, чтобы получить $\mathbf{A}$.
+
+\subsection{Алгоритм LUP-разложения}
+\begin{enumerate}
+    \item Инициализируем вектор $\mathbf{p}_0$ числами натурального ряда:
+    \[\mathbf{p}_0 = \begin{pmatrix} 1 \\ 2 \\ 3 \\ 4 \end{pmatrix}\]
+
+    \item В первом столбце $\mathbf{M}_0 = \mathbf{A}$ найдём элемент с наибольшим модулем:
+    \[\mathbf{M}_0 =
+    \begin{pmatrix}
+        -0.210&-0.155&-2.150&-0.129\\
+        -0.155& 2.001& 0.058& 0.160\\
+        \mathbf{-2.150}& 0.058& 2.637& 3.525\\
+        -0.129& 0.160& 3.525& 3.572
+    \end{pmatrix}\]
+
+    \item Переставим строку с опорным элементом так, чтобы он оказался на главной диагонали, отразив соответствующую перестановку в векторе перестановок:
+    \[\mathbf{M}_1 =
+    \begin{pmatrix}
+        \mathbf{-2.150}& \mathbf{0.058}& \mathbf{2.637}& \mathbf{3.525}\\
+        -0.155& 2.001& 0.058& 0.160\\
+        \mathit{-0.210}&\mathit{-0.155}&\mathit{-2.150}&\mathit{-0.129}\\
+        -0.129& 0.160& 3.525& 3.572
+    \end{pmatrix}; \hspace{1cm}
+    \mathbf{p}_1 = \begin{pmatrix} \mathbf{3} \\ 2 \\ \mathit{1} \\ 4 \end{pmatrix}\]
+
+    \item Все элементы первого столбца лежащие под опорным элементом (ниже 1-й строки) разделим на него:
+    \[\mathbf{M}_2 =
+    \begin{pmatrix}
+        \mathbf{-2.150}& 0.058& 2.637& 3.525\\
+        \frac{-0.155}{-2.150}& 2.001& 0.058& 0.160\\
+        \frac{-0.210}{-2.150}&-0.155&-2.150&-0.129\\
+        \frac{-0.129}{-2.150}& 0.160& 3.525& 3.572
+    \end{pmatrix} =
+    \begin{pmatrix}
+        \mathbf{-2.150}& 0.058& 2.637& 3.525\\
+        \mathit{0.072}& 2.001& 0.058& 0.160\\
+        \mathit{0.098}&-0.155&-2.150&-0.129\\
+        \mathit{0.060}& 0.160& 3.525& 3.572
+    \end{pmatrix}\]
+
+    \item Далее из элементов каждого следующего столбца, лежащих ниже опорной (1-й) строки вычтем произведение соответствующего элемента первого столбца и первой строки:
+    \[\mathbf{M}_3 = \begin{pmatrix}
+                -2.150& \mathbf{0.058}& \mathbf{2.637}& \mathbf{3.525}\\
+        \mathit{0.072}& 2.001-0.072\cdot0.058& 0.058-0.072\cdot2.637& 0.160-0.072\cdot3.525\\
+        \mathit{0.098}&-0.155-0.098\cdot0.058&-2.150-0.098\cdot2.637&-0.129-0.098\cdot3.525\\
+        \mathit{0.060}& 0.160-0.060\cdot0.058& 3.525-0.060\cdot2.637& 3.572-0.060\cdot3.525
+    \end{pmatrix}=\]
+    \[=\begin{pmatrix}
+       -2.150&  0.058&  2.637&  3.525\\
+        0.072&  1.997& -0.132& -0.094\\
+        0.098& -0.161& -2.408& -0.474\\
+        0.060&  0.157&  3.367&  3.360
+    \end{pmatrix}\]
+
+    \item Далее переходим ко второму столбцу и второй строке, повторяя пп. 2-5. В нашем случае, элемент с наибольшим модулем уже находится на главной диагонали, так что переходим к шагу деления элементов матрицы под элементом на главной диагонали:
+    \[\mathbf{M}_4 =
+    \begin{pmatrix}
+        -2.150&  0.058&  2.637&  3.525\\
+        0.072&  \mathbf{1.997}& -0.132& -0.094\\
+        0.098& \frac{-0.161}{1.997}& -2.408& -0.474\\
+        0.060& \frac{ 0.157}{1.997}&  3.367&  3.360
+    \end{pmatrix}=
+    \begin{pmatrix}
+       -2.150&          0.058 &  2.637&  3.525\\
+        0.072& \mathbf{ 1.997}& -0.132& -0.094\\
+        0.098& \mathit{-0.081}& -2.408& -0.474\\
+        0.060& \mathit{-0.079}&  3.367&  3.360
+    \end{pmatrix}\]
+
+    \item Шаг вычитания:
+    \[\mathbf{M}_5 =
+     \begin{pmatrix}
+       -2.150&          0.058 &  2.637&  3.525\\
+        0.072&          1.997 & \mathbf{-0.132}& \mathbf{-0.094}\\
+        0.098& \mathit{-0.081}& -2.408-0.081\cdot0.132& -0.474-0.081\cdot0.094\\
+        0.060& \mathit{-0.079}&  3.367-0.079\cdot0.132&  3.360-0.079\cdot0.094
+    \end{pmatrix} =
+    \begin{pmatrix}
+       -2.150&  0.058&  2.637&  3.525\\
+        0.072&  1.997& -0.132& -0.094\\
+        0.098& -0.081& -2.419& -0.482\\
+        0.060& -0.079&  \mathbf{3.357}&  3.353
+    \end{pmatrix}\]
+    В матрице $\mathbf{M}_5$ отмечен элемент с наибольшим модулем в третьем столбце (новый опорный).
+
+    \item Меняем строки, чтобы опорный элемент оказался на диагонали, не забываем про вектор перестановок:
+    \[\mathbf{M}_6 =
+     \begin{pmatrix}
+         -2.150&  0.058&  2.637&  3.525\\
+         0.072&  1.997& -0.132& -0.094\\
+        \mathbf{ 0.060}& \mathbf{-0.079}&  \mathbf{3.357}& \mathbf{ 3.353}\\
+        \mathit{ 0.098}& \mathit{-0.081}& \mathit{-2.419}& \mathit{-0.482}
+     \end{pmatrix}; \hspace{1cm}
+     \mathbf{p}_2 = \begin{pmatrix} 3 \\ 2 \\ \mathbf{4} \\ \mathit{1}  \end{pmatrix}\]
+
+     \item Шаг деления:
+     \[\mathbf{M}_7 =
+     \begin{pmatrix}
+        -2.150&  0.058&  2.637&  3.525\\
+         0.072&  1.997& -0.132& -0.094\\
+         0.060& -0.079&  \mathbf{3.357}&  3.353\\
+         0.098& -0.081& \frac{-2.419}{3.357}& -0.482
+     \end{pmatrix} =
+     \begin{pmatrix}
+         -2.150&  0.058&  2.637&  3.525\\
+         0.072&  1.997& -0.132& -0.094\\
+         0.060& -0.079&  3.357&  3.353\\
+         0.098& -0.081& \mathit{-0.721}& -0.482
+     \end{pmatrix}\]
+
+     \item Шаг вычитания:
+     \[\mathbf{M}_8 =
+     \begin{pmatrix}
+         -2.150&  0.058&  2.637&  3.525\\
+         0.072&  1.997& -0.132& -0.094\\
+         0.060& -0.079&  3.357&  \mathbf{3.353}\\
+         0.098& -0.081& \mathit{-0.721}& -0.482-(-0.721\cdot3.353)
+     \end{pmatrix} =
+     \begin{pmatrix}
+         -2.150&  0.058&  2.637&  3.525\\
+         0.072&  1.997& -0.132& -0.094\\
+         0.060& -0.079&  3.357&  3.353\\
+         0.098& -0.081& -0.721& 1.936
+     \end{pmatrix}\]
+\end{enumerate}
+Полученная матрица $\mathbf{M}_8=\mathbf{M}$ вкупе с вектором перестановок $\mathbf{p}_2=\mathbf{p}$ являются компактным представлением LUP-разложения матрицы $\mathbf{A}$. По-отдельности матрицы $\mathbf{L}$ и $\mathbf{U}$ можно получить пользуясь соотношением:
+\begin{align}
+    \mathbf{M} = \mathbf{L} - \mathbf{E} + \mathbf{U}
+\end{align}
+То есть:
+\begin{equation}
+    \mathbf{L} =
+    \begin{pmatrix}
+        1&      0&      0&  0\\
+        0.072&  1&     0& 0\\
+        0.060& -0.079&  1&  0\\
+        0.098& -0.081& -0.721& 1
+    \end{pmatrix};~~~\mathbf{U} =
+    \begin{pmatrix}
+       -2.150&  0.058&  2.637&  3.525\\
+        0&      1.997& -0.132& -0.094\\
+        0&     0&      3.357&  3.353\\
+        0&     0&     0&     1.936
+    \end{pmatrix};~~~
+    \mathbf{p} = \begin{pmatrix} 3 \\ 2 \\ 4 \\ 1  \end{pmatrix}
+\end{equation}
+
+\subsection{Решение СЛАУ с помощью полученного разложения}
+\begin{enumerate}
+    \item Прямая подстановка -- решение уравнения $\mathbf{Ly} = \mathbf{Pb}=\mathbf{b}_p$ относительно $\mathbf{y}$:
+    \[ (\mathbf{L}|\mathbf{b}_p) =
+    \left(
+    \begin{array}{cccc|c}
+        1    &      0&      0& 0& 19.997\\
+        0.072&      1&      0& 0&  4.661\\
+        0.060& -0.079&      1& 0& 25.054\\
+        0.098& -0.081& -0.721& 1& -7.486
+    \end{array}\right) \implies
+    \mathbf{y} = \begin{pmatrix} 19.997 \\ 3.223 \\ 24.110 \\ 8.201 \end{pmatrix}; \]
+    \item Обратная подстановка -- решение уравнения $\mathbf{U}\widetilde{\mathbf{x}} = \mathbf{y}$:
+    \[ (\mathbf{U}|\mathbf{y}) =
+    \left( \begin{array}{cccc|c}
+       -2.150&  0.058&  2.637&  3.525& 19.997\\
+        0&      1.997& -0.132& -0.094&  3.223\\
+        0&      0&      3.357&  3.353& 24.110\\
+        0&      0&      0&      1.936&  8.201
+    \end{array} \right) \implies
+    \widetilde{\mathbf{x}} = \begin{pmatrix} 1.327 \\ 2.008\\ 2.951\\ 4.236 \end{pmatrix}; \]
+
+    \item Рассчитаем вектор невязки по формуле: $\mathbf{r}=\mathbf{b}-\textbf{A}\widetilde{\mathbf{x}}$
+    \[ \mathbf{r}=
+    \begin{pmatrix}
+        -7.486\\ 4.661\\ 19.977\\ 25.054
+    \end{pmatrix} -
+    \begin{pmatrix}
+        -0.210&-0.155&-2.150&-0.129\\
+        -0.155& 2.001& 0.058& 0.160\\
+        -2.150& 0.058& 2.637& 3.525\\
+        -0.129& 0.160& 3.525& 3.572
+    \end{pmatrix} \cdot
+    \begin{pmatrix} 1.327 \\ 2.008\\ 2.951\\ 4.236 \end{pmatrix} =
+    \begin{pmatrix} -0.005\\ 0\\ 0\\ -0.629 \end{pmatrix}; ~~~~ ||\mathbf{r}||_2 = 0.629 \]
+\end{enumerate}
+
+\clearpage
+\section{Воспользоваться запрограммированным методом и операцией Matlab «$\backslash$» на тестовых матрицах с нулевым определителем}
+\subsection{Запрограммированный метод}
+\subsubsection{Реализация в C++}
+Основная вызываемая в программе функция выглядит так:
+\begin{lstlisting}[language=c++]
+LU_result LUP(Mtr M){
+    size_t N = M.size();
+    vInt perm(N); for (int i = 0; i < N; i++) perm[i] = i; // perm = {0,1,2,...,N-1}
+
+    for (size_t i=0; i<N; i++){ // Iterating over each row
+        find_max_and_swap(M, perm, i);
+        div_under_main_diag(M, i);
+        subtract_product(M, i);
+    }
+    auto [L, U] = split_LUP(M);
+    return {L, U, perm};
+}
+\end{lstlisting}
+Она проходит по каждой строке матрицы и последовательно применяет 3 шага, описанных в (2.1): шаг поиска максимального элемента (опорного) в столбце и перестановки двух строк, чтобы опорный оказался на главной диагонали (одновременно с этим происходит перестановка в векторе перестановок), шаг деления элементов столбца под опорным элементом на его значение и шаг вычитания произведений соответствующих элементов из подматрицы ниже и правее опорного элемента. После этих итераций необходимо разделить полученную матрицу на $\mathbf{L}$ и $\mathbf{U}$ части и вернуть их вместе с вектором перестановок $\mathbf{p}$.
+\subsubsection{Модульная структура программы}
+В программной реализации абстрагированы в подфункции многие часто используемые действия в линейной алгебре:
+\begin{lstlisting}[language=c++]
+using namespace std;
+using Vec = vector<double>;
+using vInt = vector<int>;
+using Mtr = vector<Vec>;
+using LU_result = tuple <Mtr, Mtr, vInt>;
+// Matrix algebra:
+Vec sum(const Vec& V1, const Vec& V2, double c1=1, double c2=1); // c1*V1 + c2*V2
+Mtr sum(const Mtr& M1, const Mtr& M2, double c1=1, double c2=1); // c1*M1 + c2*M2
+Vec mul(double scalar, const Vec& V);
+Mtr mul(double scalar, const Mtr& M);
+Vec mul(const Mtr& M,  const Vec& x);
+Mtr mul(const Mtr& M1, const Mtr& M2);
+// LU:
+LU_result LUP(Mtr M);
+void find_max_and_swap(Mtr& M, vInt& perm, int i);
+void div_under_main_diag(Mtr& M, int i);
+void subtract_product(Mtr& M, int i);
+pair<Mtr, Mtr> split_LUP(Mtr& U);
+// SLAE:
+Vec solveLinearEquation(const Mtr& L, const Mtr& U, const vInt& permutation, const Vec& b);
+Vec residual(const Mtr& A, const Vec& x, const Vec& b);
+// Special:
+Mtr inv(const Mtr& M);
+bool issquare(const Mtr& M);
+double det(const Mtr& M);
+\end{lstlisting}
+\subsubsection{Проверка матриц A и B:}
+{\singlespacing
+\begin{verbatim}
+Проверка матрицы A:
+A:                        |x:         |b:
+1           2           3 |         x1|    6.40157
+4           5           6 |         x2|    3.47909
+7           8           9 |         x3|   -1.09412
+
+Определитель:
+0
+
+Для решения системы нужно произвести LU-разложение матрицы:
+LU-разложение:
+
+L:                        |U:
+1           0          0  |7        8          9
+0.142857    1          0  |0        0.857143   1.71429
+0.571429    0.5        1  |0        0          1.11022e-16
+
+Вектор перестановок:
+[2, 0, 1]
+
+Соберём матрицу назад:
+1           2           3
+4           5           6
+7           8           9
+
+Вычислим вектор неизвестных, основываясь на LU-разложении:
+[7.43422e+15, -1.48684e+16, 7.43422e+15]
+
+Вектор невязки найденного решения:
+[-2.40157, -11.4791, 1.09412]
+
+2-норма вектора невязки:
+11.7785
+
+Проверка матрицы B:
+B:                            |x:         |b:
+1e+08       2e+08       3e+08 |         x1|    6.40157
+4e+08       5e+08       6e+08 |         x2|    3.47909
+7e+08       8e+08       9e+08 |         x3|   -1.09412
+
+Определитель:
+-1.07374e+09
+
+Для решения системы нужно произвести LU-разложение матрицы:
+i = 2, pivot = 0
+Ошибка: Невозможно найти максимальнный элемент в нулевом столбце!
+\end{verbatim}}
+\subsubsection{Комментарий:}
+\begin{enumerate}
+    \item В случае с матрицей $\mathbf{A}$ программа точно вычислила определитель (по наивной рекурсивной формуле) и успешно осуществила LU-разложение. Однако при дальнейшем решении СЛАУ невязка полученного решения оказалась очень большой по причине заведомо плохой обусловленности матрицы  $\mathbf{A}$.
+
+    \item В случае с матрицей $\mathbf{B}$ программа не получила точного значения определителя вследствие ошибки округления чисел с плавающей точкой (аналогичные результаты можно получить в математических пакетах, если попытаться вычислить определитель матрицы $\mathtt{det((1e8+0.1) * A)}$). При попытке же прозвести LU-разложение программа завершилась с ошибкой, т.к. в третьем столбце не был найден максимальный элемент (все элементы равны нулю), а значит невозможно осуществить шаг перестановки и следующий за ним шаг деления.
+\end{enumerate}
+
+\subsection{Оператор Matlab <<$\backslash$>>:}
+\subsubsection{Код программы в Matlab:}
+\begin{lstlisting}[language=octave]
+A = [
+1 2 3
+4 5 6
+7 8 9];
+B = 1e8*A;
+b = rand(n, 1);
+% Warning: Matrix is singular to working precision.
+% Warning: Matrix is close to singular or badly scaled.
+xA = A \ b; xB = B \ b;
+disp(A);
+disp(['Det(A): ' num2str(det(A))]);
+disp(['Cond(A): ' num2str(cond(A))]);
+disp(['||rA||: ' num2str(norm(b-A*xA))]);
+
+disp(B);
+disp(['Det(B): ' num2str(det(B))]);
+disp(['Cond(B): ' num2str(cond(B))]);
+disp(['||rB||: ' num2str(norm(b-A*xB))]);
+\end{lstlisting}
+\subsubsection{Результат:}
+{\singlespacing
+\begin{verbatim}
+Warning: Matrix is close to singular or badly scaled.
+> In LAB_0_4__3 (line 19)
+1     2     3
+4     5     6
+7     8     9
+Det(A): 6.6613e-16
+Cond(A): 1.143944118188076e+17
+||rA||: 4.3504
+Warning: Matrix is singular to working precision.
+> In LAB_0_4__3 (line 26)
+100000000   200000000   300000000
+400000000   500000000   600000000
+700000000   800000000   900000000
+Det(B): 0
+Cond(B): 2.556914355281162e+16
+||rB||: NaN
+\end{verbatim}}
+\subsubsection{Комментарий:}
+Полученные теперь результаты, отличаясь в деталях от прежних, в главном сходятся:
+\begin{enumerate}
+    \item Определитель матрицы $\mathbf{A}$ получился не нулевым, похоже внутренняя реализация этой функции в Matlab опирается на перемножение элементов диагонали матрицы $\mathbf{U}$ после LU-разложения. Если посмотреть на них и в реализации на C++, то их произведение так же получится отличным от нуля (пусть и близким к машинному эпсилон). Matlab получил некоторый результат, невязка которого так же оставляет желать лучшего;
+
+    \item Определитель же второй матрицы посчитан в точности равным 0, поэтому внутренняя логика Matlab остановила расчёт корней СЛАУ и численного ответа получено не было.
+
+    \item В обоих случаях решения, предоставленные программами, формально неверны, т.к. определители обеих матриц должны быть равны нулю {\bf в точности}, что означает неопределённость чисел обусловленности и наличие нетривиальных решений СЛАУ (или их полное отсутствие).
+\end{enumerate}
+
+\clearpage
+\section{В MatLab Решить СЛАУ с матрицами Гильберта}
+\subsection{Теория}
+Матрицы Гильберта -- особый класс квадратных матриц, использующийся для проверки алгоритмов и оценки численной стабильности. Они представляют собой модель системы линейных уравнений с плохой обусловленностью. Элементы матрицы задаются формулой:
+\begin{equation}
+    H_{ij}={\frac {1}{i+j-1}},i,j=1,2,3,...,n
+\end{equation}
+Ожидается, что решение прямыми методами СЛАУ с матрицами Гильберта будет иметь большую погрешность из-за их плохой обусловленности.
+\subsection{Код программы в Matlab:}
+\begin{lstlisting}[language=octave]
+for n = [5, 10, 15]
+    A = hilb(n);
+    b = randn(n, 1);
+    x = A \ b;
+
+    cond_num = cond(A);
+    actual_error = norm(A*x - b);
+    residual = norm(A*x - b) / norm(b);
+
+    disp(['Side: ' num2str(n)]);
+    disp(['Conditional number: ' num2str(cond_num)]);
+    disp(['Error vector norm: ' num2str(actual_error)]);
+    disp(['Residual norm: ' num2str(residual)]);
+    disp('-----------------------------');
+end
+\end{lstlisting}
+\subsection{Результат:}
+{\singlespacing
+\begin{verbatim}
+Размер матрицы: 5
+Число обусловленности: 476607.2502
+Норма фактической ошибки: 3.0881e-13
+Норма невязки: 1.2469e-13
+-----------------------------
+Размер матрицы: 10
+Число обусловленности: 16024909625167.58
+Норма фактической ошибки: 0.00013871
+Норма невязки: 3.7693e-05
+-----------------------------
+Размер матрицы: 15
+Число обусловленности: 3.378778714747708e+17
+Норма фактической ошибки: 3.298
+Норма невязки: 1.0649
+-----------------------------
+\end{verbatim}}
+\subsection{Комментарий:}
+Налицо стремительный рост числа обусловленности и нормы невязки решения для случайного вектора правой части по причинам, упомянутым выше, что согласуется с ожиданиями.
+
+\clearpage
+\section{Построить график временных затрат решения СЛАУ для операции Matlab «$\backslash$» в зависимости от размера матрицы}
+\subsection{Код программы в Matlab:}
+\begin{lstlisting}[language=octave]
+repeats = 10;  n_max = 35;
+matrix_sizes = round(logspace(log10(10), log10(2000), n_max));
+times = zeros(1, n_max);
+
+for repeat = 1:repeats
+    for i = 1:n_max
+        n = matrix_sizes(i);  A = fix_cond(n, 10);  b = randn(n, 1);
+        tic;  x = A \ b;
+        times(i) = times(i) + toc;
+    end
+end
+times = times / repeats;
+
+loglog(matrix_sizes, times, 'o');
+xlabel('Matrix size'); ylabel('Eval time, s.');
+title("Benchmarking SLAE solving using '\\' operator");
+legend("Averaged by " + string(repeats))
+grid on; hold on;
+\end{lstlisting}
+\subsection{Графики}
+\begin{figure}[H]
+    \centering
+    \caption{График зависимости времени решения СЛАУ от размера случайной матрицы. cond = 10.}
+    \includegraphics[width=1\linewidth]{../pics/task_5}
+    \label{pic:1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \caption{Подгонка кривой степенной зависимости в интерактивном режиме.}
+    \includegraphics[width=1\linewidth]{../pics/cfit}
+    \label{pic:2}
+\end{figure}
+\subsection{Комментарий:}
+В аппроксимирующей функции $t=a\cdot \text{matrix\_size}^b$ рассчитанный показатель степени $b=2.338$.
+
+\end{document}

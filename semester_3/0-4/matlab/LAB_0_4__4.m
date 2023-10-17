@@ -2,7 +2,6 @@
 clc;
 
 for n = [5, 10, 15]
-    
     A = hilb(n);
     b = randn(n, 1);
     x = A \ b;

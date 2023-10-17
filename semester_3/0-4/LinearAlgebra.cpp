@@ -1,31 +1,4 @@
 #include "LinearAlgebra.hpp"
-#include <cmath>
-#include <math.h>
-#include <tuple>
-#include <utility>
-
-bool issquare(const Mtr& M){
-    return M.size() == M[0].size();
-}
-bool isapprox(const Vec& v1, const Vec& v2, double tol) {
-    if (v1.size() != v2.size())
-        return false;
-    for (size_t i = 0; i < v1.size(); ++i)
-        if (fabs(v1[i] - v2[i]) > tol)
-            return false;
-    return true;
-}
-bool isapprox(const Mtr& m1, const Mtr& m2, double tol) {
-    if (m1.size() != m2.size() || m1[0].size() != m2[0].size())
-        return false;
-    for (size_t i = 0; i < m1.size(); ++i)
-        if (!isapprox(m1[i], m2[i], tol))
-            return false;
-    return true; 
-}
-bool issingleval(const Mtr& M){
-    return issquare(M) && M.size() == 1;
-}
 
 
 Mtr upperTrSymmetric(const Mtr& A){
@@ -214,11 +187,11 @@ Mtr _getSubmatrix(const Mtr& matrix, size_t i, size_t j) {
     Mtr submatrix;
     for (size_t row = 0; row < matrix.size(); ++row)
         if (row != i) {
-            Vec temp_row;
+            Vec new_row;
             for (size_t col = 0; col < matrix[row].size(); ++col)
                 if (col != j)
-                    temp_row.push_back(matrix[row][col]);
-            submatrix.push_back(temp_row);
+                    new_row.push_back(matrix[row][col]);
+            submatrix.push_back(new_row);
         }
     return submatrix;
 }
@@ -241,8 +214,23 @@ double det(const Mtr& M) {
     return determinant;
 }
 
-double cond(const Mtr& M){
-    return euclideanNorm(M) * euclideanNorm(inv(M));
+double cond(const Mtr& M, double p) {
+    int m = M.size();
+    int n = M[0].size();
+    
+    double max_norm = 0.0;
+    double min_norm = INFINITY;
+    
+    for (int j = 0; j < n; j++) {
+        double col_norm = 0.0;
+        for (int i = 0; i < m; i++)
+            col_norm += pow(abs(M[i][j]), p);
+
+        col_norm = pow(col_norm, 1.0/p);
+        max_norm = max(max_norm, col_norm);
+        min_norm = min(min_norm, col_norm);
+    }
+    return max_norm / min_norm;
 }
 
 Mtr inv(const Mtr& A) {
@@ -300,128 +288,4 @@ Mtr householder(const Vec& V){
     Vec W = normalize(V);
     Mtr H = sum(E(n), mul(toCol(W), toRow(W)), 1, -2);
     return H;
-}
-
-pair<Mtr, Mtr> _separateLU(const Mtr& M){
-    if (!issquare(M))
-        throw invalid_argument("Только квадратные матрцы!");
-    size_t n = M.size();
-    Mtr L = fill(0.0, n,n);
-    Mtr U = fill(0.0, n,n);
-
-    for (size_t i = 0; i < n; ++i)
-        for (size_t j = 0; j < n; ++j){
-            if (j > i)
-                U[i][j] = M[i][j];
-            else if (j < i)
-                L[i][j] = M[i][j];
-            else{
-                L[i][j] = 1.0;
-                U[i][j] = M[i][j];
-            }
-        }
-    return make_pair(L, U);
-}
-
-Mtr apply_row_permutation(const Mtr& M, const vector<int>& perm){
-    int n = M.size();
-    Mtr permuted(n, Vec(n));
-    for (int i = 0; i < n; i++) {
-        permuted[i] = M[perm[i]];
-    }
-    return permuted;
-}
-
-Vec solveLinearEquation(const Mtr& L,
-                        const Mtr& U,
-                        const std::vector<int>& permutation,
-                        const Vec& b) {
-    int n = L.size();
-    
-    // Прямая подстановка (Ly = Pb)
-    Vec y(n, 0.0);
-    for (int i = 0; i < n; ++i) {
-        double sum = 0.0;
-        for (int j = 0; j <= i - 1; ++j)
-            sum += L[i][j] * y[j];
-        y[i] = b[permutation[i]] - sum;
-    }
-
-    // Обратная подстановка (Ux = y)
-    Vec x(n, 0.0);
-    for (int i = n - 1; i >= 0; --i) {
-        double sum = 0.0;
-        for (int j= i + 1 ; j < n ; ++j)
-            sum += U[i][j] * x[j];
-        x[i] =(y[i]-sum)/U[i][i];
-    }
-    return x;
-}
-
-Vec residual(const Mtr& A, const Vec& x, const Vec& b) {
-    int n = A.size();
-    Vec residual(n, 0.0);
-    
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++)
-            residual[i] += A[i][j] * x[j];
-        residual[i] -= b[i];
-    }
-    return residual;
-}
-
-// Функция для поиска максимального элемента в столбце и его строки
-int _findMaxElementRow(const Mtr& M, int startRow, int mtr_size) {
-    double maxVal = abs(M[startRow][startRow]);
-    int maxRow = startRow;
-    
-    for (int i = startRow + 1; i < mtr_size; i++) {
-        if (abs(M[i][startRow]) > maxVal) {
-            maxVal = abs(M[i][startRow]);
-            maxRow = i;
-        }
-    }
-    return maxRow;
-}
-Mtr _eliminationStepForColumn(const Mtr& M, int col_num) {
-    int mtr_size = M.size();
-    Mtr result = M;
-
-    for (int row_num = col_num + 1; row_num < mtr_size; ++row_num) {
-        result[row_num][col_num] /= result[col_num][col_num];
-        for (int j = col_num + 1; j < mtr_size; ++j) {
-            result[row_num][j] -= result[row_num][col_num] * result[col_num][j];
-        }
-    }
-    return result;
-}
-
-// Основная функция для разложения матрицы на L и U с перестановкой элементов
-LU_result LU_decomposition(Mtr M) {
-    int mtr_size = M.size();
-
-    // Вектор для хранения текущей перестановки элементов
-    vector<int> perm;
-
-    // Инициализация начальной перестановки [0,1,...,(n-1)]
-    for (int i = 0; i < mtr_size; i++)
-        perm.push_back(i);
-
-
-    for (int col_num=0; col_num<mtr_size; ++col_num){
-        int maxRow = _findMaxElementRow(M,col_num,mtr_size);
-        if (M[col_num][col_num] == 0){
-            cerr << "Невозможно диагонализовать матрицу! Нулевой элемент на диагонали. Пропуск шага.\n";
-            continue;
-        }
-
-        if(maxRow!=col_num){
-            for(int j=col_num;j<mtr_size;++j)
-                swap(M[col_num][j], M[maxRow][j]);
-            swap(perm[col_num], perm[maxRow]);
-        }
-        M = _eliminationStepForColumn(M, col_num);
-    }
-    auto [L, U] = _separateLU(M);
-    return {L, U, perm};
 }

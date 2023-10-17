@@ -8,9 +8,9 @@ BIN_NAME=build
 SAMPLE_NAME=sample
 TASK_3_NAME=task3
 
-SOURCES=main LinearAlgebra Printers
-SAMPLE_SOURSES=report_sample LinearAlgebra Printers
-TASK_3_SOURCES=task_3 LinearAlgebra Printers
+SOURCES=main LinearAlgebra Printers LU Bools SLAE
+SAMPLE_SOURSES=report_sample LinearAlgebra Printers LU Bools SLAE
+TASK_3_SOURCES=task3 LinearAlgebra Printers LU Bools SLAE
 
 TASK_3_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(TASK_3_SOURCES)))
 SAMPLE_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SAMPLE_SOURSES)))
