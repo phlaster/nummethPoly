@@ -1,30 +1,51 @@
+CC=clang++
+CFLAGS_DBG=-g3 -O0 -Wall -Wextra --std=c++17
+CFLAGS=-O3 --std=c++17
+SOURCE_DIR=.
+OBJECT_DIR=objects
+CSV_DIR=CSVs
+DBG_NAME=debug
+BIN_NAME=build
+SAMPLE_NAME=sample
+
+SOURCES=main functions
+SAMPLE_SOURCES=sample functions
+
+DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
+OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))
+SAMPLE_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SAMPLE_SOURCES)))
+
 all: build
 
-build: main.o functions.o
-	g++ main.o functions.o -o build.out
+$(BIN_NAME): $(OBJECTS)
+	$(CC) $(CFLAGS) $^ -o $@.out; mkdir $(CSV_DIR)
 
-# # # # #
-main.o: main.cpp
-	g++ -c main.cpp
+$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-functions.o: functions.cpp
-	g++ -c functions.cpp
-
-##################################################
-#------------------- TESTS ----------------------#
-##################################################
-tests: tests.o functions.o
-	g++ tests.o functions.o -o tests.out
-
-tests.o: tests/tests.cpp
-	g++ -c tests/tests.cpp
+$(OBJECT_DIR):
+	if ! test -d $(OBJECT_DIR); then mkdir -p $(OBJECT_DIR); fi
 
 
-##################################################
-#------------------ UTILITY ---------------------#
-##################################################
+sample:
+$(SAMPLE_NAME): $(SAMPLE_OBJECTS)
+	$(CC) $(CFLAGS) $^ -o $@.out; if ! test -d $(CSV_DIR); then mkdir -p $(CSV_DIR); fi
+$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
+
+debug:
+$(DBG_NAME): $(DBG_OBJECTS)
+	$(CC) $(CFLAGS_DBG) $^ -o $@.out; if ! test -d $(CSV_DIR); then mkdir -p $(CSV_DIR); fi
+$(OBJECT_DIR)/%_DBG.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
+	$(CC) $(CFLAGS_DBG) -c $< -o $@
+
+
+
+
 clean:
-	rm -f *.o *.gch
+	rm -f $(OBJECT_DIR)/*.o
 
 purge:
-	rm -f *.o *.gch *.out; rm -rf build/
+	rm -rf $(OBJECT_DIR)/; rm -rf $(CSV_DIR); rm $(SOURCE_DIR)/*.out
