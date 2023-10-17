@@ -27,4 +27,4 @@ build/
 **/tex/*.toc
 **/tex/*.synctex.gz
 **/tex/*.pdf
-**/tex/titlepage.tex
+**/tex/**/titlepage.*
