@@ -1,0 +1,31 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1}Поиск отрезков с корнями алгебраического уравнения}{3}{}%
+\contentsline {section}{\numberline {2}Поиск отрезков для уточнения корней уравнений}{4}{}%
+\contentsline {subsection}{\numberline {2.1}Алгебраическое уравнение $(1)$:}{4}{}%
+\contentsline {subsection}{\numberline {2.2} Трансцендентное уравнение $(2)$:}{5}{}%
+\contentsline {section}{\numberline {3}Численное решение уравнений}{6}{}%
+\contentsline {subsection}{\numberline {3.1}Решение уравнений функцией Matlab \texttt {fzero}:}{6}{}%
+\contentsline {subsection}{\numberline {3.2}Метод Половинного Деления (МПД, метод биекции):}{6}{}%
+\contentsline {subsection}{\numberline {3.3}Метод Ньютона (касательных):}{7}{}%
+\contentsline {subsection}{\numberline {3.4}Применение алгоритмов к трансцендентной функции (2) на допустимом интервале:}{8}{}%
+\contentsline {subsubsection}{\numberline {3.4.1}МПД:}{8}{}%
+\contentsline {subsubsection}{\numberline {3.4.2}Метод Ньютона:}{8}{}%
+\contentsline {section}{\numberline {4}Построить зависимости числа итераций от заданной точности:}{9}{}%
+\contentsline {subsection}{\numberline {4.1}Matlab \texttt {fzero}}{9}{}%
+\contentsline {subsubsection}{\numberline {4.1.1}Код программы}{9}{}%
+\contentsline {subsubsection}{\numberline {4.1.2}График зависимости}{9}{}%
+\contentsline {subsection}{\numberline {4.2}C++ МПД:}{10}{}%
+\contentsline {subsubsection}{\numberline {4.2.1}Код программы}{10}{}%
+\contentsline {subsubsection}{\numberline {4.2.2}Графики зависимостей}{10}{}%
+\contentsline {subsection}{\numberline {4.3}C++ Метод Ньютона:}{11}{}%
+\contentsline {subsubsection}{\numberline {4.3.1}Код программы}{11}{}%
+\contentsline {subsubsection}{\numberline {4.3.2}Расчётные константы}{11}{}%
+\contentsline {subsubsection}{\numberline {4.3.3}Графики зависимостей}{11}{}%
+\contentsline {section}{\numberline {5}Сходимость метода при нарушении условий применимости:}{12}{}%
+\contentsline {subsection}{\numberline {5.1}Код программы}{12}{}%
+\contentsline {subsubsection}{\numberline {5.1.1}Использованные константы}{12}{}%
+\contentsline {subsection}{\numberline {5.2}Графики}{12}{}%
+\contentsline {subsection}{\numberline {5.3}Комментарий}{13}{}%
+\contentsline {section}{\numberline {6}Модульная структура программы}{13}{}%
+\contentsline {subsection}{\numberline {6.1}Заголовочный файл \texttt {functions.hpp}:}{13}{}%
+\contentsline {subsection}{\numberline {6.2}Точка входа \texttt {main.cpp}:}{13}{}%
