@@ -68,9 +68,10 @@ double maxdiff(const Mtr& m1, const Mtr& m2);
 double cond(const Mtr& M, double p=2);
 
 
-// LU
+// LUP
 LU_result LUP(Mtr M);
 void find_max_and_swap(Mtr& M, vInt& perm, int i);
+void subtract_product(Mtr& M, int i);
 vInt inversePermutation(const vInt& permutation);
 Mtr permutationMatrix(const vInt& permutation);
 

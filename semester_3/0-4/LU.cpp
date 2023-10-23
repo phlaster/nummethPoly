@@ -42,10 +42,8 @@ void subtract_product(Mtr& M, int i) {
 pair<Mtr, Mtr> split_LUP(Mtr& U) {
     size_t N = U.size();
     Mtr L(N, Vec(N, 0.0));
-
     for (size_t i = 0; i < N; i++) {
         L[i][i] = 1.0;
-
         for (size_t j = 0; j < i; j++) {
             L[i][j] = U[i][j];
             U[i][j] = 0.0;
@@ -61,13 +59,20 @@ LU_result LUP(Mtr M){
     
     size_t N = M.size();
     vInt perm(N); for (int i = 0; i < N; i++) perm[i] = i;
-
+    cout << "Исходная:\n";
+    print(M);
     for (size_t i=0; i<N; i++){ // По каждому ряду
+        cout << "Столбец " << i << ":\n";
         find_max_and_swap(M, perm, i);
+        cout << "После перестановки:\n";
+        print(M);
         div_under_main_diag(M, i);
+        cout << "После деления:\n";
+        print(M);
         subtract_product(M, i);
+        cout << "После вычитания:\n";
+        print(M);
     }
-
     auto [L, U] = split_LUP(M);
     return {L, U, perm};
 }
@@ -75,19 +80,16 @@ LU_result LUP(Mtr M){
 Mtr apply_row_permutation(const Mtr& M, const vInt& perm){
     int n = M.size();
     Mtr permuted(n, Vec(n));
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
         permuted[i] = M[perm[i]];
-    }
     return permuted;
 }
 
 vInt inversePermutation(const vInt& permutation) {
     int n = permutation.size();
     vInt inverse(n);
-
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
         inverse[permutation[i]] = i;
-    }
     return inverse;
 }
 
@@ -96,6 +98,5 @@ Mtr permutationMatrix(const vInt& permutation) {
     Mtr matrix(n, Vec(n, 0));
     for (int i = 0; i < n; i++)
         matrix[i][permutation[i]] = 1.0;
-
     return matrix;
 }
