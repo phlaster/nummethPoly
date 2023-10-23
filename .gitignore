@@ -20,6 +20,7 @@ build/
 **/.vscode/
 
 **/report/*
+**/reports/*
 
 # LaTeX
 **/tex/*.aux
