@@ -7,11 +7,15 @@ DBG_NAME=debug
 BIN_NAME=build
 SAMPLE_NAME=sample
 TASK_3_NAME=task3
+TEST_NAME=test
 
 SOURCES=main LinearAlgebra Printers LU Bools SLAE
 SAMPLE_SOURSES=report_sample LinearAlgebra Printers LU Bools SLAE
 TASK_3_SOURCES=task3 LinearAlgebra Printers LU Bools SLAE
+TEST_SOURCES=test LinearAlgebra Printers LU Bools SLAE
 
+
+TEST_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(TEST_SOURCES)))
 TASK_3_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(TASK_3_SOURCES)))
 SAMPLE_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SAMPLE_SOURSES)))
 DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
@@ -27,6 +31,11 @@ $(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
 
 $(OBJECT_DIR):
 	mkdir -p $@
+
+
+test:
+$(TEST_NAME): $(TEST_OBJECTS)
+	$(CC) $(CFLAGS) $^ -o $@.out
 
 
 sample:
