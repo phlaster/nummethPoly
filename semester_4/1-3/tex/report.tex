@@ -1,0 +1,249 @@
+\input{modules/settings}
+\begin{document}
+\include{modules/titlepage}
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{2}
+\tableofcontents
+
+\clearpage
+\section{Теория}
+\subsection{Определения}
+
+Существует класс методов итерационного решения СЛАУ, называемый {\bf методами вариационного типа}. Их обоснование производится с привлечением теории оптимизации, т.к. решение системы сводится к решению эквивалентной экстремальной задачи. Пусть:
+\begin{equation}
+    \mathbf{Ax=b}
+\end{equation}
+нормальная n-мерная система, т.е. $\mathbf{A}$ -- положительно определённая симметричная матрица и пусть $(\cdot, \cdot)$ -- скалярное произведение в пространстве $\mathbb{R}^n$. Образуем квадратичный функционал:
+\begin{equation}
+    \mathbf{\Phi}(\mathbf{x})=(\mathbf{Ax}, \mathbf{x}) - 2(\mathbf{b}, \mathbf{x}) + c,
+    ~~\text{ где }~~ c \in \mathbb{R}^1 ~~\text{ (произвольная постоянная)}.
+\end{equation}
+Показано, что задача решения нормальной системы (1) и задача минимизации функционала (2) {\it эквивалентны}. Таким образом через минимизацию (2) , будет найден вектор $\mathbf{x}$ решения (1).
+
+\subsection{Алгоритм}
+\begin{enumerate}
+    \item \begin{enumerate}
+        \item Задать начальное приближение $\mathbf{x}^{(0)}$ и допустимый уровень погрешности $\varepsilon>0$;
+        \item Вычислить невязку начального приближения $\mathbf{r}^{(0)}=\mathbf{b-Ax}^{(0)}$;
+        \item Положить $\mathbf{p}^{(0)}=\mathbf{r}^{(0)},~k=0$ (номер итерации);
+    \end{enumerate}
+    \item \begin{enumerate}
+        \item Вычислить $\mathbf{q}^{(k)}=\mathbf{Ap}^{(k)}$;
+        \item Вычислить шаговый скаляр $\alpha_k=\dfrac{(\mathbf{r}^{(k)}, \mathbf{p}^{(k)})}{(\mathbf{q}^{(k)}, \mathbf{p}^{(k)})}$;
+        \item Вычислить очередное приближение $\mathbf{x}^{(k+1)}=\mathbf{x}^{(k)}+\alpha_k\mathbf{p}^{(k)}$;
+        \item Вычислить невязку $(k+1)$-го приближения $\mathbf{r}^{(k+1)}=\mathbf{r}^{(k)}-\alpha_k\mathbf{q}^{(k)}$;
+        \item Проверить выполнение $||\mathbf{r}^{(k+1)}||_2 \le \varepsilon ~~\implies ~ \blacksquare$
+    \end{enumerate}
+    \item \begin{enumerate}
+        \item Вычислить скаляр $\beta_k=\dfrac{(\mathbf{r}^{(k+1)}, \mathbf{q}^{(k)})}{(\mathbf{q}^{(k)}, \mathbf{p}^{(k)})}$;
+        \item Вычислить новый вектор градиента: $\mathbf{p}^{(k+1)}=\mathbf{r}^{(k+1)}-\beta_k\mathbf{p}^{(k)}$;
+        \item Увеличить счётчик $k:=k+1$ и вернуться к 2.1.
+    \end{enumerate}
+\end{enumerate}
+
+\clearpage
+\section{Тестовый пример}
+\subsection{Задание исходных данных}
+Из положительно определённых квадратных матриц с небольшими целочисленными значениями ранга 4 методом перебора выберем $\mathbf{A}$ с достаточно малым числом обусловленности, зададим также произвольный $\mathbf{x}$ и вычислим $\mathbf{b}$:
+\[
+\mathbf{A} =
+\begin{pmatrix}
+    5 & -1 & -1 &  0\\
+   -1 &  6 &  1 & -1\\
+   -1 &  1 &  6 &  1\\
+    0 & -1 &  1 &  7
+\end{pmatrix}; ~~~~~
+\begin{matrix}
+    \texttt{cond(A)}=&1.812;\\
+    \texttt{det(A)} =&1089;
+\end{matrix} ~~~~~
+\mathbf{x} = \begin{pmatrix} -2 \\ 0 \\ 2\\ 1 \end{pmatrix}; ~~~~~
+\mathbf{b=Ax} = \begin{pmatrix} -12 \\ 3 \\ 15 \\ 9 \end{pmatrix};
+\]
+
+\subsection{Расчёт}
+\begin{enumerate}
+    \item \begin{enumerate}
+        \item $$\mathbf{x}^{(0)} :=
+        \begin{pmatrix} 1\\ 1\\ 1\\ 1 \end{pmatrix};$$
+
+        \item $$\mathbf{r}^{(0)} :=
+            \mathbf{b-Ax}^{(0)} = \begin{pmatrix} -15\\ -2\\ 8 \\ 2 \end{pmatrix}; ~~~
+        ||\mathbf{r}^{(0)}||_2 = \mathbf{17.234};$$
+
+        \item $$\mathbf{p}^{(0)} := \mathbf{r}^{(0)};$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\mathbf{q}^{(0)} :=
+            \mathbf{Ap}^{(0)} = \begin{pmatrix} -81\\ 9\\ 63\\ 24 \end{pmatrix};$$
+
+        \item $$\alpha_0 :=
+            \dfrac{(\mathbf{r}^{(0)}, \mathbf{p}^{(0)})}{(\mathbf{q}^{(0)}, \mathbf{p}^{(0)})} = 0.170;$$
+
+        \item $$\mathbf{x}^{(1)} :=
+            \mathbf{x}^{(0)}+\alpha_0\mathbf{p}^{(0)} = \begin{pmatrix} -1.550\\ 0.660\\ 2.360\\ 1.340 \end{pmatrix};$$
+
+        \item $$\mathbf{r}^{(1)} :=
+            \mathbf{r}^{(0)}-\alpha_0\mathbf{q}^{(0)} = \begin{pmatrix} -1.230\\ -3.530\\ -2.710 \\ -2.080 \end{pmatrix};$$
+
+        \item $$||\mathbf{r}^{(1)}||_2 = \mathbf{5.064}$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\beta_0 :=
+            \dfrac{(\mathbf{r}^{(1)}, \mathbf{q}^{(0)})}{(\mathbf{q}^{(0)}, \mathbf{p}^{(0)})} = -0.087;$$
+
+        \item $$\mathbf{p}^{(1)} :=
+            \mathbf{r}^{(1)}-\beta_0\mathbf{p}^{(0)} = \begin{pmatrix} -2.535\\-3.704\\-2.014\\-1.906 \end{pmatrix};$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\mathbf{q}^{(1)} :=
+            \mathbf{Ap}^{(1)} = \begin{pmatrix} -6.957\\-19.797\\-15.159\\-11.652 \end{pmatrix};$$
+
+        \item $$\alpha_1 :=
+            \dfrac{(\mathbf{r}^{(1)}, \mathbf{p}^{(1)})}{(\mathbf{q}^{(1)}, \mathbf{p}^{(1)})} = 0.178;$$
+
+        \item $$\mathbf{x}^{(2)} :=
+            \mathbf{x}^{(1)}+\alpha_1\mathbf{p}^{(1)} = \begin{pmatrix} -2.001\\0.001\\2.002\\1.001 \end{pmatrix};$$
+
+        \item $$\mathbf{r}^{(2)} :=
+            \mathbf{r}^{(1)}-\alpha_1\mathbf{q}^{(1)} = \begin{pmatrix} 0.008\\-0.006\\-0.012\\-0.006 \end{pmatrix};$$
+
+        \item $$||\mathbf{r}^{(2)}||_2 = \mathbf{0.017};$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\beta_1 :=
+            \dfrac{(\mathbf{r}^{(2)}, \mathbf{q}^{(1)})}{(\mathbf{q}^{(1)}, \mathbf{p}^{(1)})} = 0.002;$$
+
+        \item $$\mathbf{p}^{(2)} :=
+            \mathbf{r}^{(2)}-\beta_1\mathbf{p}^{(1)} = \begin{pmatrix} 0.013\\0.001\\-0.008\\-0.002 \end{pmatrix};$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\mathbf{q}^{(2)} :=
+            \mathbf{Ap}^{(2)} = \begin{pmatrix}0.072\\-0.013\\-0.062\\-0.023\end{pmatrix};$$
+
+        \item $$\alpha_2 :=
+            \dfrac{(\mathbf{r}^{(2)}, \mathbf{p}^{(2)})}{(\mathbf{q}^{(2)}, \mathbf{p}^{(2)})} = 0.141;$$
+
+        \item $$\mathbf{x}^{(3)} :=
+            \mathbf{x}^{(2)}+\alpha_2\mathbf{p}^{(2)} = \begin{pmatrix}-1.999\\0.001\\2.001\\1.001\end{pmatrix};$$
+
+        \item $$\mathbf{r}^{(3)} :=
+            \mathbf{r}^{(2)}-\alpha_2\mathbf{q}^{(2)} = \begin{pmatrix}-0.002\\-0.004\\-0.003\\-0.003 \end{pmatrix};$$
+
+        \item $$||\mathbf{r}^{(3)}||_2 = \mathbf{0.006};$$
+   \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\beta_2 :=
+            \dfrac{(\mathbf{r}^{(3)}, \mathbf{q}^{(2)})}{(\mathbf{q}^{(2)}, \mathbf{p}^{(2)})} = 0.111;$$
+
+        \item $$\mathbf{p}^{(3)} :=
+            \mathbf{r}^{(3)}-\beta_2\mathbf{p}^{(2)} = \begin{pmatrix} 0.003\\0.004\\-0.002\\-0.003 \end{pmatrix};$$
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Комментарий}
+По результатам 4х циклов в п. 6.5 расчёта получен модуль невязки $||\mathbf{r}^{(3)}||_2 = \mathbf{0.006}$, фактическая ошибка расчёта составила: $\varepsilon = ||\mathbf{x}^{(3)} - \mathbf{x}||_2 = \mathbf{0.0020}$
+
+\clearpage
+\section{Программная реализация на C++}
+\subsection{Основная функция}
+\begin{lstlisting}[language=c++]
+pair<Vec, int> conjugateGradientMethod(const Mtr& A, const Vec& b, double eps, int maxIter){
+    Vec x_k = Vec(b.size(), 1);
+    Vec r = vecSum(1, b, -1, multiplyMatrixVector(A, x_k));
+    Vec p = r;
+    int k = 0;
+
+    while (k <= maxIter){
+        Vec q = multiplyMatrixVector(A, p);
+        double pq_denom = dotProduct(p, q);
+        double alpha = dotProduct(r, p) / pq_denom;
+        x_k = vecSum(1, x_k, alpha, p);
+        r = vecSum(1, r, -alpha, q);
+        if (euclideanNorm(r) <= eps){
+            return make_pair(x_k, k);
+        }
+        double beta = dotProduct(r, q) / pq_denom;
+        p = vecSum(1, r, -beta, p);
+        k++;
+    }
+    return make_pair(x_k, -1);
+}
+\end{lstlisting}
+\subsection{Модульная структура программы}
+Некоторое содержимое заголовочного файла, используемого в программной реализации, названия функций самообъясняющие:
+\begin{lstlisting}[language=c++]
+using namespace std;
+typedef vector<double> Vec;
+typedef vector<Vec> Mtr;
+
+Vec generateRandomVector(int n, double lower=0, double upper=1);
+Mtr generateRandomMatrix(int rows, int cols, double lower=0, double upper=1);
+Mtr generateRndSymPos(int n, double cond);
+Mtr transpose(const Mtr& matrix);
+
+double dotProduct(const Vec& vector1, const Vec& vector2);
+double euclideanNorm(const Vec& vector);
+
+Vec vecSum(double c1, const Vec& vector1, double c2, const Vec& vector2); // c1*vector1 + c2*vector2
+Vec multiplyMatrixVector(const Mtr& matrix, const Vec& vector);
+
+pair<Vec, int> conjugateGradientMethod(const Mtr& A, const Vec& b, double eps, int maxIter);
+\end{lstlisting}
+
+\clearpage
+\section{Анализ сходимости метода}
+\subsection{Методика расчёта}
+При анализе сходимости метода важно не забывать об условиях его применимости. МСГ применим к СЛАУ с положительно определёнными симметричными матрицами. Однако если подойти к вопросу формально и просто заполнить квадратную матрицу $\mathsf{A}$ ранга n случайными (для определённости, равномерно распределёнными между 0 и 1) числами и исследовать сходимость МСГ на матрице $\mathsf{A} \cdot \mathsf{A}^T$, то обусловленность и определитель такой системы будут непредсказуемы и метод не покажет сходимость за $\le n$ шагов. По этой причине анализе сходимости были проведён на специально {\it сконструированных} матрицах вида $\mathbf{A = H}^T\cdot \mathbf{D \cdot H}$, где $\mathbf{D}$ -- диагональная, a $\mathbf{H = E} - 2\mathbf{ww}^T$ -- унитарная матрица, полученная из преобразования Хаусхолдера над случайным нормированным вектором $\mathbf{w}$ нужной длины. Если $\mathcal{C}\ge1$ -- выбранное число обусловленности, то $\mathbf{D}$ принимает вид:
+$$\mathbf{D} =
+\begin{pmatrix}
+    \mathcal{C} &   &   &      &       &\\
+                &r_2&   &      &       &\\
+                &   &r_3&      &       &\\
+                &   &   &\ddots&       &\\
+                &   &   &      &r_{n-1}&\\
+                &   &   &      &       &1
+\end{pmatrix},$$
+в которой $\{r_2 \ldots r_{n-1}\}$ -- случайные вещественные числа в диапазоне $[1, \mathcal{C}]$, что позволяет задать матрицу с желаемым числом обусловленности.
+
+\subsection{Графики}
+Ниже приведены графики сходимости метода для матриц нескольких фиксированных размеров. Количество шагов усреднено по 10 повторам, но ошибка выбиралась по худшему значению.
+\begin{figure}[H]
+    \centering
+    \caption{Сходимость МСГ на случайных симметричных п.о. матрицах $\mathsf{A} \cdot \mathsf{A}^T$}
+    \includegraphics[width=1\linewidth]{pics/conv_rand}
+    \label{fig:1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \caption{Сходимость МСГ на {\it сконструированных} матрицах, \texttt{cond}=500}
+    \includegraphics[width=1\linewidth]{pics/conv_cond=500}
+    \label{fig:2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \caption{Сходимость МСГ на {\it сконструированных} матрицах, \texttt{cond}=50}
+    \includegraphics[width=1\linewidth]{pics/conv_cond=50}
+    \label{fig:3}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \caption{Сходимость МСГ на {\it сконструированных} матрицах, \texttt{cond}=5}
+    \includegraphics[width=1\linewidth]{pics/conv_cond=5}
+    \label{fig:4}
+\end{figure}
+
+\subsection{Комментарий}
+Приведённые графики иллюстрируют влияние числа обусловленности на сходимость метода сопряжённых градиентов. Критерием выхода из алгоритма МСГ является норма вектора невязки, модифицируемого на каждом шаге. Её значение в общем случае не совпадает с нормой фактического вектора невязки, которую можно рассчитать апостериори. Также она может отличаться от фактической ошибки полученного решения СЛАУ. Это различие заметно на графиках сходимости плохо обусловленных систем.
+
+На хорошо обусловленных же системах предписанное теорией количество шагов до достижения желаемой точности выполняется на практике, и точность совпадает с фактической ошибкой вплоть до $10^{-13}\ldots10^{-14}$.
+
+
+\end{document}

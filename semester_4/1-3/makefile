@@ -7,13 +7,21 @@ CSV_DIR=CSVs
 DBG_NAME=debug
 BIN_NAME=build
 SAMPLE_NAME=sample
+MULTI_NAME=multi
+TESTS_NAME=tests
 
-SOURCES=main functions
-SAMPLE_SOURCES=sample functions
+
+SOURCES=main Functions Printers PCG
+SAMPLE_SOURCES=sample Functions Printers PCG
+MULTI_SOURCES=multi Functions Printers PCG
+TESTS_SOURCES=tests Functions Printers PCG
 
 DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))
 SAMPLE_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SAMPLE_SOURCES)))
+MULTI_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(MULTI_SOURCES)))
+TESTS_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(TESTS_SOURCES)))
+
 
 all: build
 
@@ -29,6 +37,19 @@ $(OBJECT_DIR):
 
 sample:
 $(SAMPLE_NAME): $(SAMPLE_OBJECTS)
+	$(CC) $(CFLAGS) $^ -o $@.out; if ! test -d $(CSV_DIR); then mkdir -p $(CSV_DIR); fi
+$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+
+multi:
+$(MULTI_NAME): $(MULTI_OBJECTS)
+	$(CC) $(CFLAGS) $^ -o $@.out; if ! test -d $(CSV_DIR); then mkdir -p $(CSV_DIR); fi
+$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+tests:
+$(TESTS_NAME): $(TESTS_OBJECTS)
 	$(CC) $(CFLAGS) $^ -o $@.out; if ! test -d $(CSV_DIR); then mkdir -p $(CSV_DIR); fi
 $(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
