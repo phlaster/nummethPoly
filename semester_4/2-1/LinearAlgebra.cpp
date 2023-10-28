@@ -125,14 +125,33 @@ double euclideanNorm(const Vec& V){
     return sqrt(dot(V, V));
 }
 
-double euclideanNorm(const Mtr& M) {
-    double sum_squares = 0.0;
+// double euclideanNorm(const Mtr& M) {
+//     double sum_squares = 0.0;
     
-    for (const auto& row : M)
-        for (const auto& elem : row)
-            sum_squares += elem * elem;
-    return sqrt(sum_squares);
+//     for (const auto& row : M)
+//         for (const auto& elem : row)
+//             sum_squares += elem * elem;
+//     return sqrt(sum_squares);
+// }
+
+double opnorm_1(const Mtr& M) {
+    size_t numRows = M.size();
+    size_t numCols = M[0].size();
+    double maxSum = -std::numeric_limits<double>::infinity();
+
+    for (size_t j = 0; j < numCols; j++) {
+        double sum = 0.0;
+        for (size_t i = 0; i < numRows; i++) {
+            sum += std::abs(M[i][j]);
+        }
+
+        if (sum > maxSum) {
+            maxSum = sum;
+        }
+    }
+    return maxSum;
 }
+
 
 Vec normalize(const Vec& V){
     double norm = euclideanNorm(V);
@@ -187,6 +206,13 @@ Vec randVec(int n, double lower, double upper){
     return V;
 }
 
+double rand_double(){
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> distrib(0, 1);
+    return distrib(gen);
+}
+
 Mtr randMtr(int rows, int cols, double lower, double upper){
     cols = cols <= 0 ? rows : cols;
     Mtr A;
@@ -196,10 +222,10 @@ Mtr randMtr(int rows, int cols, double lower, double upper){
     return A;
 }
 
-Mtr randSymmPositive(int n){
-    Mtr M = randMtr(n);
-    return upperTrSymmetric(mul(M, T(M)));
-}
+// Mtr randSymmPositive(int n){
+//     Mtr M = randMtr(n);
+//     return upperTrSymmetric(mul(M, T(M)));
+// }
 
 Vec fill(double val, size_t length){
     return Vec(length, val);
@@ -247,9 +273,9 @@ double det(const Mtr& M) {
     return determinant;
 }
 
-double cond(const Mtr& M){
-    return euclideanNorm(M) * euclideanNorm(inv(M));
-}
+// double cond(const Mtr& M){
+//     return euclideanNorm(M) * euclideanNorm(inv(M));
+// }
 
 Mtr inv(const Mtr& A) {
     if (!issquare(A))
@@ -456,7 +482,7 @@ Vec div(const Vec& v1, const Vec& v2, double eps){
         throw invalid_argument("Операция применима только к векторам одинаковой длины");
     Vec res;
     for (size_t i = 0; i < v1.size(); i++){
-        if (fabs(v2[i]) > eps)
+        if (fabs(v2[i]) >= eps)
             res.push_back(v1[i]/v2[i]);
         else
             cerr << "Одно из значений в знаменателе оказалось меньше порогового, сокращаем вектор результата\n";
@@ -480,4 +506,41 @@ double min(const Vec& v){
 
 double mean(const Vec& v){
     return sum(v)/size(v);
+}
+
+
+
+// Mtr householder(const Vec& w0){
+    
+//     // auto fill = [](double val, size_t rows, size_t cols) -> Mtr{
+//     //     return Mtr(rows, Vec(cols, val));
+//     // };
+
+//     // auto toCol = [&](const Vec& v) -> Mtr{
+//     //     Mtr alloc = fill(0, size(v), 1);
+//     //     for (size_t i=0; i< size(v); i++)
+//     //         alloc[i][0] = v[i];
+//     //     return alloc;
+//     // };
+
+//     // auto toRow = [](const Vec& v) -> Mtr{
+//     //     return Mtr(1, v);
+//     // };
+
+//     size_t n = size(w0);
+//     Vec w = normalize(w0);
+//     Mtr Q = sum(E(n), mul(toCol(w), toRow(w)), 1, -2);
+//     return Q;
+// }
+
+Mtr generateRndSymPos(int n, double cond){
+    Vec w0 = randVec(n);
+    Mtr H = householder(w0);
+    Vec eigens = {cond};
+    for (int i=0; i<n-2; i++) eigens.push_back(rand_double() + 1.0);
+    eigens.push_back(1);
+    
+    Mtr D = diag(eigens);
+    Mtr A = mul(mul(T(H), D), H);
+    return A;
 }

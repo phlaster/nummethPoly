@@ -1,0 +1,134 @@
+\begin{itemize}
+    \item
+    $\lambda_0 =
+    \begin{pmatrix}
+        0\\0\\0\\0
+    \end{pmatrix};~~~~
+    x_0 =
+    \begin{pmatrix}
+        1\\1\\1\\1
+    \end{pmatrix};~~~~
+    \delta = 0.1;$
+
+
+
+    \item
+    $x_1 = Ax_0 =
+    \begin{pmatrix}
+        1.292\\1.428\\7.136\\11.305
+    \end{pmatrix};$
+    \item
+    $\lambda_1 = x_{i1} / x_{i0} =
+    \begin{pmatrix}
+        1.292/1\\1.428/1\\7.136/1\\11.305/1
+    \end{pmatrix} =
+    \begin{pmatrix}
+        1.292\\1.428\\7.136\\11.305
+    \end{pmatrix};~~~~
+    |\langle\lambda_1\rangle-\langle\lambda_0\rangle| = |5.290-0| = 5.290 >^1 \delta;$
+
+
+
+    \item
+    $x_2 = Ax_1 =
+    \begin{pmatrix}
+        15.096\\11.101\\34.719\\44.384
+    \end{pmatrix};$
+    \item
+    $\lambda_2 = x_{i2} / x_{i1} =
+    \begin{pmatrix}
+        15.096/1.292\\11.101/1.428\\34.719/7.136\\44.384/11.305
+    \end{pmatrix} =
+    \begin{pmatrix}
+        11.684\\7.774\\4.865\\3.926
+    \end{pmatrix};~~~~
+    |\langle\lambda_2\rangle-\langle\lambda_1\rangle| = |7.062-5.290| = 1.772 >^2 \delta;$
+
+
+
+    \item
+    $x_3 = Ax_2 =
+    \begin{pmatrix}
+        61.812\\37.046\\177.655\\246.502
+    \end{pmatrix};$
+    \item
+    $\lambda_3 = x_{i3} / x_{i2} =
+    \begin{pmatrix}
+        61.812/15.096\\37.046/11.101\\177.655/34.719\\246.502/44.384
+    \end{pmatrix} =
+    \begin{pmatrix}
+        4.095\\3.337\\5.117\\5.554
+    \end{pmatrix};~~~~
+    |\langle\lambda_3\rangle-\langle\lambda_2\rangle| = |4.526 - 7.062| = 2.537 >^3 \delta;$
+
+
+
+    \item
+    $x_4 = Ax_3 =
+    \begin{pmatrix}
+        347.173\\189.57\\878.737\\1183.065
+    \end{pmatrix};$
+    \item
+    $\lambda_4 = x_{i4} / x_{i3} =
+    \begin{pmatrix}
+        347.173/61.812\\189.57/37.046\\878.737/177.655\\1183.07/246.502
+    \end{pmatrix} =
+    \begin{pmatrix}
+        5.617\\5.117\\4.946\\4.799
+    \end{pmatrix};~~~~
+    |\langle\lambda_4\rangle-\langle\lambda_3\rangle| = |5.120 - 4.526| = 0.594 >^4 \delta;$
+
+
+
+    \item
+    $x_5 = Ax_4 =
+    \begin{pmatrix}
+        1691.835\\840.407\\4400.599\\6012.159
+    \end{pmatrix};$
+    \item
+    $\lambda_5 = x_{i5} / x_{i4} =
+    \begin{pmatrix}
+        1691.84/347.173\\840.407/189.57\\4400.6/878.737\\6012.16/1183.07
+    \end{pmatrix} =
+    \begin{pmatrix}
+        4.873\\4.433\\5.008\\5.082
+    \end{pmatrix};~~~~
+    |\langle\lambda_5\rangle-\langle\lambda_4\rangle| = |4.849 - 5.120| = 0.271 >^5 \delta;$
+
+
+
+    \item
+    $x_6 = Ax_5 =
+    \begin{pmatrix}
+        8643.614\\4119.618\\21944.271\\29858.896
+    \end{pmatrix};$
+    \item
+    $\lambda_6 = x_{i6} / x_{i5} =
+    \begin{pmatrix}
+        8643.61/1691.84\\4119.62/840.407\\21944.3/4400.6\\29858.9/6012.16
+    \end{pmatrix} =
+    \begin{pmatrix}
+        5.109\\4.902\\4.987\\4.966
+    \end{pmatrix};~~~~
+    |\langle\lambda_6\rangle-\langle\lambda_5\rangle| = |4.991 - 4.849| = 0.142 >^6 \delta;$
+
+
+
+    \item
+    $x_7 = Ax_6 =
+    \begin{pmatrix}
+        43136.918\\19869.435\\109693.335\\149668.570
+    \end{pmatrix};$
+    \item
+    $\lambda_7 = x_{i7} / x_{i6} =
+    \begin{pmatrix}
+        43136.918/8643.614\\19869.435/4119.618\\109693.335/21944.271\\149668.570/29858.896
+    \end{pmatrix} =
+    \begin{pmatrix}
+        4.991\\4.823\\4.999\\5.013
+    \end{pmatrix};~~~~
+    |\langle\lambda_7\rangle-\langle\lambda_6\rangle| = |4.957 - 4.991| = 0.034 <^7 \delta;$
+
+
+    \item $\langle\lambda_7\rangle = \widetilde{\max{\lambda}} = 4.957 \implies \blacksquare $
+\end{itemize}

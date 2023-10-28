@@ -1,0 +1,330 @@
+\section{Тестовый пример}
+
+\subsection{Создание матрицы с известными с.ч.}
+
+Для задания матрицы с известным спектром используем унитарную матрицу из преобразования Хаусхолдера, применённого к случайному орту $\mathbf{v},~||\mathbf{v}||=1$:
+\begin{equation}
+\mathbf{v} = \begin{pmatrix}0.432\\0.626\\0.517\\0.393\end{pmatrix} \implies~~
+\mathbf{H} = \mathbf{I} - 2\mathbf{vv}^T \implies~~~~~ \mathbf{A = H^T\cdot D\cdot H}~~~~~~~~\Longleftarrow
+\mathbf{D} = \begin{pmatrix}
+    11& &  &\\
+      &4&  &\\
+      & &-2&\\
+      & &  &1
+\end{pmatrix}
+\end{equation}
+
+\begin{equation}
+\mathbf{A} =\begin{pmatrix}
+     5.211& -4.610& -1.129& -1.878\\
+    -4.610&  2.811&  2.903&  0.733\\
+    -1.129&  2.903&  3.605&  3.042\\
+    -1.878&  0.733&  3.042&  2.388
+\end{pmatrix}; ~~~ \texttt{cond(A) = 11.014}
+\end{equation}
+
+\subsection{Ручной расчёт}
+\subsubsection{Поиск максимального с.ч. без нормировки}
+\begin{enumerate}
+\item $$
+    \lambda^{(0)} =\begin{pmatrix}0\\0\\0\\0\end{pmatrix}; ~~~~ \langle\lambda^{(0)}\rangle = 0;~~~~
+    \mathbf{y^{(0)}} =\begin{pmatrix}1\\1\\1\\1\end{pmatrix};$$
+
+\item $$
+    \mathbf{y^{(1)} =Ay}^{(0)} = \begin{pmatrix} -2.406\\1.837\\8.421\\4.285\end{pmatrix};$$
+
+\item $$
+     \lambda^{(1)} =\left( y^{(1)}_i / y^{(0)}_i \right) =
+     \begin{pmatrix} \frac{-2.406}{1}\\\frac{1.837}{1}\\\frac{8.421}{1}\\\frac{4.285}{1}\end{pmatrix}=
+     \begin{pmatrix} -2.406\\1.837\\8.421\\4.285\end{pmatrix}; ~~~
+     \langle\lambda^{(1)}\rangle = 3.034;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(1)}\rangle - \langle\lambda^{(0)}\rangle| = |3.034 - 0| = \mathbf{3.034};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(1)}\rangle - \lambda_1| = |3.034 - 11| = \mathbf{7.966};
+    \end{matrix}$$
+
+
+
+\item $$
+    \mathbf{y^{(2)} =Ay}^{(1)} = \begin{pmatrix}-38.561\\43.843\\51.442\\41.714\end{pmatrix};$$
+
+\item $$
+    \lambda^{(2)} =\left( y^{(2)}_i / y^{(1)}_i \right) =
+    \begin{pmatrix} \frac{-38.561}{-2.406}\\\frac{43.843}{1.837}\\\frac{51.442}{8.421}\\\frac{41.714}{4.285}\end{pmatrix}=
+    \begin{pmatrix}16.027\\23.867\\6.109\\9.735\end{pmatrix}; ~~~
+    \langle\lambda^{(2)}\rangle = 13.935;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(2)}\rangle - \langle\lambda^{(1)}\rangle| = |13.935- 3.034| = \mathbf{10.901};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(2)}\rangle - \lambda_1| = |13.935 - 11| = \mathbf{2.935};
+    \end{matrix}$$
+
+
+
+\item $$
+    \mathbf{y^{(3)} =Ay}^{(2)} = \begin{pmatrix}-539.475\\480.921\\483.154\\360.654\end{pmatrix};$$
+
+\item $$
+    \lambda^{(3)} =\left( y^{(3)}_i / y^{(2)}_i \right) =
+    \begin{pmatrix} \frac{-539.475}{-38.561}\\\frac{480.921}{43.843}\\\frac{483.154}{51.442}\\\frac{360.654}{41.714}\end{pmatrix}=
+    \begin{pmatrix}13.990\\10.969\\9.392\\8.646\end{pmatrix}; ~~~
+    \langle\lambda^{(3)}\rangle = 10.749;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(3)}\rangle - \langle\lambda^{(2)}\rangle| = |10.749 -13.935| =   \mathbf{3.186};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(3)}\rangle - \lambda_1| = |10.749 - 11| = \mathbf{0.251};
+    \end{matrix}$$
+
+
+
+\item $$
+    \mathbf{y^{(4)} =Ay}^{(3)} = \begin{pmatrix}-6251.039\\5505.804\\4844.061\\3696.645\end{pmatrix};$$
+
+\item $$
+    \lambda^{(4)} =\left( y^{(4)}_i / y^{(3)}_i \right) =
+    \begin{pmatrix} \frac{-6251.039}{-539.475}\\\frac{5505.804}{480.921}\\\frac{4844.061}{483.154}\\\frac{3696.645}{360.654}\end{pmatrix}=
+    \begin{pmatrix} 11.587\\11.448\\10.026\\10.250\end{pmatrix}; ~~~
+    \langle\lambda^{(4)}\rangle = 10.828;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(4)}\rangle - \langle\lambda^{(3)}\rangle| = |10.828-10.749|    = \mathbf{0.079};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(4)}\rangle - \lambda_1| = |10.828 - 11| = \mathbf{0.172};
+    \end{matrix}$$
+
+\item И т.д.
+\end{enumerate}
+\paragraph{Комментарий:} Видим, как без нормировки растут модули элементов $\mathbf{y}^{(k)}$ и как текущая абсолютная ошибка то больше, то меньше текущей точности.
+
+
+\subsubsection{Поиск максимального с.ч. c нормировкой}
+\begin{enumerate}
+\item $$
+    \lambda^{(0)} =\begin{pmatrix}0\\0\\0\\0\end{pmatrix}; ~~~~
+    \langle\lambda^{(0)}\rangle = 0;~~~~
+    \mathbf{y^{(0)}} =\begin{pmatrix}1\\1\\1\\1\end{pmatrix};~~~~
+    \mathbf{x}^{(0)}:=~\dfrac{\mathbf{y}^{(0)}}{||\mathbf{y}^{(0)}||} = \begin{pmatrix}0.5\\0.5\\0.5\\0.5\end{pmatrix};$$
+
+\item $$
+    \mathbf{y^{(1)} =Ax}^{(0)} = \begin{pmatrix}-1.203\\0.918\\4.210\\2.142\end{pmatrix};$$
+
+\item $$
+     ||\mathbf{y^{(1)}}|| = 4.960; ~~~~
+     \mathbf{x^{(1)}}:=\mathbf{y^{(1)}}/||\mathbf{y^{(1)}}|| =
+     \begin{pmatrix}-0.243\\0.185\\0.849\\0.432\end{pmatrix}$$
+
+\item $$
+    \lambda^{(1)} =\left( y^{(1)}_i / x^{(0)}_i \right) =
+    \begin{pmatrix} \frac{-1.203}{0.5}\\\frac{0.918}{0.5}\\\frac{4.210}{0.5}\\\frac{2.142}{0.5}\end{pmatrix}=
+    \begin{pmatrix} -2.406\\1.836\\8.420\\4.284\end{pmatrix}; ~~~
+    \langle\lambda^{(1)}\rangle = 3.034;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(1)}\rangle - \langle\lambda^{(0)}\rangle| = |3.034 - 0| = \mathbf{3.034};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(1)}\rangle - \lambda_1| = |3.034 - 11| = \mathbf{7.966};
+    \end{matrix}$$
+
+
+
+\item $$
+    \mathbf{y^{(2)} =Ax}^{(1)} = \begin{pmatrix}-3.889\\4.422\\5.186\\4.206\end{pmatrix};$$
+
+\item $$
+    ||\mathbf{y^{(2)}}|| = 8.903; ~~~~
+    \mathbf{x^{(2)}}:=\mathbf{y^{(2)}}/||\mathbf{y^{(2)}}|| =
+    \begin{pmatrix}-0.437\\0.497\\0.583\\0.472\end{pmatrix}$$
+
+\item $$
+    \lambda^{(2)} =\left( y^{(2)}_i / x^{(1)}_i \right) =
+    \begin{pmatrix} \frac{-3.889}{-0.243}\\\frac{4.422 }{0.185}\\\frac{5.186}{ 0.849}\\\frac{4.206}{ 0.432}\end{pmatrix}=
+    \begin{pmatrix} 16.004\\23.903\\6.108\\9.736\end{pmatrix}; ~~~
+    \langle\lambda^{(2)}\rangle = 13.938;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(2)}\rangle - \langle\lambda^{(1)}\rangle| = |13.938-3.034| =   \mathbf{10.904};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(2)}\rangle - \lambda_1| = |13.938 - 11| = \mathbf{2.938};
+    \end{matrix}$$
+
+
+
+
+\item $$
+    \mathbf{y^{(3)} =Ax}^{(2)} = \begin{pmatrix}-6.113\\5.450\\5.474\\4.086\end{pmatrix};$$
+
+\item $$
+    ||\mathbf{y^{(3)}}|| = 10.664; ~~~~
+    \mathbf{x^{(3)}}:=\mathbf{y^{(3)}}/||\mathbf{y^{(3)}}|| =
+    \begin{pmatrix}-0.573\\0.511\\0.513\\0.383\end{pmatrix}$$
+
+\item $$
+    \lambda^{(3)} =\left( y^{(3)}_i / x^{(2)}_i \right) =
+    \begin{pmatrix} \frac{-6.113}{-0.437}\\\frac{ 5.450}{0.497}\\\frac{5.474}{0.583}\\\frac{4.086}{0.472}\end{pmatrix}=
+    \begin{pmatrix}13.989\\10.966\\9.389\\8.657\end{pmatrix}; ~~~
+    \langle\lambda^{(3)}\rangle = 10.750;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(3)}\rangle - \langle\lambda^{(2)}\rangle| = |10.750-13.938| =    \mathbf{3.188};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(3)}\rangle - \lambda_1| = |10.750 - 11| = \mathbf{0.250};
+    \end{matrix}$$
+
+
+
+
+\item $$
+\mathbf{y^{(4)} =Ax}^{(3)} = \begin{pmatrix}-6.640\\5.848\\5.145\\3.926\end{pmatrix};$$
+
+\item $$
+    ||\mathbf{y^{(4)}}|| = 10.962; ~~~~
+    \mathbf{x^{(4)}}:=\mathbf{y^{(4)}}/||\mathbf{y^{(4)}}|| =
+    \begin{pmatrix} -0.606\\0.533\\0.469\\0.358\end{pmatrix}$$
+
+\item $$
+    \lambda^{(4)} =\left( y^{(4)}_i / x^{(3)}_i \right) =
+    \begin{pmatrix} \frac{-6.640}{-0.573}\\\frac{5.848 }{0.511}\\\frac{5.145 }{0.513}\\\frac{3.926 }{0.383}\end{pmatrix}=
+    \begin{pmatrix} 11.588\\11.444\\10.029\\10.251\end{pmatrix}; ~~~
+    \langle\lambda^{(4)}\rangle = 10.828;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(4)}\rangle - \langle\lambda^{(3)}\rangle| = |10.828-10.750|     =    \mathbf{0.078};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(4)}\rangle - \lambda_1| = |10.828 - 11| = \mathbf{0.172};
+    \end{matrix}$$
+\end{enumerate}
+
+\paragraph{Комментарий:} Нормировка предотвращает разрастание модулей элементов полученного приближения к собственному вектору. Как и в 2.2.1 видим, что текущая абсолютная ошибка может быть как больше, там и меньше текущей точности. Скорость сходимости алгоритма определяется в основном величиной $\left|\dfrac{\lambda_2}{\lambda_1}\right|$. Это означает, что сходимость будет тем лучше и, как следствие, критерий остановки алгоритма тем надежнее, чем сильнее доминирует в спектре матрицы $\mathbf{A}$ собственное число c наибольшим модулем $\lambda_1$. В нашем случае, алгоритмы 2.2.1 и 2.2.2 сходятся со скоростью порядка $\left(\dfrac{4}{11}\right)^k$.
+
+\subsubsection{Поиск минимального с.ч. c применением сдвига}
+возможен для знакоопределённой матрицы. У такой матрицы все собственные числа имеют одинаковый знак. Исходная матрица $\mathbf{A}$ оказалась не такой. Пользуясь формулами и ортом $\mathbf{v}$ из (4) сконструируем матрицу $\mathbf{A}_p$ с собственными числами: $\{11,4,2,1\}$:
+\begin{equation}
+    \mathbf{A}_p =
+    \begin{pmatrix}
+         6.010& -3.453& -1.961& -1.152\\
+        -3.453&  4.485&  1.699&  1.784\\
+        -1.961&  1.699&  4.470&  2.287\\
+        -1.152&  1.784&  2.287&  3.047\\
+    \end{pmatrix}
+\end{equation}
+Теперь задача поиска наименьшего с.ч. сводится к отысканию по одному из отработанных выше алгоритмов наибольшего по модулю собственного числа $\Lambda$ матрицы $ \mathbf{A' = A}_p-\mathbf{\lambda_1I}$. Будем считать известным $\lambda_1=11$.
+\begin{equation}
+    \mathbf{A' = A}_p-11\cdot\mathbf{I} =
+    \begin{pmatrix}
+        -4.990& -3.453& -1.961& -1.152\\
+        -3.453& -6.515&  1.699&  1.784\\
+        -1.961&  1.699& -6.530&  2.287\\
+        -1.152&  1.784&  2.287& -7.953
+    \end{pmatrix}; ~~~ \texttt{cond(A') = 742.876};
+\end{equation}
+
+\begin{enumerate}
+\item $$
+    \lambda^{(0)} =\begin{pmatrix}0\\0\\0\\0\end{pmatrix}; ~~~~
+    \langle\lambda^{(0)}\rangle = 0;~~~~
+    \mathbf{y^{(0)}} =\begin{pmatrix}1\\1\\1\\1\end{pmatrix};~~~~
+    \mathbf{x}^{(0)}:=~\dfrac{\mathbf{y}^{(0)}}{||\mathbf{y}^{(0)}||} = \begin{pmatrix}0.5\\0.5\\0.5\\0.5\end{pmatrix};$$
+
+\item $$
+    \mathbf{y^{(1)} =A'x}^{(0)} = \begin{pmatrix}-5.778\\-3.242\\-2.252\\-2.517\end{pmatrix};$$
+
+\item $$
+    ||\mathbf{y^{(1)}}|| = 7.437; ~~~~
+    \mathbf{x^{(1)}}:=\mathbf{y^{(1)}}/||\mathbf{y^{(1)}}|| =
+    \begin{pmatrix}-0.777\\-0.436\\-0.303\\-0.338\end{pmatrix}$$
+
+\item $$
+    \lambda^{(1)} =\left( y^{(1)}_i / x^{(0)}_i \right) =
+    \begin{pmatrix} \frac{-5.778}{0.5}\\\frac{-3.242}{0.5}\\\frac{-2.252}{0.5}\\\frac{-2.517}{0.5}\end{pmatrix}=
+    \begin{pmatrix}-11.556\\-6.484\\-4.504\\-5.034\end{pmatrix}; ~~~
+    \langle\lambda^{(1)}\rangle = -6.894;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(1)}\rangle - \langle\lambda^{(0)}\rangle| = |-6.894 - 0| =  \mathbf{6.894};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(1)}\rangle - (\lambda_n-\lambda_1)| = |-6.894 + 10| = \mathbf{3.106};
+    \end{matrix}$$
+
+
+
+\item $$
+    \mathbf{y^{(2)} =A'x}^{(1)} = \begin{pmatrix} 6.366\\4.406\\1.989\\2.112\end{pmatrix};$$
+
+\item $$
+||\mathbf{y^{(2)}}|| = 8.268; ~~~~
+    \mathbf{x^{(2)}}:=\mathbf{y^{(2)}}/||\mathbf{y^{(2)}}|| =
+    \begin{pmatrix} 0.770\\0.533\\0.241\\0.255\end{pmatrix}$$
+
+\item $$
+    \lambda^{(2)} =\left( y^{(2)}_i / x^{(1)}_i \right) =
+    \begin{pmatrix} \frac{6.366}{-0.777}\\\frac{4.406}{-0.436}\\\frac{1.989}{-0.303}\\\frac{2.112}{-0.338}\end{pmatrix}=
+    \begin{pmatrix}-8.193\\-10.106\\-6.564\\-6.249\end{pmatrix}; ~~~
+    \langle\lambda^{(2)}\rangle = -7.778;$$
+
+\item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(2)}\rangle - \langle\lambda^{(1)}\rangle| = |-7.778+6.894| =    \mathbf{0.884};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(2)}\rangle - (\lambda_n-\lambda_1)| = |-7.778 + 10| = \mathbf{2.222};
+    \end{matrix}$$
+
+
+
+
+\item $$
+    \mathbf{y^{(3)} =A'x}^{(2)} = \begin{pmatrix}-6.449\\-5.267\\-1.595\\-1.413\end{pmatrix};$$
+
+\item $$
+    ||\mathbf{y^{(3)}}|| = 8.595; ~~~~
+    \mathbf{x^{(3)}}:=\mathbf{y^{(3)}}/||\mathbf{y^{(3)}}|| =
+    \begin{pmatrix} -0.750\\-0.613\\-0.186\\-0.164\end{pmatrix}$$
+
+    \item $$
+    \lambda^{(3)} =\left( y^{(3)}_i / x^{(2)}_i \right) =
+    \begin{pmatrix} \frac{-6.449}{0.770}\\\frac{-5.267}{0.533}\\\frac{-1.595}{0.241}\\\frac{-1.413}{0.255}\end{pmatrix}=
+    \begin{pmatrix} -8.375\\-9.882\\-6.618\\-5.541\end{pmatrix}; ~~~
+    \langle\lambda^{(3)}\rangle = -7.604;$$
+
+    \item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(3)}\rangle - \langle\lambda^{(2)}\rangle| = |-7.604 + 7.778| =    \mathbf{0.174};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(3)}\rangle - (\lambda_n-\lambda_1)| = |-7.604 +10| = \mathbf{2.396};
+    \end{matrix}$$
+
+
+
+
+    \item $$
+    \mathbf{y^{(4)} =A'x}^{(3)} = \begin{pmatrix}6.413\\5.975\\1.269\\0.649\end{pmatrix};$$
+
+    \item $$
+    ||\mathbf{y^{(4)}}|| = 8.880; ~~~~
+    \mathbf{x^{(4)}}:=\mathbf{y^{(4)}}/||\mathbf{y^{(4)}}|| =
+    \begin{pmatrix}0.722\\0.673\\0.143\\0.073\end{pmatrix}$$
+
+    \item $$
+    \lambda^{(4)} =\left( y^{(4)}_i / x^{(3)}_i \right) =
+    \begin{pmatrix} \frac{6.413}{-0.750}\\\frac{5.975}{-0.613}\\\frac{1.269}{-0.186}\\\frac{0.649}{-0.164}\end{pmatrix}=
+    \begin{pmatrix}-8.551\\9.747\\-6.823\\-3.957\end{pmatrix}; ~~~
+    \langle\lambda^{(4)}\rangle = -7.270;$$
+
+    \item $$
+    \begin{matrix}
+        \text{Проверка окончания алгоритма: }&|\langle\lambda^{(4)}\rangle - \langle\lambda^{(3)}\rangle| = |-7.270+7.604|     =    \mathbf{0.334};\\
+        \text{Текущая абсолютная ошибка: }&|\langle\lambda^{(4)}\rangle - (\lambda_n-\lambda_1)| = |  -7.270 +10| = \mathbf{2.730};
+    \end{matrix}$$
+\end{enumerate}
+
+\paragraph{Комментарий:} Последний пример показал плохую сходимость. Это иллюстрирует одну из возникающих проблем при сдвиге: Получившаяся матрица $\mathbf{A'}$ оказалась плохо обусловлена: $\texttt{cond(A')=742.876}$, что негативно сказалось на монотонности сходимости метода и на фактической ошибке каждого шага.
+
+В качестве сдвигового скаляра из (7) в литературе, кроме наибольшего с.ч. (спектральная норма) матрицы, предлагают использовать и другие операторные нормы. Так, если предложить $\mathbf{A''} = \mathbf{A}_p - ||\mathbf{A}_p||_1\cdot \mathbf{I}$, где $||\mathbf{A}_p||_1=12.576$, то $\texttt{cond(A'') = 7.409}$, что гарантирует успешную сходимость метода.
+
+Для случайной матрицы ранга 4 с собственными числами: $\{4,3,2,1\}$ можно построить:
+\begin{figure}[H]
+    \centering
+    \caption{График зависимости числа обусловленности от скаляра сдвига.}
+    \includegraphics[width=1\linewidth]{pics/conds}
+\end{figure}

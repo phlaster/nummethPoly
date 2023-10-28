@@ -39,7 +39,8 @@ Vec div(const Vec& v1, const Vec& v2, double eps=1e-16);
 
 double dot(const Vec& V1, const Vec& V2);
 double euclideanNorm(const Vec& V);
-double euclideanNorm(const Mtr& M);
+// double euclideanNorm(const Mtr& M);
+double opnorm_1(const Mtr& M);
 double det(const Mtr& M);
 double cond(const Mtr& M);
 
@@ -56,6 +57,7 @@ Mtr mul(const Mtr& M1, const Mtr& M2);
 Vec randVec(int n, double lower=0, double upper=1);
 Mtr randMtr(int rows, int cols=-1, double lower=0, double upper=1);
 Mtr randSymmPositive(int n);
+Mtr generateRndSymPos(int n, double cond);
 
 Mtr toCol(const Vec& v);
 Mtr toRow(const Vec& v);

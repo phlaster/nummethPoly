@@ -1,0 +1,179 @@
+\begin{itemize}
+    \item
+    $\lambda^C_0 =
+    \begin{pmatrix}
+        0\\0\\0\\0
+    \end{pmatrix};~~~~
+    y_0 =
+    \begin{pmatrix}
+        1\\1\\1\\1
+    \end{pmatrix};~~~~
+    x_0 = \cfrac{y_0}{||y_0||} = \cfrac{1}{\sqrt{1^2+1^2+1^2+1^2}}\cdot
+    \begin{pmatrix}
+        1\\1\\1\\1
+    \end{pmatrix} =
+    \begin{pmatrix}
+        0.5\\0.5\\0.5\\0.5
+    \end{pmatrix};~~~~
+    \delta = 0.1;$
+
+
+
+    \item
+    $y_1 = Cx_0 =
+    \begin{pmatrix}
+        -4.035\\-3.967\\-1.113\\0.972
+    \end{pmatrix};$
+
+    \item
+    $x_1 = \cfrac{y_1}{||y_1||} = \cfrac{1}{\sqrt{-4.035^2+(-3.967)^2+(-1.113)^2+0.972^2}}\cdot
+    \begin{pmatrix}
+        -4.035\\-3.967\\-1.113\\0.972
+    \end{pmatrix} =
+    \begin{pmatrix}
+        -0.690\\-0.678\\-0.190\\0.166
+    \end{pmatrix}$
+
+    \item
+    $\lambda^C_1 = y_{i1} / x_{i0} =
+    \begin{pmatrix}
+        -4.035/0.5\\
+        -3.967/0.5\\
+        -1.113/0.5\\
+         0.972/0.5
+    \end{pmatrix} =
+    \begin{pmatrix}
+        -8.070\\-7.934\\-2.226\\1.944
+    \end{pmatrix};~~~~
+    |\langle\lambda^C_1\rangle-\langle\lambda^C_0\rangle| = |-4.072-0| = 4.072 >^1 \delta;$
+
+
+
+
+    \item
+    $y_2 = Cx_1 =
+    \begin{pmatrix}
+         6.716\\
+         6.154\\
+        -0.964\\
+        -6.808
+    \end{pmatrix};$
+
+    \item
+    $x_2 = \cfrac{y_2}{||y_2||} = \cfrac{1}{\sqrt{6.716^2+6.154^2+(-0.964)^2+(-6.808)^2}}\cdot
+    \begin{pmatrix}
+         6.716\\
+         6.154\\
+         -0.964\\
+         -6.808
+    \end{pmatrix} =
+    \begin{pmatrix}
+        0.588\\
+        0.539\\
+        -0.084\\
+        -0.597
+    \end{pmatrix}$
+
+    \item
+    $\lambda^C_2 = y_{i2} / x_{i1} =
+    \begin{pmatrix}
+        6.716/-0.690\\
+        6.154/-0.678\\
+       -0.964/-0.190\\
+       -6.808/ 0.166
+    \end{pmatrix} =
+    \begin{pmatrix}
+        -9.733\\
+        -9.077\\
+         5.074\\
+       -41.012
+    \end{pmatrix};~~~~
+    |\langle\lambda^C_2\rangle-\langle\lambda^C_1\rangle| = |-13.687+4.072| = 9.615 >^2 \delta;$
+
+
+
+    \item
+    $y_3 = Cx_2 =
+    \begin{pmatrix}
+       -6.311\\
+       -5.389\\
+        1.930\\
+        8.628
+    \end{pmatrix};$
+
+    \item
+    $x_3 = \cfrac{y_3}{||y_3||} = \cfrac{1}{\sqrt{(-6.311)^2+(-5.389)^2+1.930^2+8.628^2}}\cdot
+    \begin{pmatrix}
+        -6.311\\
+        -5.389\\
+        1.930\\
+        8.628
+    \end{pmatrix} =
+    \begin{pmatrix}
+        -0.520\\
+        -0.444\\
+        0.159\\
+        0.712
+    \end{pmatrix}$
+
+    \item
+    $\lambda^C_3 = y_{i3} / x_{i2} =
+    \begin{pmatrix}
+       -6.311/ 0.588\\
+       -5.389/ 0.539\\
+        \cancel{1.930/-0.084}\\
+        8.628/-0.597
+    \end{pmatrix} =
+    \begin{pmatrix}
+       -10.733\\
+        -9.998\\
+       -14.452
+    \end{pmatrix};~~~~
+    |\langle\lambda^C_3\rangle-\langle\lambda^C_2\rangle| = |-11.727+13.687| = 1.959 >^3 \delta;$
+
+
+
+    \item
+    $y_4 = Cx_3 =
+    \begin{pmatrix}
+        5.808\\
+        4.711\\
+       -2.002\\
+       -8.725
+    \end{pmatrix};$
+
+    \item
+    $x_4 = \cfrac{y_4}{||y_4||} = \cfrac{1}{\sqrt{5.808^2+4.711^2+(-2.002)^2+(-8.725)^2}}\cdot
+    \begin{pmatrix}
+        5.808\\
+        4.711\\
+        -2.002\\
+        -8.725
+    \end{pmatrix} =
+    \begin{pmatrix}
+        0.498\\
+        0.404\\
+       -0.172\\
+       -0.748
+    \end{pmatrix}$
+
+    \item
+    $\lambda^C_4 = y_{i4} / x_{i3} =
+    \begin{pmatrix}
+        5.808/-0.520\\
+        4.711/-0.444\\
+       -2.002/ 0.159 \\
+       -8.725/ 0.712
+    \end{pmatrix} =
+    \begin{pmatrix}
+        -11.169\\
+        -10.610\\
+        -12.591\\
+        -12.254
+    \end{pmatrix};~~~~
+    |\langle\lambda^C_4\rangle-\langle\lambda^C_3\rangle| = |-11.656+11.727| = 0.071 <^4 \delta;$
+
+    \item $\langle\lambda^C_4\rangle = \widetilde{\max{\lambda^C}} = -11.656 \implies
+    \widetilde{\min{\lambda}} = \widetilde{\max{\lambda^C}} + \mu = -11.656 + 9.362 = -2.294
+    \implies \blacksquare $
+\end{itemize}

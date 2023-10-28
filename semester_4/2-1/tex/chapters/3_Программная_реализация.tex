@@ -1,0 +1,24 @@
+\section{Программная реализация на C++}
+\subsection{Некоторые использованные функции}
+\subsubsection{Поэлементное деление векторов}
+\lstinputlisting[language=C++]{listings/div.cpp}
+
+\subsubsection{Метод без нормировки}
+\lstinputlisting[language=C++]{listings/naive_PM.cpp}
+
+\subsubsection{Метод с нормировкой}
+\lstinputlisting[language=C++]{listings/normed_PM.cpp}
+
+\subsection{Модульная структура}
+\lstinputlisting[language=C++]{listings/header.hpp}
+\begin{itemize}
+    \item \lstinline|Vec div(const Vec& v1, const Vec& v2, double eps=1e-15);| -- поэлементно делит вектор на вектор в шаге 3. Если элемент второго вектора в знаменателе меньше выбранного порога, игнорирует эту пару соответствующих элементов, сокращая вектор результата;
+
+    \item \lstinline|Vec normalize(const Vec& V);| -- нормализует вектор на шаге 3;
+
+    \item \lstinline|double mean(const Vec& v);| -- возвращает среднее значение вектора $\lambda^{(k)}$ на шаге 5;
+
+    \item \lstinline|pair<int, double> naive_PM(const Mtr& A, double delta=1e-15);| -- алгоритм без нормирования, возвращает наибольшее по модулю значение и количество шагов до достижения указанной точности;
+
+    \item \lstinline|pair<int, double> normed_PM(const Mtr& A, double delta=1e-15);| -- алгоритм с нормированием, возвращает наибольшее по модулю значение и количество шагов до достижения указанной точности;
+\end{itemize}

@@ -4,12 +4,14 @@ CFLAGS=-O3 --std=c++17
 SOURCE_DIR=.
 OBJECT_DIR=objects
 DBG_NAME=debug
+MULTI_NAME=multi
 BIN_NAME=build
 
 
 SOURCES=main LinearAlgebra Printers algos
+SOURCES_MULTI=multi LinearAlgebra Printers algos
 
-
+MULTI_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES_MULTI)))
 DBG_OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix _DBG.o,$(SOURCES)))
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))
 
@@ -22,6 +24,13 @@ $(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
 
 $(OBJECT_DIR):
 	mkdir -p $@
+
+multi:
+$(MULTI_NAME): $(MULTI_OBJECTS)
+	$(CC) $(CFLAGS_DBG) $^ -o $@.out
+
+$(OBJECT_DIR)/%.o: $(SOURCE_DIR)/%.cpp | $(OBJECT_DIR)
+	$(CC) $(CFLAGS_DBG) -c $< -o $@
 
 
 debug:
