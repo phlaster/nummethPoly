@@ -1,8 +1,8 @@
 using CairoMakie, CSV, ColorSchemes
 
 f1 = CSV.File("rect_trapez_compare.csv");
-f2 = CSV.File("trapez_runge.csv");
-f3 = CSV.File("trapez_adaptive.csv");
+f_ru = CSV.File("trapez_runge.csv");
+f_ad = CSV.File("trapez_adaptive.csv");
 
 let
     f = Figure(resolution = (1000, 800))
@@ -78,25 +78,25 @@ let
     f = Figure(resolution = (1000, 800))
     ax = CairoMakie.Axis(f[1, 1],
         backgroundcolor = :gray90,
-        xlabel = "Шаги", ylabel = "абс. ошибка",
-        xminorgridvisible = true,
-        yminorgridvisible = true,
+        ylabel = "Шаги", xlabel = "точность",
+        # xminorgridvisible = true,
+        # yminorgridvisible = true,
         xscale=log10,
         yscale=log10,
 	)
     scatter!(
-        f2.n_steps, f2.err,
+        f2.eps, f2.n_steps,
         color = :royalblue,
         label = "трапеции (Рунге)",
         markersize = 25,
         alpha=.7
     )
     scatter!(
-        f3.n_steps, f3.err,
+        f3.eps, f3.n_steps,
         color = :cyan3,
         label = "трапеции адаптивный"
     )
-    ylims!(1e-15, 1)    
+    # ylims!(1e-15, 1)    
     axislegend()
     current_figure()
 end
@@ -129,3 +129,45 @@ let
     current_figure()
 end
 
+let 
+    f = Figure(resolution = (1200, 800))
+    ax1 = CairoMakie.Axis(f[1, 1],
+        backgroundcolor = :gray90,
+        xlabel = "ε", ylabel = "N",
+        # xminorgridvisible = true,
+        # yminorgridvisible = true,
+        xscale=log10,
+        yscale=log10,
+	)
+    scatterlines!(
+        ax1, f_ru.eps, f_ru.n_steps,
+        label = "Трапеции, критерий Рунге"
+    )
+    scatterlines!(
+        ax1, f_ad.eps, f_ad.n_steps,
+        label = "Адаптивные трапеции",
+        color =:crimson
+    )
+    axislegend()
+
+
+    ax2 = CairoMakie.Axis(f[2, 1],
+        backgroundcolor = :gray90,
+        xlabel = "ε", ylabel = "err",
+        # xminorgridvisible = true,
+        # yminorgridvisible = true,
+        xscale=log10,
+        yscale=log10,
+	)
+    scatterlines!(
+        ax2, f_ru.eps, f_ru.err,
+        label = "Трапеции, критерий Рунге"
+    )
+    scatterlines!(
+        ax2, f_ad.eps, f_ad.err,
+        label = "Адаптивные трапеции",
+        color =:crimson
+    )
+    # axislegend(position=:lt)
+    current_figure()
+end
