@@ -23,9 +23,11 @@ build/
 **/reports/*
 
 # LaTeX
-**/tex/*.aux
-**/tex/*.log
-**/tex/*.toc
-**/tex/*.synctex.gz
-**/tex/*.pdf
+**/tex/**/*.aux
+**/tex/**/*.log
+**/tex/**/*.toc
+**/tex/**/*.synctex.gz
+**/tex/**/*.pdf
+**/tex/**/*.fls
+**/tex/**/*.fdb*
 **/tex/**/titlepage.*
