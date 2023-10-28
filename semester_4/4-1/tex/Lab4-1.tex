@@ -1,0 +1,85 @@
+\documentclass[a4paper, 14pt]{article}
+\usepackage[russian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\setstretch{1.3}
+\usepackage{anyfontsize}
+\usepackage{amsmath, amsfonts, amssymb, amsthm, mathtools}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{breqn}
+\usepackage{cancel}
+\geometry{a4paper, portrait, margin=10mm, bmargin=15mm, tmargin=15mm}
+
+\usepackage{xcolor}
+\usepackage{multicol}
+\usepackage{listings}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.65,0.65,0.65}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.93, 0.95, 0.96}
+\definecolor{keywordcolor}{rgb}{0.23, 0.37, 0.8}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{keywordcolor}\bf,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\include{titlepage}
+
+\pagenumbering{arabic}
+
+\setcounter{page}{2}
+
+\section*{Задание}
+
+
+\section{Метод трапеций с заданным числом разбиений}
+
+\subsection{Алгоритм}
+
+\lstinputlisting[language=C++]{listings/1.cpp}
+
+\subsection{Графики}
+
+\begin{figure}[H]
+    \centering
+    \caption{}
+    \includegraphics[width=0.8\linewidth]{images/1}
+    \label{fig:1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \caption{}
+    \includegraphics[width=0.8\linewidth]{images/2}
+    \label{fig:2}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \caption{}
+    \includegraphics[width=0.8\linewidth]{images/3}
+    \label{fig:3}
+\end{figure}
+
+\end{document}
