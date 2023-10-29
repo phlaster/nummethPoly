@@ -1,7 +1,12 @@
-#include "Runge.hpp"
+#include "headers/runge.hpp"
 
 double RK2_maxerror(
-    double y0, double a, double b, double h, double (*dydx)(double, double), double (*y_exact)(double)
+    const double y0,
+    const double a,
+    const double b,
+    const double h,
+    double (*dydx)(double, double),
+    double (*y_exact)(double)
 ){
     double maxerr = 0.0;
     double x = a, y = y0;
@@ -23,7 +28,11 @@ double RK2_maxerror(
     func - right hand of the equation for the first derivitive dy/dx
 */
 vector<point> RK2(
-    double y0, double a, double b, double h, double (*dydx)(double, double)
+    const double y0,
+    const double a,
+    const double b,
+    const double h,
+    double (*dydx)(double, double)
 ){
     vector<point> Y = {{a,y0}};
     double x = a, y = y0;
@@ -38,7 +47,12 @@ vector<point> RK2(
 }
 
 vector<point> RK2_adaptive(
-    double y0, double a, double b, double h0, double p, double (*dydx)(double, double)
+    const double y0,
+    const double a,
+    const double b,
+    const double h0,
+    const double p,
+    double (*dydx)(double, double)
 ){
     vector<point> Y = {{a,y0}};
     double x = a, y = y0;
@@ -55,7 +69,7 @@ vector<point> RK2_adaptive(
 
             _yj = yj + hhj*dydx(x,yj);
             yj += hhi*dydx(x+hhj, _yj);
-            //cout << "<" << fabs(yi - yj)/3.0 << ">\n";
+
             if(fabs(yi - yj)/3.0 < p){
                 y = yi;
                 break;
