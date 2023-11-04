@@ -1,5 +1,16 @@
-#include "HEADER.hpp"
-#include "Sparse.hpp"
+#include "headers/HEADER.hpp"
+
+Vec randVec(size_t n, double lower, double upper){
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_real_distribution<> distrib(lower, upper);
+    
+    Vec V(n);
+    for (size_t i = 0; i < n; ++i)
+        V[i] = distrib(gen);
+    return V;
+}
+
 
 double euclideanNorm(const Vec& V){
     return sqrt(V*V);
@@ -21,11 +32,3 @@ Vec normalize(const Vec& V){
     return V/norm;
 }
 
-spMtr normalize(const spMtr& M){
-    if (M.cols != 1)
-        throw invalid_argument("Sparse: only column matricies for normalization!");
-    double norm = euclideanNorm(M);
-    if (norm==0.0)
-        throw invalid_argument("Can't norm zero sparse vector!");
-    return M/norm;
-}

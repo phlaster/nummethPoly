@@ -1,38 +1,48 @@
-#include "HEADER.hpp"
+#include "headers/HEADER.hpp"
 
 int main(int argv, char **argc){
     srand((unsigned)time(NULL));
-
-    int msize = stoi(argc[1]);
-    float cond = stof(argc[2]);
-    float sparsity = stof(argc[3]);
-    float threshold = stof(argc[4]);
+    int msize;
+    float cond, sparsity, threshold;
+    if (argv < 5){
+        msize = 10;
+        cond = 5;
+        sparsity = 1;
+        threshold = 0;
+    } else if (argv == 5){
+        msize = stoi(argc[1]);
+        cond = stof(argc[2]);
+        sparsity = stof(argc[3]);
+        threshold = stof(argc[4]);
+    } else {
+        print("Слишком много аргументов, завершение!");
+        exit(1);
+    }
+    cout << "msize="<<msize<<"\n"
+        << "cond="<<cond<<"\n"
+        << "sparsity="<<sparsity<<"\n"
+        << "threshold="<<threshold<<endl;
 
     spMtr A = generateRndSymPos(msize, cond, sparsity);
-    spMtr B = A;
-    cout << "A:" << endl;
-    print(A);
+    Vec x = randVec(msize);
+    Vec b = A*x;
+    print(to_dense(A), x, b);
 
-    ___incomp_chol_tol(A, 0);
-    cout << "chol(A):" << endl;
-    print(A);
-    cout << A.valCounter << endl;
     
-    ___incomp_chol_tol(B, threshold);
-    cout << "chol(A, delta="<<threshold<<"):" << endl;
-    print(B);
-    cout << B.valCounter << endl;
-    
-    // erase_above_diag(A, true);
-    // chol(A);
-    // print(A);
-    // spMtr Ch = chol(A);
-    // print(to_dense(Ch));
-    // print(A - Ch* T(Ch));
+    auto [_x, nsteps] = pcg(A, b);
+    cout << "Шагов: " << nsteps << "\nНорма ошибки: ";
+    print(euclideanNorm(_x - x));
 
-    // Mtr A = generateRndSymPos(4,10);
-    // print(A);
-    // choleskyDecomposition(A);
-    // print(A);
+    
+    spMtr Chol = chol(A, threshold);
+    print(Chol);
+
+    print(Chol*T(Chol) - A);
+
+    
+    auto [_x2, nsteps2] = pcg(A, b, Chol);
+    cout << "Шагов: " << nsteps2 << "\nНорма ошибки: ";
+    print(euclideanNorm(_x2 - x));
+
     return 0;
 }

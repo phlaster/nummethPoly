@@ -1,4 +1,4 @@
-#include "Printers.hpp"
+#include "headers/Printers.hpp"
 
 void print(const Vec& v){
     cout << "[";
@@ -21,24 +21,24 @@ void print(const Mtr& A){
     cout << "\n";
 }
 void print(const Mtr& A, const Vec& x, const Vec& b){
-    int n = A.size();
+    size_t n = A.size();
     
-    cout << "A:" << setw(12*n+1) << "|x:" << setw(12) << "  |b:" << '\n';
+    cout << "A:" << setw(13*n+1) << "|x:" << setw(13) << "  |b:" << '\n';
 
-	for(int i=0; i<n; ++i){
-		for(int j=0; j<n; ++j)
+	for(size_t i=0; i<n; ++i){
+		for(size_t j=0; j<n; ++j)
 			cout << setw(12) << A[i][j] << " ";
 		cout << "|"<< setw(12) << x[i] << "|" << setw(12) << b[i] << "\n";
 	}
     cout << "\n";
 }
 void print(const Mtr& A, const vector<string>& S, const Vec& b){
-    int n = A.size();
+    size_t n = A.size();
     
-    cout << "A:" << setw(12*n+1) << "|x:" << setw(12) << "  |b:" << '\n';
+    cout << "A:" << setw(13*n+1) << "|x:" << setw(13) << "  |b:" << '\n';
 
-	for(int i=0; i<n; ++i){
-		for(int j=0; j<n; ++j)
+	for(size_t i=0; i<n; ++i){
+		for(size_t j=0; j<n; ++j)
 			cout << setw(12) << A[i][j] << " ";
 		cout << "|"<< setw(12) << S[i] << "|" << setw(12) << b[i] << "\n";
 	}
@@ -55,8 +55,8 @@ void print(const char* s) {
 }
 
 void print(const spMtr& sA){
-    for (int i = 0; i < sA.rows; i++){
-        for (int j = 0; j < sA.cols; j++){
+    for (size_t i = 0; i < sA.rows; i++){
+        for (size_t j = 0; j < sA.cols; j++){
             double value = sA.get(i,j);
             if (value == 0.0){
                 cout << "           . ";

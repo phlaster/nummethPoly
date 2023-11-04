@@ -1,13 +1,13 @@
-#include "operators.hpp"
+#include "headers/operators.hpp"
 
 
 Vec operator+(Vec a, const Vec& b) {
-    int n = a.size();
+    size_t n = a.size();
     if (n != b.size()) {
         throw invalid_argument("Vector sizes are not aligned for addition.");
     }
     
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         a[i] += b[i];
     }
     return a;
@@ -15,27 +15,27 @@ Vec operator+(Vec a, const Vec& b) {
 
 Vec operator-(Vec a){
     size_t n = size(a);
-    for (size_t i; i<n; i++){
+    for (size_t i=0; i<n; i++){
         a[i] *= -1.0;
     }
     return a;
 }
 
 Vec operator-(Vec a, const Vec& b){
-    int n = a.size();
+    size_t n = a.size();
     if (n != b.size()) {
         throw invalid_argument("Vector sizes are not aligned for subtraction.");
     }
-    for (size_t i; i<n; i++){
+    for (size_t i=0; i<n; i++){
         a[i] -= b[i];
     }
     return a;
 }
 
 Vec operator*(const double c, Vec a){
-    int n = a.size();
+    size_t n = a.size();
     
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         a[i] *= c;
     }
     return a;
@@ -57,7 +57,7 @@ Vec operator/(Vec a, const double c){
         throw invalid_argument("Can not devide vector by zero.");
     }
     size_t n = size(a);
-    for (size_t i; i<n; i++){
+    for (size_t i=0; i<n; i++){
         a[i] /= c;
     }
     return a;
@@ -66,13 +66,13 @@ Vec operator/(Vec a, const double c){
 
 
 Mtr operator+(Mtr A, const Mtr& B) {
-    int n = A.size(), m = A[0].size();
+    size_t n = A.size(), m = A[0].size();
     if (n != B.size() || m != B[0].size()) {
         throw invalid_argument("Matrix dimensions are not aligned for addition.");
     }
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             A[i][j] += B[i][j];
         }
     }
@@ -80,10 +80,10 @@ Mtr operator+(Mtr A, const Mtr& B) {
 }
 
 Mtr operator-(Mtr A) {
-    int n = A.size(), m = A[0].size();
+    size_t n = A.size(), m = A[0].size();
     
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             A[i][j] *= -1.0;
         }
     }
@@ -91,13 +91,13 @@ Mtr operator-(Mtr A) {
 }
 
 Mtr operator-(Mtr A, const Mtr& B) {
-    int n = A.size(), m = A[0].size();
+    size_t n = A.size(), m = A[0].size();
     if (n != B.size() || m != B[0].size()) {
         throw invalid_argument("Matrix dimensions are not aligned for subtraction.");
     }
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             A[i][j] -= B[i][j];
         }
     }
@@ -105,10 +105,10 @@ Mtr operator-(Mtr A, const Mtr& B) {
 }
 
 Mtr operator*(const double c, Mtr A) {
-    int n = A.size(), m = A[0].size();
+    size_t n = A.size(), m = A[0].size();
     
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             A[i][j] *= c;
         }
     }
@@ -151,10 +151,10 @@ Mtr operator/(Mtr A, const double c){
     if (fabs(c)<1e-15) {
         throw invalid_argument("Can not devide matrix by zero.");
     }
-    int n = A.size(), m = A[0].size();
+    size_t n = A.size(), m = A[0].size();
     
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             A[i][j] /= c;
         }
     }
@@ -165,12 +165,12 @@ Mtr operator/(Mtr A, const double c){
 
 
 spMtr operator+(spMtr A, const spMtr& B) {
-    int n = A.rows, m = A.cols;
+    size_t n = A.rows, m = A.cols;
     if (n != B.rows || m != B.cols) {
         throw invalid_argument("Matrix dimensions are not aligned for addition.");
     }
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             double res = A.get(i,j) + B.get(i,j);
             A.set(res, i,j);
         }
@@ -179,10 +179,10 @@ spMtr operator+(spMtr A, const spMtr& B) {
 }
 
 spMtr operator-(spMtr A) {
-    int n = A.rows, m = A.cols;
+    size_t n = A.rows, m = A.cols;
     
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             double val = -1.0 * A.get(i,j);
             A.set(val,i,j);
         }
@@ -191,7 +191,7 @@ spMtr operator-(spMtr A) {
 }
 
 spMtr operator-(const spMtr& A, const spMtr& B) {
-    int n = A.rows, m = A.cols;
+    size_t n = A.rows, m = A.cols;
     if (n != B.rows || m != B.cols) {
         throw invalid_argument("Matrix dimensions are not aligned for subtraction.");
     }
@@ -199,10 +199,10 @@ spMtr operator-(const spMtr& A, const spMtr& B) {
 }
 
 spMtr operator*(const double c, spMtr A) {
-    int n = A.rows, m = A.cols;
+    size_t n = A.rows, m = A.cols;
     
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             double val = A.get(i,j) * c;
             A.set(val, i, j);
         }
@@ -246,10 +246,10 @@ spMtr operator/(spMtr A, const double c){
     if (fabs(c)<1e-15) {
         throw invalid_argument("Can not devide matrix by zero.");
     }
-    int n = A.rows, m = A.cols;
+    size_t n = A.rows, m = A.cols;
     
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             double val = A.get(i,j) / c;
             A.set(val, i, j);
         }
@@ -259,12 +259,12 @@ spMtr operator/(spMtr A, const double c){
 
 
 void operator+=(spMtr& A, const spMtr& B) {
-    int n = A.rows, m = B.cols;
+    size_t n = A.rows, m = B.cols;
     if (n != B.rows || m != B.cols) {
         throw std::invalid_argument("Matrix dimensions are not aligned.");
     }
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < m; ++j) {
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
             double val = A.get(i,j) + B.get(i,j);
             A.set(val, i, j);
         }
