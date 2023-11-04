@@ -1,5 +1,61 @@
 \section{Тестовый пример}
+\begin{equation}
+    \begin{matrix}
+        \text{Вариант 11:} & xy^2y' = x^2+y^3,              & 1.1\le x\le3, & y^3=3x^2(x-1);            \\
+                           & y'=\dfrac{x}{y^2}+\dfrac{y}{x} &               & y=\root 3 \of {3x^2(x-1)}
+    \end{matrix}
+\end{equation}
 
-%\subsection{Определения}
+\subsection{Удвоение разбиения на каждом шаге}
 
-%\subsection{Алгоритмы}
+\begin{enumerate}
+    \item $x_0 = 1.1, ~~ y_0 = y(x_0) = 0.71335$
+
+    \item $h^{I} = \frac{1}{2}:$
+    \begin{enumerate}
+        \item $\eta_0^{I} := f\left(x_0+\dfrac{h^{I}}{2},~~ y_0+\dfrac{h^{I}}{2}f(x_0,y_0)\right) = 1.72221$
+        \item $\Delta_0^{I} y_0 := h^{I}\eta_0^{I} = \frac{1}{2} 1.72221 = 0.86110$
+        \item $(x_1^{I},~~ y_1^{I}) = (x_0+h^{I}, ~~y_0 + \Delta^{I} y_0) = \mathbf{(1.6, ~~1.57445)}$
+    \end{enumerate}
+
+    \item $h^{II} = \frac{1}{4}:$
+    \begin{enumerate}
+        \item $\eta_0^{II} := f\left(x_0+\dfrac{h^{II}}{2},~~ y_0+\dfrac{h^{II}}{2}f(x_0,y_0)\right) = 1.94988$
+        \item $\Delta_0^{II} y_0 := h^{II}\eta_0^{II} = 0.48747$
+        \item $(x_1^{II},~~ y_1^{II}) = (x_0+h^{II}, ~~y_0 + \Delta_0^{II} y_0) = (1.35, ~~ 1.20082)$
+
+        \item $\eta_1^{II} := f\left(x_1^{II}+\dfrac{h^{II}}{2},~~ y_1^{II}+\dfrac{h^{II}}{2}f(x_1^{II},y_1^{II})\right) = 1.69112$
+        \item $\Delta_1^{II} y_1^{II} := h^{II}\eta_1^{II}  = 0.42278$
+        \item $(x_2^{II},~~ y_2^{II}) = (x_1^{II}+h^{II}, ~~y_1^{II} + \Delta_1^{II} y_1^{II}) = \mathbf{(1.6, ~~ 1.6236)}$
+    \end{enumerate}
+
+    \item $h^{III} = \frac{1}{8}:$
+    \begin{enumerate}
+        \item $\eta_0^{III} := f\left(x_0+\dfrac{h^{III}}{2},~~ y_0+\dfrac{h^{III}}{2}f(x_0,y_0)\right) = 2.23569$
+        \item $\Delta_0^{III} y_0 := h^{III}\eta_0^{III} = 0.27946$
+        \item $(x_1^{III},~~ y_1^{III}) = (x_0+h^{III}, ~~y_0 + \Delta_0^{III} y_0) = (1.225, ~~0.99281)$
+
+        \item $\eta_1^{III} := f\left(x_1^{III}+\dfrac{h^{III}}{2},~~ y_1^{III}+\dfrac{h^{III}}{2}f(x_1^{III},y_1^{III})\right) = 1.89509$
+        \item $\Delta_1^{III} y_1^{III} := h^{III}\eta_1^{III} = 0.23689$
+        \item $(x_2^{III},~~ y_2^{III}) = (x_1^{III}+h^{III}, ~~y_1^{III} + \Delta_1^{III} y_1^{III}) = (1.35, ~~ 1.2297)$
+
+        \item $\eta_2^{III} := f\left(x_2^{III}+\dfrac{h^{III}}{2},~~ y_2^{III}+\dfrac{h^{III}}{2}f(x_2^{III},y_2^{III})\right) = 1.73419$
+        \item $\Delta_2^{III} y_2^{III} := h^{III}\eta_2^{III} = 0.21677$
+        \item $(x_3^{III},~~ y_3^{III}) = (x_2^{III}+h^{III}, ~~y_2^{III} + \Delta_2^{III} y_2^{III}) = (1.475, ~~ 1.44647)$
+
+        \item $\eta_3^{III} := f\left(x_3^{III}+\dfrac{h^{III}}{2},~~ y_3^{III}+\dfrac{h^{III}}{2}f(x_3^{III},y_3^{III})\right) = 1.64777$
+        \item $\Delta_3^{III} y_3^{III} := h^{III}\eta_3^{III} = 0.20597$
+        \item $(x_4^{III},~~ y_4^{III}) = (x_3^{III}+h^{III}, ~~y_3^{III} + \Delta_3^{III} y_3^{III}) = \mathbf{(1.6, ~~ 1.65244)}$
+    \end{enumerate}
+
+    \item И т.д.
+\end{enumerate}
+
+Покажем убывание поправки с уменьшением шага:
+\begin{enumerate}
+    \item $\Theta|y_1^{I} - y_2^{II}| = \frac{1}{3}|1.57445 - 1.6236| = \mathbf{0.01638}$
+
+    \item $\Theta|y_2^{II} - y_4^{III}| = \frac{1}{3}|1.6236 - 1.65244| =\mathbf{0.00961}$
+
+    \item И т.д.
+\end{enumerate}

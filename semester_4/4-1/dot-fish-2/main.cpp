@@ -38,6 +38,5 @@ int main(int argc, char** argv){
         Minimum();
     if (do_dostatochno)
         Dostatochno();
-
     return 0;
 }

@@ -1,108 +1,81 @@
-#include "./headers/routines.hpp"
+#include "headers/routines.hpp"
+#include "headers/functions.hpp"
+#include "headers/runge.hpp"
 
 //limits
 const double a = 1.1, b = 3.0;
 
 void Baza(void){
-    cout << "executing \"Baza\" part of the assigment\n";
-    ofstream 
-        stream("data_baza_a.csv", ofstream::trunc),
-        stream2("data_baza_b.csv", ofstream::trunc);
+    cout << "executing \"Baza\"\n";
 
-    // .IA.
-    cout << "calculating for h = 0.1 ...\n";
-    vector<point> numsolution = RK2(exact_y(a), a, b, 0.1, &dydx);
-    
+    for (double h : {0.1, 0.05}){
+        ofstream stream("data_baza_"+to_string(h)+".csv", ofstream::trunc);
+        cout << "calculating for h="<<h<<endl;
 
-    cout << "writing to file ...\n";
-    stream << "x,y_h=0.1,y_exact,err_h=0.1\n";
-    for(size_t i = 0; i < numsolution.size(); i++){
-        stream << numsolution[i].x << "," << numsolution[i].y << "," << exact_y(numsolution[i].x) << "," << fabs(numsolution[i].y - exact_y(numsolution[i].x)) << "\n";
+        vector<point> res = RK2(exact_y(a), a, b, h, &dydx);
+
+        stream << "x,y_h="<<h<<",y_exact,err_h="<<h<<endl;
+        for(size_t i = 0; i < res.size(); i++){
+            stream
+            << res[i].x << ","
+            << res[i].y << ","
+            << exact_y(res[i].x) << ","
+            << fabs(res[i].y - exact_y(res[i].x)) << endl;
+        }
+        stream.close();
+    }
+
+    ofstream stream("data_baza_8dots.csv",ofstream::trunc);
+    stream << "h,h_square,max_err,nsteps\n";
+    for (int i = 1; i <= 8; i++){
+        double h = pow(10,-i);
+        cout << "calculating for h =" << h << endl;
+        auto [y_n, maxerr, nsteps] = RK2_maxerror(exact_y(a), a, b, h, &dydx, &exact_y);
+        stream << h << "," << h*h << "," << maxerr << "," << nsteps << "\n" << flush;
     }
     stream.close();
 
-
-    // .IB.
-    cout << "calculating for h = 0.05 ...\n";
-    numsolution = RK2(exact_y(a), a, b, 0.05, &dydx);
-    
-
-    cout << "writing to file ...\n";
-    stream2 << "x,y_h=0.05,y_exact,err_h=0.05\n";
-    for(size_t i = 0; i < numsolution.size(); i++){
-        stream2 << numsolution[i].x << "," << numsolution[i].y << "," << exact_y(numsolution[i].x) << "," << fabs(numsolution[i].y - exact_y(numsolution[i].x)) << "\n";
-    }
-    stream2.close();
-
-
-    cout << "-------------------\n";
-    //Построить зависимость (No2) ошибки от шага. На график нанести линию h 2 (почему?)
-    ofstream stream3("data_baza_c.csv",ofstream::trunc);
-    stream3 << "h,h_square,max_err\n";
-    for (int i = 1; i <= 8; i++){
-        double h = pow(10,-i);
-        cout << "calculating for h = " << h << "... ";
-        double maxerr = RK2_maxerror(exact_y(a), a, b, h,&dydx, &exact_y);
-        cout << "and writing to file...\n";
-        stream3 << h << "," << h*h << "," << maxerr << "\n";
-    }
-    stream3.close();
-
-
-    cout << "...all done!\n";
+    cout << "Baza done!\n";
     return;
 }
 
 void Minimum(void){
-    cout << "executing \"Minimum\" part of the assigment\n"; 
-    //Построить зависимость 3, 4
-    ofstream stream3("data_min.csv",ofstream::trunc);
+    cout << "Minimum"<<endl; 
+    ofstream stream("data_min.csv",ofstream::trunc);
 
-    stream3 << "p,N,max_err\n";
-    for (int i = 1; i <= 8; i++){
-        double p = pow(10,-i);
+    stream << "eps,N,max_err\n";
+    for (int i = 1; i <= 12; i++){
+        double eps = pow(10,-i);
         double h = 1.0;
-        while(1){
-            cout << "calculating for p = " << p << "... ";
-            
-            vector<point> numsolution  = RK2_adaptive(exact_y(a), a, b, h, p, &dydx);
-            vector<point> numsolution2  = RK2_adaptive(exact_y(a), a, b, h*0.5, p, &dydx);
+        while(1){            
+            auto [y_n, err_n, steps_n  ] = RK2_maxerror(exact_y(a), a, b, h,   &dydx, &exact_y);
+            auto [y_2n,err_2n,nsteps_2n] = RK2_maxerror(exact_y(a), a, b, h/2, &dydx, &exact_y);
 
-            double yi = numsolution[numsolution.size()].y, yj = numsolution2[numsolution2.size()].y;
-            if(fabs(yi - yj)/3.0 < p){
-                cout << "and writing to file...\n";
-                stream3 << p << "," << numsolution.size() << "," << error_max(numsolution) << "\n";
+            if(fabs(y_2n-y_n)/3.0 <= eps){
+                stream << eps << "," << nsteps_2n << "," << err_2n << endl;
                 break;
             }
-            h = 0.5*h;
+            h /= 2.0;
         }
-        
     }
-    stream3.close();
-
-
-    cout << "...all done!\n";
+    stream.close();
+    cout << "Minimum done!\n";
     return;
 }
 
 void Dostatochno(void){
-    cout << "executing \"Dostatochno\" part of the assigment\n"; 
-    //Построить зависимость 3, 4
-    ofstream stream3("data_dost.csv",ofstream::trunc);
+    cout << "Dostatochno"<<endl; 
+    ofstream stream("data_dost.csv",ofstream::trunc);
 
-    stream3 << "p,N,max_err\n";
+    stream << "eps,N,max_err\n";
     for (int i = 1; i <= 8; i++){
-        double p = pow(10,-i);
-        cout << "calculating for p = " << p << "... ";
-        vector<point> numsolution  = RK2_adaptive(exact_y(a), a, b, 1.0, p, &dydx);
-        double maxerr = error_max(numsolution);
-        cout << "and writing to file...\n";
-        stream3 << p << "," << numsolution.size() << "," << maxerr << "\n";
+        double eps = pow(10,-i);
+        cout << "calculating for eps = " << eps << "... " << flush;
+        auto [y_n, err, nsteps]  = RK2_adaptive(exact_y(a), a, b, 0.1, eps, &dydx, &exact_y);
+        cout << "and writing to file..." << endl;
+        stream << eps << "," << nsteps << "," << err << endl;
     }
-    stream3.close();
-    
-
+    stream.close();
     cout << "...all done!\n";
     return;
 }
-

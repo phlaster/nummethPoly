@@ -21,16 +21,17 @@ vector<point> RK2(
     double (*func)(double, double)
 );
 
-vector<point> RK2_adaptive(
+tuple<double, double, int> RK2_adaptive(
     const double y0,
     const double a,
     const double b,
     const double h,
-    const double p,
-    double (*func)(double, double)
+    const double eps,
+    double (*func)(double, double),
+    double (*etalon)(double)
 );
 
-double RK2_maxerror(
+tuple<double, double, int> RK2_maxerror(
     const double y0,
     const double a,
     const double b,
@@ -38,4 +39,34 @@ double RK2_maxerror(
     double (*func)(double, double),
     double (*etalon)(double)
 );
+
+pair<double, int> RK2_recursive(
+    double (*f)(double, double),
+    double (*exact)(double),
+    const double y0,
+    const double x0,
+    const double b,
+    const double eps
+);
+
+pair<double, int> RK2_adpt(
+    double (*f)(double, double),
+    double (*exact)(double),
+    const double y0,
+    const double x0,
+    const double b,
+    const double h,
+    const double eps
+);
+
+pair<double, int> RK2___(
+    const double y0,
+    const double x0,
+    const double b,
+    const double h0,
+    const double eps,
+    double (*f)(double, double),
+    double (*exact)(double)
+);
+
 #endif
