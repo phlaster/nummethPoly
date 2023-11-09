@@ -5,6 +5,7 @@
 #include "Printers.hpp"
 #include "operators.hpp"
 #include "Sparse.hpp"
+#include <cmath>
 
 Vec randVec(size_t n, double lower=0, double upper=1);
 
@@ -29,10 +30,10 @@ spMtr generateRndSymPos(int n, double cond, double sparsity);
 Mtr generateRndSymPos(const Vec& V, const Vec& conds);
 pair<double, double> mean_std(const Mtr& A);
 
-
+double maximum(const spMtr& A);
 pair<double, double> mean_std(const spMtr& A);
 spMtr erase_above_diag(spMtr A, bool below=false);
-spMtr chol(spMtr A, double threshold=-1);
+spMtr chol(spMtr A, double threshold=-INFINITY);
 
 Vec solve_L(const spMtr& L, const Vec& b);
 Vec solve_U(const spMtr& U, const Vec& b);
@@ -46,8 +47,8 @@ pair<Vec, int> pcg(
 );
 pair<Vec, int> pcg(
     const spMtr& A,
+    const spMtr& L, // Cholesky reconditioner
     const Vec& b,
-    const spMtr& C,
     double eps=1e-16, int maxIter=500
 );
 
