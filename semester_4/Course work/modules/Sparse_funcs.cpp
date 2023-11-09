@@ -1,5 +1,6 @@
 #include "headers/HEADER.hpp"
 #include "headers/Sparse.hpp"
+#include <cmath>
 
 spMtr normalize(const spMtr& M){
     if (M.cols != 1)
@@ -25,6 +26,14 @@ pair<double, double> mean_std(const spMtr& A) {
     double variance = (sum_sq - (sum * sum)/n/m)/(n*m-1);
     double stdv = sqrt(variance);
     return make_pair(mean, stdv);
+}
+
+double maximum(const spMtr& A){
+    double maximum = -INFINITY;
+    for (const auto& [key, val] : A.data){
+        maximum = max(maximum, val);
+    }
+    return maximum;
 }
 
 spMtr T(const spMtr& M){
@@ -56,7 +65,6 @@ spMtr householder(const spMtr& M){
     spMtr H = E(M.rows, true) - 2 * W * T(W);
     return H;
 }
-
 spMtr generateRndSymPos(int n, double cond, double sparsity){
     spMtr w0 = spMtr(n, 1, sparsity);
     spMtr H = householder(w0);
@@ -70,7 +78,6 @@ spMtr generateRndSymPos(int n, double cond, double sparsity){
     spMtr A = T(H) * D * H;
     return A;
 }
-
 spMtr erase_above_diag(spMtr A, bool below){
     if (A.cols != A.rows)
         throw invalid_argument("Eraser applies only to sqr mtrx!");
@@ -87,7 +94,6 @@ spMtr erase_above_diag(spMtr A, bool below){
     }
     return A;
 }
-
 spMtr chol(spMtr A, const double threshold) {
     size_t n = A.rows;
     for (size_t i = 0; i < n; i++) {
@@ -104,16 +110,15 @@ spMtr chol(spMtr A, const double threshold) {
                 S -= A.get(i, ip) * A.get(j, ip);
             }
             double to_set = S / A.get(i, i);
-            // if (fabs(to_set) > threshold) {
+            if (fabs(to_set) > threshold) {
                 A.set(to_set, j, i);
-            // } else {
-            //     A.set(0.0, j, i); 
-            // }
+            } else {
+                A.set(0.0, j, i); 
+            }
         }
     }
     return erase_above_diag(A);
 }
-
 Vec solve_L(const spMtr& L, const Vec& b) {
     size_t n = b.size();
     Vec y(n, 0.0);
@@ -125,7 +130,6 @@ Vec solve_L(const spMtr& L, const Vec& b) {
     }
     return y;
 }
-
 Vec solve_U(const spMtr& U, const Vec& b) {
     size_t n = b.size();
     Vec x(n, 0.0);
@@ -137,17 +141,20 @@ Vec solve_U(const spMtr& U, const Vec& b) {
     }
     return x;
 }
-
 Vec solve_L_U(const spMtr& L, const spMtr& U, const Vec& b){
     Vec y = solve_L(L, b);
     Vec x = solve_U(U, y);
+    return x;
+}
+Vec solve_L_U(const spMtr& L, const Vec& b){
+    Vec y = solve_L(L, b);
+    Vec x = solve_U(T(L), y);
     return x;
 }
 
 pair<Vec, int> pcg(const spMtr& A, const Vec& b, double eps, int maxIter){
     Vec x_k = Vec(b.size(), 1);
     Vec r = b - A*x_k;
-    
     Vec p = r;
     int k = 0;
     while (k <= maxIter){
@@ -162,57 +169,35 @@ pair<Vec, int> pcg(const spMtr& A, const Vec& b, double eps, int maxIter){
         p = r - beta*p;
         k++;
     }
+    cerr << "Метод не сошёлся за " << maxIter << " шагов!" << endl;
     return make_pair(x_k, -1);
 }
 
 // Overload for preconditioner
-// pair<Vec, int> pcg(const spMtr& A, const Vec& b, const spMtr& C, double eps, int maxIter){
-//     Vec x_k = Vec(b.size(), 0);
-//     Vec r = b;
-//     int k = 0;
-//     spMtr M = C*T(C);
-//     Vec p, z0, r0;
-//     while (euclideanNorm(r) > eps){
-//         auto [z_k, n_z] = pcg(M, r, eps, maxIter); // solving for preconditioner
-//         k++;
-//         if (k==1){
-//             p = z_k;
-//         } else {
-//             double beta = r*z_k / (r0*z0);
-//             p = z_k + beta*p;
-//         }
-//         double alpha = r*z_k / (A*p * p);
-//         r0 = r;
-//         z0 = z_k;
-//         x_k = x_k + alpha*p;
-//         r = r - alpha*A*p;
-//     }
-//     return make_pair(x_k, k);
-// }
-
-pair<Vec, int> pcg(const spMtr& A, const Vec& b, const spMtr& Chol, double eps, int maxIter){
-
+pair<Vec, int> pcg(const spMtr& A, const spMtr& L, const Vec& b, double eps, int maxIter) {
     Vec x_k = Vec(b.size(), 1);
-    Vec r = b - A*x_k;
-    Vec z = solve_L_U(Chol, T(Chol), r);
-    Vec p = z;
+    Vec r_k = b - A * x_k;
+    Vec z_k = solve_L_U(L, r_k);
+    Vec p_k = z_k;
     int k = 0;
-    while (k <= maxIter){
-        k++;
-        Vec q = A*p;
-        double denom = p*q;
-        double alpha = z*q/denom;
-        x_k = x_k + alpha*p;
-        Vec r_k = r - alpha*q;
-        if (euclideanNorm(r_k) <= eps)
-            break;
-        Vec z_k = solve_L_U(Chol, T(Chol), r_k);
-        double beta = r_k*z_k / (r*z);
-        p = r_k + beta*p;
-
-        z = z_k;
-        r = r_k;
+    while (k < maxIter) {
+        Vec q_k = A * p_k;
+        double alpha_denom = p_k*q_k;
+        double alpha = z_k*r_k / alpha_denom;
+        x_k = x_k + alpha*p_k;
+        Vec r_k_new = r_k - alpha*q_k;
+        if (euclideanNorm(r_k_new) <= eps) {
+            return make_pair(x_k, k);
+        }
+        Vec z_k_new = solve_L_U(L, r_k_new);
+        
+        double beta = (z_k_new * r_k_new) / (z_k * r_k);
+        p_k = z_k_new + beta * p_k;
+        
+        r_k = r_k_new;
+        z_k = z_k_new;
+        ++k;
     }
-    return make_pair(x_k, k);
+    cerr << "Метод не сошёлся за " << maxIter << " шагов!" << endl;
+    return make_pair(x_k, -1);
 }
-
