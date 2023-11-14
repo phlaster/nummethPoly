@@ -52,20 +52,27 @@ int main(int argv, char **argc){
     spMtr A = generateRndSymPos(msize, cond, sparsity);
     Vec x = randVec(msize);
     Vec b = A*x;
-    // print(to_dense(A), x, b);
     
-    auto [_x, nsteps] = pcg(A, b);
-    cout << "Шагов: " << nsteps << "\nНорма ошибки: ";
-    print(euclideanNorm(_x - x));
-    
-    spMtr Chol = chol(A, threshold);
-    // print(Chol);
+    // auto [_x, nsteps] = pcg(A, b);
+    // cout << "Шагов: " << nsteps << "\nНорма ошибки: ";
+    // print(euclideanNorm(_x - x));
+    auto [mu, sigma] = mean_std(A);
+    double maxval = maximum(A);
+    auto [_x1, nsteps1] = pcg(A, b);
+    double err1 = euclideanNorm(_x1-x);
+    cout << "theta,nsteps2,err2,msize="<<msize<<",cond="<<cond<<",nsteps1="<<nsteps1<<",err1="<<err1<<",mu="<<mu<<",sigma="<<sigma<<",maxval="<<maxval<<endl;
+    for (double theta=1e-9; theta <= maxval; theta *= 1.7){
+        spMtr Chol = chol(A, theta);
+        auto [_x2, nsteps2] = pcg(A, Chol, b);
+        double err2 = euclideanNorm(_x2-x);
+        cout<<theta<<","<<nsteps2<<","<<err2<<endl;
+    }
 
-    cout << "Max = " << maximum(Chol*T(Chol) - A) << endl;
+
+    // cout << "Max = " << maximum(Chol*T(Chol) - A) << endl;
     
-    auto [_x2, nsteps2] = pcg(A, Chol, b);
-    cout << "Шагов: " << nsteps2 <<"\nНорма ошибки: ";
-    print(euclideanNorm(_x2 - x));
+    // cout << "Шагов: " << nsteps2 <<"\nНорма ошибки: ";
+    // print(euclideanNorm(_x2 - x));
 
     return 0;
 }
