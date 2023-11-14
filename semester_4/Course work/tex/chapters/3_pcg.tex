@@ -1,0 +1,224 @@
+\section{Метод сопряжённых градиентов}
+
+\subsection{Теория}
+
+Существует класс методов итерационного решения СЛАУ, называемый {\bf методами вариационного типа}. Их обоснование производится с привлечением теории оптимизации, т.к. решение системы сводится к решению эквивалентной экстремальной задачи. Пусть:
+\begin{equation}
+    \mathbf{Ax=b}
+\end{equation}
+нормальная n-мерная система, т.е. $\mathbf{A}$ -- положительно определённая симметричная матрица и пусть $(\cdot, \cdot)$ -- скалярное произведение в пространстве $\mathbb{R}^n$. Образуем квадратичный функционал:
+\begin{equation}
+    \mathbf{\Phi}(\mathbf{x})=(\mathbf{Ax}, \mathbf{x}) - 2(\mathbf{b}, \mathbf{x}) + c,
+    ~~\text{ где }~~ c \in \mathbb{R}^1 ~~\text{ (произвольная постоянная)}.
+\end{equation}
+Показано, что задача решения нормальной системы (1) и задача минимизации функционала (2) {\it эквивалентны}. Таким образом через минимизацию (2) , будет найден вектор $\mathbf{x}$ решения (1).
+
+\subsubsection{Алгоритм}
+\begin{enumerate}
+    \item \begin{enumerate}
+        \item Задать начальное приближение $\mathbf{x}^{(0)}$ и допустимый уровень погрешности $\varepsilon>0$;
+        \item Вычислить невязку начального приближения $\mathbf{r}^{(0)}=\mathbf{b-Ax}^{(0)}$;
+        \item Положить $\mathbf{p}^{(0)}=\mathbf{r}^{(0)},~k=0$ (номер итерации);
+    \end{enumerate}
+    \item \begin{enumerate}
+        \item Вычислить $\mathbf{q}^{(k)}=\mathbf{Ap}^{(k)}$;
+        \item Вычислить шаговый скаляр $\alpha_k=\dfrac{(\mathbf{r}^{(k)}, \mathbf{p}^{(k)})}{(\mathbf{q}^{(k)}, \mathbf{p}^{(k)})}$;
+        \item Вычислить очередное приближение $\mathbf{x}^{(k+1)}=\mathbf{x}^{(k)}+\alpha_k\mathbf{p}^{(k)}$;
+        \item Вычислить невязку $(k+1)$-го приближения $\mathbf{r}^{(k+1)}=\mathbf{r}^{(k)}-\alpha_k\mathbf{q}^{(k)}$;
+        \item Проверить выполнение $||\mathbf{r}^{(k+1)}||_2 \le \varepsilon ~~\implies ~$ вернуть $\mathbf{x}^{(k+1)} \blacksquare$
+    \end{enumerate}
+    \item \begin{enumerate}
+        \item Вычислить скаляр $\beta_k=\dfrac{(\mathbf{r}^{(k+1)}, \mathbf{q}^{(k)})}{(\mathbf{q}^{(k)}, \mathbf{p}^{(k)})}$;
+        \item Вычислить новый вектор градиента: $\mathbf{p}^{(k+1)}=\mathbf{r}^{(k+1)}-\beta_k\mathbf{p}^{(k)}$;
+        \item Увеличить счётчик $k:=k+1$ и вернуться к 2.1.
+    \end{enumerate}
+\end{enumerate}
+
+\subsection{Предобусловленный метод сопряжённых градиентов}
+Несмотря на то, что метод сопряжённых градиентов можно отнести к прямым, т.к. показано, что при любом начальном векторе $\mathbf{x}^{(0)}$ n-мерной линейной системы минимум функционала (2) достигается ровно за n шагов, метод используется как итерационный (это видно и из приведённого алгоритма 3.1.1), т.к. во-первых, реальный вычислительный процесс может быть довольно далек от идеального и, вследствие неизбежных ошибок округления, на n-м шаге может быть не достигнута нужная точность. Во-вторых, если размерность n решаемой задачи велика, число шагов, достаточное для получения решения системы с нужной точностью (т.е. выход по критерию на шаге 2.5), может оказаться значительно меньше n.
+
+Вообще, метод сопряженных градиентов работает хорошо для матриц, которые либо хорошо обусловлены, либо имеют лишь небольшое число различных собственных значений. Чтобы добиться этого, применим метод сопряжённых градиентов к преобразованной системе:
+
+\begin{equation}
+    \mathbf{\tilde{A}z=\tilde{b}}
+\end{equation}
+где $\mathbf{\tilde{A} = C^{-1}AC^{-1}, ~~z = Cx,~~ \tilde{b} = C^{-1}b}$, a $\mathbf{C}$ -- симметричная положительно определённая матрица.
+
+В качестве предобуславливателя можно использовать матрицу, полученную из неполного разложения Холецкого матрицы $\mathbf{A}$.
+
+\subsubsection{Алгоритм предобусловленного МСГ на неполном преобразовании Холецкого}
+\begin{enumerate}
+    \item Вычислить неполное преобразование Холецкого $\mathbf{C_\theta}$ для матрицы $\mathbf{A}$ по алгоритму 2.3;
+
+    \item \begin{enumerate}
+        \item Задать начальное приближение $\mathbf{x}^{(0)}$ и допустимый уровень погрешности $\varepsilon>0$;
+        \item Вычислить невязку начального приближения $\mathbf{r}^{(0)}=\mathbf{b-Ax}^{(0)}$;
+
+        \item Вычислить преобразованный вектор неизвестных $\mathbf{z}^{(0)}$:
+        \begin{enumerate}
+            \item Прямым ходом метода Гаусса решить систему $\mathbf{C_\theta y^{(0)} = r}^{(0)}$ относительно $\mathbf{y}^{(0)}$;
+
+            \item Обратным ходом метода Гаусса решить систему $\mathbf{C_\theta^T z^{(0)} = y}^{(0)}$ относительно $\mathbf{z}^{(0)}$;
+        \end{enumerate}
+
+        \item Положить $\mathbf{p}^{(0)}=\mathbf{z}^{(0)},~k=0$ (номер итерации);
+    \end{enumerate}
+    \item \begin{enumerate}
+        \item Вычислить $\mathbf{q}^{(k)}=\mathbf{Ap}^{(k)}$;
+        \item Вычислить шаговый скаляр $\alpha_k=\dfrac{(\mathbf{z}^{(k)}, \mathbf{r}^{(k)})}{(\mathbf{q}^{(k)}, \mathbf{p}^{(k)})}$;
+        \item Вычислить очередное приближение $\mathbf{x}^{(k+1)}=\mathbf{x}^{(k)}+\alpha_k\mathbf{p}^{(k)}$;
+        \item Вычислить невязку $(k+1)$-го приближения $\mathbf{r}^{(k+1)}=\mathbf{r}^{(k)}-\alpha_k\mathbf{q}^{(k)}$;
+        \item Проверить выполнение $||\mathbf{r}^{(k+1)}||_2 \le \varepsilon ~~\implies ~$ вернуть $\mathbf{x}^{(k+1)} \blacksquare$
+    \end{enumerate}
+    \item \begin{enumerate}
+        \item Вычислить новый преобразованный вектор неизвестных $\mathbf{z}^{(k+1)}$:
+        \begin{enumerate}
+            \item Прямым ходом метода Гаусса решить систему $\mathbf{C_\theta y^{(k+1)} = r^{(k+1)}}$ относительно $\mathbf{y}^{(k+1)}$;
+
+            \item Обратным ходом метода Гаусса решить систему $\mathbf{C_\theta^T z^{(k+1)} = y}^{(k+1)}$ относительно $\mathbf{z}^{(k+1)}$;
+        \end{enumerate}
+        \item Вычислить скаляр $\beta_k=\dfrac{(\mathbf{r}^{(k+1)}, \mathbf{z}^{(k+1)})}{(\mathbf{z}^{(k)}, \mathbf{r}^{(k)})}$;
+        \item Вычислить новый вектор градиента: $\mathbf{p}^{(k+1)}=\mathbf{z}^{(k+1)}+\beta_k\mathbf{p}^{(k)}$;
+        \item Увеличить счётчик $k:=k+1$ и вернуться к 3.1.
+    \end{enumerate}
+\end{enumerate}
+
+
+\clearpage
+
+\subsection{Тестовые примеры}
+\subsubsection{Без предобуславливателя}
+Из положительно определённых квадратных матриц с небольшими целочисленными значениями ранга 4 методом перебора выберем $\mathbf{A}$ с достаточно малым числом обусловленности, зададим также произвольный $\mathbf{x}$ и вычислим $\mathbf{b}$:
+\begin{equation}
+    \mathbf{A} =
+    \begin{pmatrix}
+        5  & -1 & -1 & 0  \\
+        -1 & 6  & 1  & -1 \\
+        -1 & 1  & 6  & 1  \\
+        0  & -1 & 1  & 7
+    \end{pmatrix}; ~~~~~
+    \begin{matrix}
+    \texttt{cond(A)}=&1.812;\\
+    \texttt{det(A)} =&1089;
+    \end{matrix} ~~~~~
+    \mathbf{x} = \begin{pmatrix} -2 \\ 0 \\ 2\\ 1 \end{pmatrix}; ~~~~~
+    \mathbf{b=Ax} = \begin{pmatrix} -12 \\ 3 \\ 15 \\ 9 \end{pmatrix};
+\end{equation}
+
+\begin{enumerate}
+    \item \begin{enumerate}
+        \item $$\mathbf{x}^{(0)} :=
+        \begin{pmatrix} 1\\ 1\\ 1\\ 1 \end{pmatrix};$$
+
+        \item $$\mathbf{r}^{(0)} :=
+        \mathbf{b-Ax}^{(0)} = \begin{pmatrix} -15\\ -2\\ 8 \\ 2 \end{pmatrix}; ~~~
+        ||\mathbf{r}^{(0)}||_2 = \mathbf{17.234};$$
+
+        \item $$\mathbf{p}^{(0)} := \mathbf{r}^{(0)};$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\mathbf{q}^{(0)} :=
+        \mathbf{Ap}^{(0)} = \begin{pmatrix} -81\\ 9\\ 63\\ 24 \end{pmatrix};$$
+
+        \item $$\alpha_0 :=
+        \dfrac{(\mathbf{r}^{(0)}, \mathbf{p}^{(0)})}{(\mathbf{q}^{(0)}, \mathbf{p}^{(0)})} = 0.170;$$
+
+        \item $$\mathbf{x}^{(1)} :=
+        \mathbf{x}^{(0)}+\alpha_0\mathbf{p}^{(0)} = \begin{pmatrix} -1.550\\ 0.660\\ 2.360\\ 1.340 \end{pmatrix};$$
+
+        \item $$\mathbf{r}^{(1)} :=
+        \mathbf{r}^{(0)}-\alpha_0\mathbf{q}^{(0)} = \begin{pmatrix} -1.230\\ -3.530\\ -2.710 \\ -2.080 \end{pmatrix};$$
+
+        \item $$||\mathbf{r}^{(1)}||_2 = \mathbf{5.064}$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\beta_0 :=
+        \dfrac{(\mathbf{r}^{(1)}, \mathbf{q}^{(0)})}{(\mathbf{q}^{(0)}, \mathbf{p}^{(0)})} = -0.087;$$
+
+        \item $$\mathbf{p}^{(1)} :=
+        \mathbf{r}^{(1)}-\beta_0\mathbf{p}^{(0)} = \begin{pmatrix} -2.535\\-3.704\\-2.014\\-1.906 \end{pmatrix};$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\mathbf{q}^{(1)} :=
+        \mathbf{Ap}^{(1)} = \begin{pmatrix} -6.957\\-19.797\\-15.159\\-11.652 \end{pmatrix};$$
+
+        \item $$\alpha_1 :=
+        \dfrac{(\mathbf{r}^{(1)}, \mathbf{p}^{(1)})}{(\mathbf{q}^{(1)}, \mathbf{p}^{(1)})} = 0.178;$$
+
+        \item $$\mathbf{x}^{(2)} :=
+        \mathbf{x}^{(1)}+\alpha_1\mathbf{p}^{(1)} = \begin{pmatrix} -2.001\\0.001\\2.002\\1.001 \end{pmatrix};$$
+
+        \item $$\mathbf{r}^{(2)} :=
+        \mathbf{r}^{(1)}-\alpha_1\mathbf{q}^{(1)} = \begin{pmatrix} 0.008\\-0.006\\-0.012\\-0.006 \end{pmatrix};$$
+
+        \item $$||\mathbf{r}^{(2)}||_2 = \mathbf{0.017};$$
+    \end{enumerate}
+\end{enumerate}
+
+\subsubsection{С предобуславливателем}
+
+\begin{enumerate}
+    \item Применим к матрице $\mathbf{A}$ разложение Холецкого с нулевым порогом:
+    \begin{equation}
+        \mathbf{C}_{\theta=0} = \begin{pmatrix}
+            2.236  & 0      & 0     & 0     \\
+            -0.447 & 2.408  & 0     & 0     \\
+            -0.447 & 0.332  & 2.385 & 0     \\
+            0      & -0.415 & 0.477 & 2.569
+        \end{pmatrix}
+    \end{equation}
+
+    \item $$\mathbf{x}^{(0)} :=
+    \begin{pmatrix} 1\\ 1\\ 1\\ 1 \end{pmatrix};$$
+
+    \item $$\mathbf{r}^{(0)} :=
+    \mathbf{b-Ax}^{(0)} = \begin{pmatrix} -15\\ -2\\ 8 \\ 2 \end{pmatrix}; ~~~
+    ||\mathbf{r}^{(0)}||_2 = \mathbf{17.234};$$
+
+    \item Два хода алгоритма Гаусса:
+    \begin{enumerate}
+        \item $$ \mathbf{Cy}^{(0)} = \mathbf{r}^{(0)}
+        \begin{pmatrix}
+            2.236  & 0      & 0     & 0     \\
+            -0.447 & 2.408  & 0     & 0     \\
+            -0.447 & 0.332  & 2.385 & 0     \\
+            0      & -0.415 & 0.477 & 2.569
+        \end{pmatrix}
+        \begin{pmatrix} y^{(0)}_1\\ y^{(0)}_2\\ y^{(0)}_3 \\ y^{(0)}_4 \end{pmatrix} =
+        \begin{pmatrix} -15\\ -2\\ 8 \\ 2 \end{pmatrix}~~\implies ~~
+        \mathbf{y^{(0)}} = \begin{pmatrix}-6.708\\-2.076\\2.386\\0\end{pmatrix}$$
+        \item $$\mathbf{C^Tz}^{(0)} = \mathbf{y}^{(0)}
+        \begin{pmatrix}
+            2.236 & -0.447 & -0.447 & 0      \\
+            0     & 2.408  & 0.332  & -0.415 \\
+            0     & 0      & 2.385  & 0.477  \\
+            0     & 0      & 0      & 2.569
+        \end{pmatrix}
+        \begin{pmatrix} z^{(0)}_1\\z^{(0)}_2\\ z^{(0)}_3 \\ z^{(0)}_4 \end{pmatrix} =
+        \begin{pmatrix}-6.708\\-2.076\\2.386\\0\end{pmatrix}~~\implies ~~
+        \mathbf{z^{(0)}} = \begin{pmatrix}-3\\-1\\1\\0\end{pmatrix}$$
+    \end{enumerate}
+
+    \item $$\mathbf{p}^{(0)} := \mathbf{z}^{(0)};$$
+
+    \item \begin{enumerate}
+        \item $$\mathbf{q}^{(0)} :=
+        \mathbf{Ap}^{(0)} = \begin{pmatrix} -15\\ -2\\ 8\\ 2 \end{pmatrix};$$
+
+        \item $$\alpha_0 :=
+        \dfrac{(\mathbf{z}^{(0)}, \mathbf{r}^{(0)})}{(\mathbf{q}^{(0)}, \mathbf{p}^{(0)})} = 1;$$
+
+        \item $$\mathbf{x}^{(1)} :=
+        \mathbf{x}^{(0)}+\alpha_0\mathbf{p}^{(0)} = \begin{pmatrix} -2\\ 0\\ 2\\ 1 \end{pmatrix};$$
+
+         \item $$\mathbf{r}^{(1)} :=
+        \mathbf{r}^{(0)}-\alpha_0\mathbf{q}^{(0)} = \begin{pmatrix} 0\\ 0\\ 0 \\ 0 \end{pmatrix};$$
+
+        \item $$||\mathbf{r}^{(1)}||_2 = \mathbf{0} ~~\implies ~~ \text{метод сошёлся} ~~\implies ~~ \blacksquare$$
+    \end{enumerate}
+\end{enumerate}
+
+\paragraph{Комментарий:} Применительно к данной матрице $\mathbf{A}$ неполное разложение Холецкого с нулевым порогом повело себя так же, как полное разложение Холецкого. Единственный нулевой элемент попал бы и в него. Так, метод сошёлся за единственный шаг, если не принимать во внимания дополнительные шаги, необходимые для двукратного применения метода Гаусса при расчёте $\mathbf{z}$ и шагов самого алгоритма факторизации. На практике, применять полное разложение не рационально, потому что в таком случае дополнительные вычислительные затраты на разложение и решение треугольных систем нивелируют выигрыш от одношагового схождения предобусловленного МСГ. Далее рассмотрим графики числа итераций в зависимости от величины порога в неполном разложении Холецкого.
