@@ -3,16 +3,15 @@
 spMtr::spMtr( size_t r, size_t c) : rows(r), cols(c), zeroCounter(r*c), valCounter(0){
 }
 
-spMtr::spMtr( size_t r, size_t c, double sparsity):rows(r), cols(c), zeroCounter(r*c), valCounter(0){
-    if (sparsity<0. || sparsity>1.)
+spMtr::spMtr( size_t r, size_t c, double density):rows(r), cols(c), zeroCounter(r*c), valCounter(0){
+    if (density<0. || density>1.)
         throw invalid_argument("Sparsity value s must be 0<=s<=1");
 
 
     for( size_t i = 0; i < rows; ++i ){
         for( size_t j = 0; j < cols; ++j ){
-            if ((double)rand()/RAND_MAX > sparsity){
-            }
-            else {
+            if ((double)rand()/RAND_MAX > density){
+            } else {
                 keypair key = make_pair(i, j);
                 data[key] = (double)rand()/RAND_MAX;
                 valCounter++; zeroCounter--;

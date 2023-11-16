@@ -2,6 +2,23 @@
 #include "headers/Sparse.hpp"
 #include <cmath>
 
+
+void spy(const spMtr& sA){
+    for (size_t i = 0; i < sA.rows; i++){
+        for (size_t j = 0; j < sA.cols; j++){
+            double value = sA.get(i,j);
+            if (value == 0.0){
+                cout << "   ";
+            }
+            else
+                cout << "███";
+        }
+        cout << "\n";
+    }
+    cout << "nz = " << sA.valCounter << endl;
+}
+
+
 spMtr normalize(const spMtr& M){
     if (M.cols != 1)
         throw invalid_argument("Sparse: only column matricies for normalization!");
@@ -35,6 +52,13 @@ double maximum(const spMtr& A){
     }
     return maximum;
 }
+double maxabs(const spMtr& A){
+    double maximum = 0.0;
+    for (const auto& [key, val] : A.data){
+        maximum = max(maximum, fabs(val));
+    }
+    return maximum;
+}
 
 spMtr T(const spMtr& M){
     spMtr res(M.cols, M.rows);
@@ -65,8 +89,8 @@ spMtr householder(const spMtr& M){
     spMtr H = E(M.rows, true) - 2 * W * T(W);
     return H;
 }
-spMtr generateRndSymPos(int n, double cond, double sparsity){
-    spMtr w0 = spMtr(n, 1, sparsity);
+spMtr generateRndSymPos(int n, double cond, double density){
+    spMtr w0 = spMtr(n, 1, 1);
     spMtr H = householder(w0);
     spMtr D = E(n, true);
 
@@ -76,7 +100,7 @@ spMtr generateRndSymPos(int n, double cond, double sparsity){
     D.set(cond, 0, 0);
 
     spMtr A = T(H) * D * H;
-    return A;
+    return sparsen(A, 1-density);
 }
 spMtr erase_above_diag(spMtr A, bool below){
     if (A.cols != A.rows)
@@ -94,110 +118,214 @@ spMtr erase_above_diag(spMtr A, bool below){
     }
     return A;
 }
-spMtr chol(spMtr A, const double threshold) {
-    size_t n = A.rows;
-    for (size_t i = 0; i < n; i++) {
-        double S = A.get(i, i);
-        for (size_t ip = 0; ip < i; ip++) {
-            S -= A.get(i, ip) * A.get(i, ip);
-        }
+spMtr sparsen(spMtr M, double prob) {
+    if (prob < 0.0 || prob > 1.0) {
+        cerr << "Error: Probability must be in the range [0, 1]." << endl;
+        exit(1);
+    }
+    if (M.rows!=M.cols){
+        cerr << "Square matricies only!" << endl;
+        exit(1);
+    }
 
-        A.set(sqrt(S), i, i);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> rdist(0.0, 1.0);
 
-        for (size_t j = i + 1; j < n; j++) {
-            double S = A.get(j, i);
-            for (size_t ip = 0; ip < i; ip++) {
-                S -= A.get(i, ip) * A.get(j, ip);
+    for (size_t i = 0; i < M.rows; ++i) {
+        for (size_t j = i + 1; j < M.cols; ++j) {
+            if (rdist(gen) < prob) {
+                M.set(0.0, i, j);
+                M.set(0.0, j, i);
             }
-            double to_set = S / A.get(i, i);
-            if (fabs(to_set) > threshold) {
-                A.set(to_set, j, i);
-            } else {
-                A.set(0.0, j, i); 
-            }
         }
     }
-    return erase_above_diag(A);
+    return M;
 }
-Vec solve_L(const spMtr& L, const Vec& b) {
-    size_t n = b.size();
-    Vec y(n, 0.0);
-    for (size_t i = 0; i < n; i++) {
-        double sum = 0.0;
-        for (size_t j = 0; j < i; j++)
-            sum += L.get(i, j) * y[j];
-        y[i] = (b[i] - sum) / L.get(i, i);
-    }
-    return y;
-}
-Vec solve_U(const spMtr& U, const Vec& b) {
-    size_t n = b.size();
-    Vec x(n, 0.0);
-    for (int i = n - 1; i >= 0; i--) {
-        double sum = 0.0;
-        for (size_t j = i + 1; j < n; j++)
-            sum += U.get(i, j) * x[j];
-        x[i] = (b[i] - sum) / U.get(i, i);
-    }
-    return x;
-}
-Vec solve_L_U(const spMtr& L, const spMtr& U, const Vec& b){
-    Vec y = solve_L(L, b);
-    Vec x = solve_U(U, y);
-    return x;
-}
-Vec solve_L_U(const spMtr& L, const Vec& b){
-    Vec y = solve_L(L, b);
-    Vec x = solve_U(T(L), y);
-    return x;
-}
+// spMtr chol(spMtr A) {
+//     size_t n = A.rows;
+//     for (size_t i = 0; i < n; i++) {
+//         double S = A.get(i, i);
+//         for (size_t ip = 0; ip < i; ip++) {
+//             S -= A.get(i, ip) * A.get(i, ip);
+//         }
+//         if (S < 0.0) {
+//             cerr << "No complex values" << endl;
+//             exit(1);
+//         }
+//         A.set(sqrt(S), i, i);
+//         for (size_t j = i + 1; j < n; j++) {
+//             double S = A.get(j, i);
+//             for (size_t ip = 0; ip < i; ip++) {
+//                 S -= A.get(i, ip) * A.get(j, ip);
+//             }
+//             double to_set = S / A.get(i, i);
+//             A.set(to_set, j, i);
+//         }
+//     }
+//     return erase_above_diag(A);
+// }
+// spMtr chol(spMtr A, const double threshold) {
+//     size_t n = A.rows;
+//     for (size_t i = 0; i < n; i++) {
+//         double S = A.get(i, i);
+//         for (size_t ip = 0; ip < i; ip++) {
+//             S -= A.get(i, ip) * A.get(i, ip);
+//         }
+//         if (S < 0.0) {
+//             cerr << "No complex values" << endl;
+//             exit(1);
+//         }
+//         A.set(sqrt(S), i, i);
+//         for (size_t j = i + 1; j < n; j++) {
+//             double S = A.get(j, i);
+//             for (size_t ip = 0; ip < i; ip++) {
+//                 S -= A.get(i, ip) * A.get(j, ip);
+//             }
+//             if (fabs(A.get(j,i)) > threshold) {
+//                 double to_set = S / A.get(i, i);
+//                 A.set(to_set, j, i);
+//             } else {
+//                 A.set(0.0, j, i); 
+//             }
+//         }
+//     }
+//     return erase_above_diag(A);
+// }
 
-pair<Vec, int> pcg(const spMtr& A, const Vec& b, double eps, int maxIter){
-    Vec x_k = Vec(b.size(), 1);
-    Vec r = b - A*x_k;
-    Vec p = r;
-    int k = 0;
-    while (k <= maxIter){
-        Vec q = A * p;
-        double pq_denom = p*q;
-        double alpha = r*p / pq_denom; 
-        x_k = x_k + alpha*p;
-        r = r - alpha*q;
-        if (euclideanNorm(r) <= eps)
-            return make_pair(x_k, k);
-        double beta = r*q / pq_denom;
-        p = r - beta*p;
-        k++;
-    }
-    cerr << "Метод не сошёлся за " << maxIter << " шагов!" << endl;
-    return make_pair(x_k, -1);
-}
 
-// Overload for preconditioner
-pair<Vec, int> pcg(const spMtr& A, const spMtr& L, const Vec& b, double eps, int maxIter) {
-    Vec x_k = Vec(b.size(), 1);
-    Vec r_k = b - A * x_k;
-    Vec z_k = solve_L_U(L, r_k);
-    Vec p_k = z_k;
-    int k = 0;
-    while (k < maxIter) {
-        Vec q_k = A * p_k;
-        double alpha_denom = p_k*q_k;
-        double alpha = z_k*r_k / alpha_denom;
-        x_k = x_k + alpha*p_k;
-        Vec r_k_new = r_k - alpha*q_k;
-        if (euclideanNorm(r_k_new) <= eps) {
-            return make_pair(x_k, k);
-        }
-        Vec z_k_new = solve_L_U(L, r_k_new);
-        
-        double beta = (z_k_new * r_k_new) / (z_k * r_k);
-        p_k = z_k_new + beta * p_k;
-        
-        r_k = r_k_new;
-        z_k = z_k_new;
-        ++k;
-    }
-    cerr << "Метод не сошёлся за " << maxIter << " шагов!" << endl;
-    return make_pair(x_k, -1);
-}
+// spMtr ichol(const spMtr& M, double threshold) {
+//     int n = M.cols;
+//     if (n != M.rows){
+//         cerr << "Non square matrix!" << endl;
+//         exit(1);
+//     }
+//     spMtr L(n, n);
+//     for (int i = 0; i < n; ++i) {
+//         for (int j = 0; j <= i; ++j) {
+//             if (i == j) {
+//                 double sum = 0.0;
+//                 for (int k = 0; k < j; ++k) {
+//                     sum += pow(L.get(j,k), 2);
+//                 }
+//                 double pre_sqrt = M.get(j,j) - sum;
+//                 if (pre_sqrt < 0.0){
+//                     cerr << "Square root of negative" << endl;
+//                     exit(1);
+//                 } else {
+//                     L.set(sqrt(pre_sqrt), j, j);
+//                 }
+//             } else {
+//                 double sum = 0.0;
+//                 for (int k = 0; k < j; ++k) {
+//                     sum += L.get(i,k) * L.get(j,k);
+//                 }
+//                 double to_set = (M.get(i,j) - sum) / L.get(j,j);
+//                 if (fabs(to_set) <= threshold){
+//                     continue;
+//                 } else {
+//                     L.set(to_set, i,j);
+//                 }
+//             }
+//         }
+//     }
+//     return L;
+// }
+
+// spMtr chol(spMtr A, const double threshold) {
+//     size_t n = A.rows;
+//     for (size_t i = 0; i < n; i++) {
+//         double S = A.get(i, i);
+//         for (size_t ip = 0; ip < i; ip++) {
+//             S -= A.get(i, ip) * A.get(i, ip);
+//         }
+//         A.set(sqrt(S), i, i);
+//         for (size_t j = i + 1; j < n; j++) {
+//             double S = A.get(j, i);
+//             for (size_t ip = 0; ip < i; ip++) {
+//                 S -= A.get(i, ip) * A.get(j, ip);
+//             }
+//             double to_set = S / A.get(i, i);
+//             if (fabs(to_set) > threshold) {
+//                 A.set(to_set, j, i);
+//             } else {
+//                 A.set(0.0, j, i); 
+//             }
+//         }
+//     }
+//     return erase_above_diag(A);
+// }
+
+// spMtr ichol(const spMtr& A, double theta) {
+//     int n = A.rows;
+//     spMtr result(n,n, 0.0);
+//     for (int k = 0; k < n; ++k) {
+//         double diagonal_element = result.get(k, k);
+//         diagonal_element = sqrt(diagonal_element);
+//         result.set(diagonal_element, k, k);
+//         for (int i = k + 1; i < n; ++i) {
+//             if (result.get(i, k) != 0.0) {
+//                 double new_value = result.get(i, k) / diagonal_element;
+//                 new_value = fabs(new_value) > theta ? new_value : 0.0; 
+//                 result.set(new_value, i, k);
+//             }
+//         }
+//         for (int j = k + 1; j < n; ++j) {
+//             for (int i = j+1; i < n; ++i) {
+//                 if (result.get(i, j) != 0.0) {
+//                     double new_value = result.get(i, j) - result.get(i, k) * result.get(j, k);
+//                     new_value = fabs(new_value) > theta ? new_value : 0.0; 
+//                     result.set(new_value, i, j);
+//                 }
+//             }
+//         }
+//     }
+//     return erase_above_diag(result);
+// }
+
+// spMtr ichol(const spMtr& A, double theta) {
+//     int N = A.rows;
+//     spMtr Ch(N,N);
+//     for (int i = 0; i < N; ++i) {
+//         double S = A.get(i,i);
+//         for (int ip = 0; ip < i; ++ip) {
+//             S -= A.get(i,ip) * A.get(i, ip);
+//         }
+//         Ch.set(sqrt(S), i, i);      
+//         for (int j = i + 1; j < N; ++j) {
+//             double S = A.get(j,i);
+//             for (int ip = 0; ip < i; ++ip) {
+//                 S -= Ch.get(i, ip) * Ch.get(j, ip);
+//             }
+//             double toset = S / A.get(i,i);
+//             if (fabs(toset > theta)){
+//                 Ch.set( toset, j, i);
+//             }
+//         }
+//     }
+//     return Ch;
+// }
+
+
+
+// Вержбицкий
+// pair<Vec, int> cg(const spMtr& A, const Vec& b, double eps, int maxIter){
+//     Vec x_k = Vec(b.size(), 0);
+//     Vec r = b - A*x_k;
+//     Vec p = r;
+//     int k = 0;
+//     while (k <= maxIter){
+//         Vec q = A * p;
+//         double denom = (p*q);
+//         double alpha = (r*p) / denom; 
+//         x_k = x_k + (alpha*p);
+//         r = r - (alpha*q);
+//         if (euclideanNorm(r) <= eps)
+//             return make_pair(x_k, k);
+//         double beta = (r*q) / denom;
+//         p = r - (beta*p);
+//         k++;
+//     }
+//     cerr << "Метод не сошёлся за " << maxIter << " шагов!" << endl;
+//     return make_pair(x_k, -1);
+// }

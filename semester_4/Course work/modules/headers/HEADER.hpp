@@ -26,21 +26,29 @@ Mtr to_dense(const spMtr& SP);
 spMtr T(const spMtr& M);
 spMtr E(size_t size, bool sparse);
 spMtr householder(const spMtr& M);
-spMtr generateRndSymPos(int n, double cond, double sparsity);
+spMtr generateRndSymPos(int n, double cond, double density);
 Mtr generateRndSymPos(const Vec& V, const Vec& conds);
 pair<double, double> mean_std(const Mtr& A);
 
 double maximum(const spMtr& A);
+double maxabs(const spMtr& A);
 pair<double, double> mean_std(const spMtr& A);
 spMtr erase_above_diag(spMtr A, bool below=false);
-spMtr chol(spMtr A, double threshold=-INFINITY);
+spMtr sparsen(spMtr M, double prob);
+// spMtr chol(const spMtr& A, double threshold);
+spMtr chol(const spMtr& A);
+
+// spMtr chol(spMtr A, const double threshold);
+spMtr ichol(const spMtr& A, double theta=0.0);
+
 
 Vec solve_L(const spMtr& L, const Vec& b);
 Vec solve_U(const spMtr& U, const Vec& b);
 Vec solve_L_U(const spMtr& L, const spMtr& U, const Vec& b);
 
+void spy(const spMtr& sA);
 
-pair<Vec, int> pcg(
+pair<Vec, int> cg(
     const spMtr& A,
     const Vec& b,
     double eps=1e-16, int maxIter=500
@@ -52,5 +60,8 @@ pair<Vec, int> pcg(
     double eps=1e-16, int maxIter=500
 );
 
-
+spMtr block5diag(size_t m, size_t n);
+spMtr block5diag(size_t n);
+Vec estimate_b(size_t n);
+Vec exact_x(double n);
 #endif

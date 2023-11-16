@@ -14,12 +14,11 @@ struct spMtr{
 
 
     spMtr(size_t r, size_t c);
-    spMtr(size_t r, size_t c, double sparsity);
+    spMtr(size_t r, size_t c, double density);
     spMtr(Mtr matrix, double eps=1e-16);
     ~spMtr();
     void print();
     double sparsity();
-    void rotate90Clockwise();
 
     
     double get(size_t rIndex, size_t cIndex) const;
