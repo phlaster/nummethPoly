@@ -16,7 +16,7 @@ DBG_NAME=debug
 BIN_NAME=build
 
 # Names of your bins
-SOURCES=main Matrix_funcs Sparse_funcs operators Printers Sparse Vectors
+SOURCES=main Matrix_funcs Sparse_funcs operators Printers Sparse Vectors Stationary CHOL CG
 
 # Baking names for objects for build & objects for debug
 OBJECTS=$(addprefix $(OBJECT_DIR)/,$(addsuffix .o,$(SOURCES)))
@@ -42,4 +42,4 @@ clean: # only deleting the object files
 	rm -f $(OBJECT_DIR)/*.o
 
 purge:  # all csvs will be deleted in cwd!
-	rm -rf $(OBJECT_DIR)/; rm $(SOURCE_DIR)/*.out; rm $(SOURCE_DIR)/*.csv
+	rm -rf $(OBJECT_DIR)/; rm *.out;
