@@ -1,0 +1,42 @@
+\section{Модульная структура программы}
+Некоторые часто использованные функции:
+
+Просмотр структуры разреженной матрицы:
+
+\lstinline|void spy(const spMtr& sA)|
+
+Транспонирование:
+
+\lstinline|spMtr T(const spMtr& M)|
+
+Создание случайной симметричной разреженной матрицы с заданным числом обусловленности:
+
+\lstinline|spMtr generateRndSymPos(int n, double cond, double sparsity)|
+
+Полное разложение Холецкого:
+
+\lstinline|spMtr chol(const spMtr& M)|
+
+Неполное разложение Холецкого с порогом:
+
+\lstinline|spMtr chol(const spMtr& M, double threshold)|
+
+Прямой и обратный прогон метода гаусса для нижнетреугольной матрицы (предобуславлевателя):
+
+\lstinline|Vec solve_L_U(const spMtr& L, const Vec& b)|
+
+Метод сопряжённых градиентов с заданным максимальным количеством шагов:
+
+\lstinline|pair<Vec, int> cg(const spMtr& A, const Vec& b, double eps, int maxIter)|
+
+Предобусловденный метод сопряжённых градиентов с заданным максимальным количеством шагов:
+
+\lstinline|pair<Vec, int> pcg(const spMtr& A, const spMtr& L, const Vec& b, double eps, int maxIter)|
+
+Генератор матрицы для СЛАУ стационарной задачи:
+
+\lstinline|spMtr block5diag(size_t m, size_t n)|
+
+Расчёт вектора правой части с выбранным шагом:
+
+\lstinline|Vec estimate_b(size_t n)|

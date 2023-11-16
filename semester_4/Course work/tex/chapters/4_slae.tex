@@ -1,0 +1,64 @@
+\section{Решение стационарной задачи}
+
+\subsection{Теория}
+
+В приложениях часто возникает потребность решать уравнения вида:
+
+\begin{equation}
+    k\nabla^2 u + f(x,y,z,t) = \frac{\partial u}{\partial t},
+\end{equation}
+
+Двумерная стационарная версия которого при может при $k=1$ быть записана как
+\begin{equation}
+    \nabla^2 u + f(x,y) = 0,
+\end{equation}
+что может интерпретироваться как состояние плоской системы после окончания переходных процессов.
+
+\subsubsection{Вариант 5}
+
+\begin{equation}
+    u = \sin(\pi x)\cos(\pi y)
+\end{equation}
+
+\begin{equation}
+    -\nabla^2 u = f(x,y) = 2\pi^2\sin(\pi x)\cos(\pi y)
+\end{equation}
+
+Для заданной области $D = [0,1]\times[0,1]$ получим граничные условия:
+\begin{itemize}
+    \item $u(0,y) = 0$;
+    \item $u(1,y) = 0$;
+    \item $u(x,0) = -\sin(\pi x)$;
+    \item $u(x,1) = \sin(\pi x)$;
+\end{itemize}
+
+Для проведения вычислительного эксперимента воспользуемся конечно-разностным методом. Для произвольного узла сетки с индексами i j аппроксимация частных производных функции конечно-разностным методом доставляет нам уравнение вида:
+    \begin{equation}
+    \frac{u_{i-1,j}-2u_{i,j}+u_{i+1,j}}{h^2}+\frac{u_{i,j-1}-2u_{i,j}+u_{i,j+1}}{h^2}+f(x_i, y_i) = 0
+\end{equation}
+
+Вектор решений представляет собой развернутую сетку. Развертка достигается за счет перенумерования точек сетки, каждой паре индексов $(i, j)$ ставится в соответствие индекс $k$. Ввиду конечности количества точек такая перенумерация осуществляется однозначно. Так, при $i = \{1..x_n\}, j = \{1..y_n\}, k = (j - 1) x_n + i$.
+
+\clearpage
+Выбрав количество точек разбиения и приводя полученную систему к каноническому виду получим матрицу системы в виде блочной пятидиагональной матрицы.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{pics/36_full}
+    \caption{Матрица модельной задачи 6*6 блоков}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{pics/36_chol}
+    \caption{Полное разложение Холецкого для матрицы модельной задачи.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{pics/36_chol_0}
+    \caption{Частичное разложение Холецкого с нулевым порогом.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{pics/36_diag}
+    \caption{Частичное разложение Холецкого с ненулевым порогом.}
+\end{figure}
