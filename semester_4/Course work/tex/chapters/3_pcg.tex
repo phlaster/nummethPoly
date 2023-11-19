@@ -22,14 +22,16 @@
     \end{enumerate}
     \item \begin{enumerate}
         \item Вычислить $\mathbf{q}^{(k)}=\mathbf{Ap}^{(k)}$;
-        \item Вычислить шаговый скаляр $\alpha_k=\dfrac{(\mathbf{r}^{(k)}, \mathbf{p}^{(k)})}{(\mathbf{q}^{(k)}, \mathbf{p}^{(k)})}$;
+        \item Вычислить шаговый скаляр $\alpha_k=\dfrac{(\mathbf{r}^{(k)}, \mathbf{r}^{(k)})}{(\mathbf{q}^{(k)}, \mathbf{p}^{(k)})}$;
         \item Вычислить очередное приближение $\mathbf{x}^{(k+1)}=\mathbf{x}^{(k)}+\alpha_k\mathbf{p}^{(k)}$;
         \item Вычислить невязку $(k+1)$-го приближения $\mathbf{r}^{(k+1)}=\mathbf{r}^{(k)}-\alpha_k\mathbf{q}^{(k)}$;
         \item Проверить выполнение $||\mathbf{r}^{(k+1)}||_2 \le \varepsilon ~~\implies ~$ вернуть $\mathbf{x}^{(k+1)} \blacksquare$
     \end{enumerate}
-    \item \begin{enumerate}
-        \item Вычислить скаляр $\beta_k=\dfrac{(\mathbf{r}^{(k+1)}, \mathbf{q}^{(k)})}{(\mathbf{q}^{(k)}, \mathbf{p}^{(k)})}$;
-        \item Вычислить новый вектор градиента: $\mathbf{p}^{(k+1)}=\mathbf{r}^{(k+1)}-\beta_k\mathbf{p}^{(k)}$;
+
+    \item
+    \begin{enumerate}
+        \item Вычислить скаляр $\beta_k=\dfrac{(\mathbf{r}^{(k+1)}, \mathbf{r}^{(k+1)})}{(\mathbf{r}^{(k)}, \mathbf{r}^{(k)})}$;
+        \item Вычислить новый вектор градиента: $\mathbf{p}^{(k+1)}=\mathbf{r}^{(k+1)}+\beta_k\mathbf{p}^{(k)}$;
         \item Увеличить счётчик $k:=k+1$ и вернуться к 2.1.
     \end{enumerate}
 \end{enumerate}
@@ -44,7 +46,7 @@
 \end{equation}
 где $\mathbf{\tilde{A} = C^{-1}AC^{-1}, ~~z = Cx,~~ \tilde{b} = C^{-1}b}$, a $\mathbf{C}$ -- симметричная положительно определённая матрица.
 
-В качестве предобуславливателя можно использовать матрицу, полученную из неполного разложения Холецкого матрицы $\mathbf{A}$.
+В качестве предобуславливателя можно использовать матрицу $\mathbf{C_\theta C_\theta}^T$, полученную из неполного разложения Холецкого матрицы $\mathbf{A}$.
 
 \subsubsection{Алгоритм предобусловленного МСГ на неполном преобразовании Холецкого}
 \begin{enumerate}
@@ -154,7 +156,32 @@
 
         \item $$||\mathbf{r}^{(2)}||_2 = \mathbf{0.017};$$
     \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\beta_1 :=
+        \dfrac{(\mathbf{r}^{(2)}, \mathbf{q}^{(1)})}{(\mathbf{q}^{(1)}, \mathbf{p}^{(1)})} = 0.002;$$
+
+        \item $$\mathbf{p}^{(2)} :=
+        \mathbf{r}^{(2)}-\beta_1\mathbf{p}^{(1)} = \begin{pmatrix} 0.013\\0.001\\-0.008\\-0.002 \end{pmatrix};$$
+    \end{enumerate}
+
+    \item \begin{enumerate}
+        \item $$\mathbf{q}^{(2)} :=
+        \mathbf{Ap}^{(2)} = \begin{pmatrix}0.072\\-0.013\\-0.062\\-0.023\end{pmatrix};$$
+
+        \item $$\alpha_2 :=
+        \dfrac{(\mathbf{r}^{(2)}, \mathbf{p}^{(2)})}{(\mathbf{q}^{(2)}, \mathbf{p}^{(2)})} = 0.141;$$
+
+        \item $$\mathbf{x}^{(3)} :=
+        \mathbf{x}^{(2)}+\alpha_2\mathbf{p}^{(2)} = \begin{pmatrix}-1.999\\0.001\\2.001\\1.001\end{pmatrix};$$
+
+        \item $$\mathbf{r}^{(3)} :=
+        \mathbf{r}^{(2)}-\alpha_2\mathbf{q}^{(2)} = \begin{pmatrix}-0.002\\-0.004\\-0.003\\-0.003 \end{pmatrix};$$
+
+        \item $$||\mathbf{r}^{(3)}||_2 = \mathbf{0.006}; ~~ \implies ~~ \text{Метод сошёлся в пределах последней значащей цифры}$$
+    \end{enumerate}
 \end{enumerate}
+
 
 \subsubsection{С предобуславливателем}
 
@@ -221,9 +248,3 @@
 
 \paragraph{Комментарий:} Применительно к данной матрице $\mathbf{A}$ неполное разложение с нулевым порогом повело себя так же, как полное. Единственный нулевой элемент попал бы и в него. Так, метод сошёлся за единственный шаг, если не принимать во внимания дополнительные шаги, необходимые для двукратного применения метода Гаусса при расчёте $\mathbf{z}$ и шагов самого алгоритма факторизации. На практике, применять полное разложение не рационально, потому что в таком случае дополнительные вычислительные затраты на разложение и решение треугольных систем нивелируют выигрыш от одношагового схождения предобусловленного МСГ.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{pics/pcg_cg}
-    \caption{Зависимость количества шагов предобусловденного М.С.Г в сравнении с не предобусловленным от величины порога для матрицы размером 100*100, cond=500}
-    \label{fig:pcgcg}
-\end{figure}

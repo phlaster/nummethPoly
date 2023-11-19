@@ -1,42 +1,47 @@
 \section{Модульная структура программы}
 Некоторые часто использованные функции:
+\begin{itemize}
 
-Просмотр структуры разреженной матрицы:
+\item Просмотр структуры разреженной матрицы:
 
-\lstinline|void spy(const spMtr& sA)|
+\lstinline|void spy(const spMtr& sA)|\\
 
-Транспонирование:
+\item Транспонирование:
 
-\lstinline|spMtr T(const spMtr& M)|
+\lstinline|spMtr T(const spMtr& M)|\\
 
-Создание случайной симметричной разреженной матрицы с заданным числом обусловленности:
+\item Создание случайной симметричной разреженной матрицы с заданным числом обусловленности (n - сторона, cond - число обусловленности, density = $\dfrac{\text{ненулевые элементы}}{n^2}$):
 
-\lstinline|spMtr generateRndSymPos(int n, double cond, double sparsity)|
+\lstinline|spMtr generateRndSymPos(int n, double cond, double density)|\\
 
-Полное разложение Холецкого:
+\item Полное разложение Холецкого (возвращает нижнетреугольную матрицу):
 
-\lstinline|spMtr chol(const spMtr& M)|
+\lstinline|spMtr chol(const spMtr& M)|\\
 
-Неполное разложение Холецкого с порогом:
+\item Неполное разложение Холецкого с порогом (возвращает нижнетреугольную матрицу):
 
-\lstinline|spMtr chol(const spMtr& M, double threshold)|
+\lstinline|spMtr ichol(const spMtr& M, double threshold)|\\
 
-Прямой и обратный прогон метода гаусса для нижнетреугольной матрицы (предобуславлевателя):
+\item Прямой и обратный прогон метода Гаусса для нижнетреугольной матрицы (предобуславлевателя):
 
-\lstinline|Vec solve_L_U(const spMtr& L, const Vec& b)|
+\lstinline|Vec solve_L_U(const spMtr& L, const Vec& b)|\\
 
-Метод сопряжённых градиентов с заданным максимальным количеством шагов:
+\item Метод сопряжённых градиентов с заданным максимальным количеством шагов (A -- матрица системы, b -- вектор правой части, eps -- желаемая точность решения системы, maxIter -- максимальное число итераций до завершения метода, вернёт пару (решение, количество шагов)):
 
-\lstinline|pair<Vec, int> cg(const spMtr& A, const Vec& b, double eps, int maxIter)|
+\lstinline|pair<Vec, int> cg(const spMtr& A, const Vec& b, double eps, int maxIter)|\\
 
-Предобусловденный метод сопряжённых градиентов с заданным максимальным количеством шагов:
+\item Предобусловденный метод сопряжённых градиентов с заданным максимальным количеством шагов (то же, что и в cg, L -- нижнетреугольная матрица разложения Холецкого):
 
-\lstinline|pair<Vec, int> pcg(const spMtr& A, const spMtr& L, const Vec& b, double eps, int maxIter)|
+\lstinline|pair<Vec, int> pcg(const spMtr& A, const spMtr& L, const Vec& b, double eps, int maxIter)|\\
 
-Генератор матрицы для СЛАУ стационарной задачи:
+\item Генератор матрицы для СЛАУ стационарной задачи (вернет блочно диагональную матрицу для решения 2-мерного стационарного уравнения Пуассона $n^2\times n^2$):
 
-\lstinline|spMtr block5diag(size_t m, size_t n)|
+\lstinline|spMtr block5diag(size_t n)|\\
 
-Расчёт вектора правой части с выбранным шагом:
+\item Расчёт вектора длины $n^2$ правой части с выбранным шагом (вернёт вектор правой части, посчитанный на основе заданных граничных условий и взятия частных производных методом конечных разностей):
 
 \lstinline|Vec estimate_b(size_t n)|
+
+\item Так же для удобства написания алгоритмов с матрицами и векторами для них были перегружены все необходимые алгебраические операторы: \lstinline|+  -  *  +=  -=|
+\end{itemize}
+
