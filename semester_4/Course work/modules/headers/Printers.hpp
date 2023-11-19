@@ -12,5 +12,6 @@ void print(const double value);
 void print(const bool b);
 void print(const char* s);
 void print(const spMtr& sA);
+void save(const spMtr& sA, const string& fname);
 
 #endif

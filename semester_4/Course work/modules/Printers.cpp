@@ -1,4 +1,5 @@
 #include "headers/Printers.hpp"
+#include <fstream>
 
 void print(const Vec& v){
     cout << "[";
@@ -67,4 +68,13 @@ void print(const spMtr& sA){
         cout << "\n";
     }
     cout << "\n";
+}
+
+void save(const spMtr& A, const string& fname){
+    ofstream stream(fname, ofstream::trunc);
+    for (int i=0; i<A.rows; i++){
+        for (int j=0; j<A.cols; j++)
+            stream << A.get(i, j) << " ";
+        stream << "\n";
+    }
 }

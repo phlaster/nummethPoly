@@ -39,7 +39,7 @@ pair<Vec, int> pcg(const spMtr& A, const spMtr& L, const Vec& b, double eps, int
     Vec r_k = b - A * x_k;
     Vec z_k = solve_L_U(L, r_k);
     Vec p_k = z_k;
-    int k = 0;
+    int k = 1;
     while (k < maxIter) {
         Vec q_k = A * p_k;
         double alpha_denom = p_k*q_k;
@@ -65,7 +65,7 @@ pair<Vec, int> cg(const spMtr& A, const Vec& b, double eps, int maxIter) {
     Vec x_k = Vec(b.size(), 1);
     Vec r_k = b - A * x_k;
     Vec p_k = r_k;
-    int k = 0;
+    int k = 1;
     while (k < maxIter) {
         Vec q_k = A * p_k;
         double alpha_denom = p_k*q_k;

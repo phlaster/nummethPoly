@@ -35,10 +35,7 @@ double maxabs(const spMtr& A);
 pair<double, double> mean_std(const spMtr& A);
 spMtr erase_above_diag(spMtr A, bool below=false);
 spMtr sparsen(spMtr M, double prob);
-// spMtr chol(const spMtr& A, double threshold);
 spMtr chol(const spMtr& A);
-
-// spMtr chol(spMtr A, const double threshold);
 spMtr ichol(const spMtr& A, double theta=0.0);
 
 
@@ -51,13 +48,15 @@ void spy(const spMtr& sA);
 pair<Vec, int> cg(
     const spMtr& A,
     const Vec& b,
-    double eps=1e-16, int maxIter=500
+    double eps=1e-16,
+    int maxIter=500
 );
 pair<Vec, int> pcg(
     const spMtr& A,
     const spMtr& L, // Cholesky reconditioner
     const Vec& b,
-    double eps=1e-16, int maxIter=500
+    double eps=1e-16,
+    int maxIter=500
 );
 
 spMtr block5diag(size_t m, size_t n);

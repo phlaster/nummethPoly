@@ -41,9 +41,11 @@ spMtr block5diag(size_t m, size_t n) {
     }
     return matrix;
 }
+
 spMtr block5diag(size_t n){
     return block5diag(n,n);
 }
+
 Vec estimate_b(size_t n) {
     const double PI = acos(-1);
     const double h = 1.0/(n+1);
@@ -71,6 +73,7 @@ Vec estimate_b(size_t n) {
     }
     return b;
 }
+
 Vec exact_x(double n){
     const double PI = acos(-1);
     const double h = 1.0/(n+1);
