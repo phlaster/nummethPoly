@@ -1,6 +1,7 @@
 clc;
-F = b5d(5)
+F = b5d(15)
 spy(F)
+cond(F)
 figure
 spy(A)
 cond(full(A))
